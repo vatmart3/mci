@@ -89,7 +89,7 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
       <GlassFog className="absolute inset-0 z-0 h-full w-full" />
 
       {/* Texte : visible immédiatement, au-dessus de la vitre */}
-      <div className="wrap pointer-events-none relative z-10 flex h-full flex-col justify-end pb-20 lg:pb-6">
+      <div className="wrap pointer-events-none relative z-10 flex h-full flex-col justify-end pb-24 lg:pb-6">
         <div className="grid-12">
           <div className="pointer-events-auto col-span-12 md:col-span-10 lg:col-span-8">
             <h1 id="hero-title" className="t-display" style={{ fontSize: "clamp(2.75rem, 0.9rem + 5.4vw, 6.5rem)" }}>
