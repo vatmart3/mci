@@ -142,7 +142,7 @@
 /* ─────────────── Typographie ─────────────── */
 @layer components {
   .t-display {
-    font-family: var(--font-display);
+    font-family: var(--font-archivo-display), var(--font-display);
     font-weight: 800;
     font-variation-settings: "wdth" 118;
     font-size: clamp(2.75rem, 1.2rem + 6.4vw, 7.5rem);
@@ -150,7 +150,7 @@
     letter-spacing: -0.02em;
   }
   .t-h1 {
-    font-family: var(--font-display);
+    font-family: var(--font-archivo-display), var(--font-display);
     font-weight: 800;
     font-variation-settings: "wdth" 116;
     font-size: clamp(2.125rem, 1.4rem + 3vw, 4.25rem);
@@ -222,6 +222,9 @@
     grid-template-columns: repeat(12, minmax(0, 1fr));
     column-gap: var(--gutter);
   }
+  .grid-12 > * {
+    min-width: 0;
+  }
 
   /* Lien texte souligné (actions secondaires) */
   .link-u {
@@ -289,6 +292,7 @@
 
   /* Scroll horizontal natif (mobile) */
   .snap-row {
+    position: relative;
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
@@ -298,6 +302,10 @@
   .snap-row > * {
     scroll-snap-align: start;
   }
+}
+
+html[data-cookies="1"] [data-cookie-banner] {
+  display: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -62,7 +62,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               { name: product.code, path: `/produit/${product.slug}` },
             ]}
           />
-          <div className="grid-12 mt-8 gap-y-10">
+          <div className="grid-12 mt-8 gap-y-12">
             <div className="col-span-12 lg:col-span-6">
               <div className="lg:sticky lg:top-20">
                 <ProductViewer product={product} />

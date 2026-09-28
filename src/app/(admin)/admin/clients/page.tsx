@@ -34,9 +34,9 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
       <button type="button" className="flex w-full flex-wrap items-center gap-3 px-4 py-3 text-left" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
         <span className="min-w-0 flex-1">
           <span className="font-semibold">{account.company}</span>
-          <span className="t-mono ml-2 text-xs text-ink/60">SIRET {account.siret}</span>
+          <span className="t-mono ml-2 text-xs text-ink/70">SIRET {account.siret}</span>
         </span>
-        <span className="text-xs text-ink/60">{account.kind} · créé le {formatDate(account.createdAt)}</span>
+        <span className="text-xs text-ink/70">{account.kind} · créé le {formatDate(account.createdAt)}</span>
         {account.isDemo ? <DemoBadge /> : null}
         <Badge tone={statusTone[account.status]}>{statusText[account.status]}</Badge>
       </button>
@@ -68,7 +68,7 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
             <Checkbox id={`ra-${account.id}`} checked={account.requiresApproval} onChange={(e) => patch({ requiresApproval: e.target.checked })} label={<span className="text-sm">Les commandes des acheteurs doivent être validées par un valideur de la structure</span>} />
             <Checkbox id={`ch-${account.id}`} checked={account.chorus} onChange={(e) => patch({ chorus: e.target.checked })} label={<span className="text-sm">Facturation Chorus Pro{account.chorusServiceCode ? ` (${account.chorusServiceCode})` : ""}</span>} />
             <div className="text-sm">
-              <p className="t-mono text-xs text-ink/60">ADRESSES</p>
+              <p className="t-mono text-xs text-ink/70">ADRESSES</p>
               <ul className="mt-1 space-y-1">
                 {account.addresses.map((a) => (
                   <li key={a.id}>
@@ -81,12 +81,12 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
             {err ? <p role="alert" className="text-sm text-danger">{err}</p> : null}
           </div>
           <div>
-            <p className="t-mono text-xs text-ink/60">UTILISATEURS</p>
+            <p className="t-mono text-xs text-ink/70">UTILISATEURS</p>
             <ul className="mt-2 divide-y divide-rule border-y border-rule text-sm">
               {(users ?? []).map((u) => (
                 <li key={u.id} className="flex items-center justify-between gap-2 py-2">
                   <span>
-                    {u.fullName} <span className="t-mono text-xs text-ink/60">{u.email}</span>
+                    {u.fullName} <span className="t-mono text-xs text-ink/70">{u.email}</span>
                   </span>
                   <Badge tone={u.role === "approver" ? "mci" : "ink"}>{u.role === "approver" ? "VALIDEUR" : "ACHETEUR"}</Badge>
                 </li>
@@ -142,7 +142,7 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
         <div className="w-64">
           <Input fieldSize="sm" aria-label="Filtrer" placeholder="Filtrer les produits…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <span className="t-mono text-xs text-ink/60">{filled} PRIX RENSEIGNÉS</span>
+        <span className="t-mono text-xs text-ink/70">{filled} PRIX RENSEIGNÉS</span>
         <Button
           size="sm"
           className="ml-auto"

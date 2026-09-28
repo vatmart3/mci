@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return legacyRedirects.map((r) => ({ ...r, permanent: true }));
+    return legacyRedirects.map((r) => ({ ...r, statusCode: 301 as const }));
   },
   async headers() {
     return [

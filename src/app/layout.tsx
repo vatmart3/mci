@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { archivo, instrument, plex } from "./fonts";
+import { archivo, archivoDisplay, instrument, plex } from "./fonts";
 import { SITE_URL } from "@/lib/env";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
+import { cookieBootScript } from "@/components/layout/CookieBanner";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -23,7 +24,10 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${archivo.variable} ${instrument.variable} ${plex.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${archivo.variable} ${archivoDisplay.variable} ${instrument.variable} ${plex.variable}`}>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: cookieBootScript }} />
+      </head>
       <body>
         {children}
         <JsonLd data={organizationJsonLd()} />

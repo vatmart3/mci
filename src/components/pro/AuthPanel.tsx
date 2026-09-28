@@ -81,7 +81,7 @@ function LoginForm({ onDone, staff }: { onDone: () => void; staff?: boolean }) {
                 >
                   {c.label}
                 </button>{" "}
-                <span className="t-mono text-xs text-ink/60">{c.email}</span>
+                <span className="t-mono text-xs text-ink/70">{c.email}</span>
               </li>
             ))}
           </ul>

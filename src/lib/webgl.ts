@@ -23,3 +23,36 @@ export function webglSupport(): "full" | "lite" | "none" {
 export function prefersReducedMotion() {
   return typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
+
+/**
+ * Porte d'entrée de la 3D : sur appareil modeste / mobile, la scène WebGL ne démarre qu'à la
+ * première interaction (toucher, défilement, clavier) ; sur poste fixe, dès que le navigateur
+ * est inactif après le chargement. Les packshots statiques occupent la place en attendant.
+ */
+export function whenWebGLAllowed(mode: "full" | "lite", cb: () => void): () => void {
+  let done = false;
+  const go = () => {
+    if (done) return;
+    done = true;
+    cleanup();
+    cb();
+  };
+  const events = ["pointerdown", "touchstart", "keydown", "wheel", "scroll"] as const;
+  let idle = 0;
+  let timer = 0;
+  const cleanup = () => {
+    events.forEach((e) => window.removeEventListener(e, go));
+    if (idle && "cancelIdleCallback" in window) window.cancelIdleCallback(idle);
+    window.clearTimeout(timer);
+  };
+  events.forEach((e) => window.addEventListener(e, go, { once: true, passive: true }));
+  if (mode === "full") {
+    const start = () => {
+      if ("requestIdleCallback" in window) idle = window.requestIdleCallback(go, { timeout: 2500 });
+      else timer = globalThis.setTimeout(go, 1200) as unknown as number;
+    };
+    if (document.readyState === "complete") start();
+    else window.addEventListener("load", start, { once: true });
+  }
+  return cleanup;
+}

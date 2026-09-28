@@ -51,7 +51,7 @@ export function SeteMap({ className }: { className?: string }) {
           MCI · PARC AQUATECHNIQUE
         </text>
       </svg>
-      <figcaption className="t-mono mt-2 text-xs text-ink/60">
+      <figcaption className="t-mono mt-2 text-xs text-ink/70">
         SCHÉMA DE SITUATION · {company.postalCode} {company.city.toUpperCase()}
       </figcaption>
     </figure>

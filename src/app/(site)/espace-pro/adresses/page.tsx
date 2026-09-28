@@ -52,19 +52,19 @@ export default function ProAddresses() {
         </h2>
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-3">
           <div>
-            <dt className="t-mono text-xs text-ink/60">RAISON SOCIALE</dt>
+            <dt className="t-mono text-xs text-ink/70">RAISON SOCIALE</dt>
             <dd>{account.company}</dd>
           </div>
           <div>
-            <dt className="t-mono text-xs text-ink/60">SIRET</dt>
+            <dt className="t-mono text-xs text-ink/70">SIRET</dt>
             <dd className="t-mono">{account.siret}</dd>
           </div>
           <div>
-            <dt className="t-mono text-xs text-ink/60">VALIDATION DES COMMANDES</dt>
+            <dt className="t-mono text-xs text-ink/70">VALIDATION DES COMMANDES</dt>
             <dd>{account.requiresApproval ? "Les commandes des acheteurs passent par un valideur" : "Directe"}</dd>
           </div>
         </dl>
-        <p className="mt-3 text-xs text-ink/60">Pour modifier la raison sociale ou le SIRET, contactez MCI.</p>
+        <p className="mt-3 text-xs text-ink/70">Pour modifier la raison sociale ou le SIRET, contactez MCI.</p>
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           <Checkbox id="p-chorus" checked={draft.chorus} disabled={!canEdit} onChange={(e) => setDraft({ ...draft, chorus: e.target.checked })} label="Facturation via Chorus Pro" />
           {draft.chorus ? (
@@ -176,7 +176,7 @@ export default function ProAddresses() {
           {(users ?? []).map((u) => (
             <li key={u.id} className="flex flex-wrap items-center justify-between gap-3 py-3 text-sm">
               <span>
-                {u.fullName} <span className="t-mono text-xs text-ink/60">{u.email}</span>
+                {u.fullName} <span className="t-mono text-xs text-ink/70">{u.email}</span>
               </span>
               <Badge tone={u.role === "approver" ? "mci" : "ink"}>{u.role === "approver" ? "VALIDEUR" : "ACHETEUR"}</Badge>
             </li>

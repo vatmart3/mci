@@ -55,7 +55,7 @@ export default function AdminSettings() {
         <div>
           <Label htmlFor="st-hours">Horaires {s.hours ? null : <ToConfirm />}</Label>
           <Input id="st-hours" value={s.hours} onChange={(e) => setS({ ...s, hours: e.target.value })} placeholder="Du lundi au vendredi, 8 h – 12 h / 14 h – 17 h" />
-          <p className="mt-1 text-xs text-ink/60">Vide = masqué côté public (« Appelez-nous »).</p>
+          <p className="mt-1 text-xs text-ink/70">Vide = masqué côté public (« Appelez-nous »).</p>
         </div>
         <div>
           <Label htmlFor="st-banner">Bandeau d&apos;information</Label>
@@ -68,7 +68,7 @@ export default function AdminSettings() {
         <div>
           <Label htmlFor="st-socials">Réseaux sociaux (une ligne « Nom | https://… »)</Label>
           <Textarea id="st-socials" rows={3} className="t-mono text-sm" value={socialsText} onChange={(e) => setSocialsText(e.target.value)} placeholder="LinkedIn | https://www.linkedin.com/company/…" />
-          <p className="mt-1 text-xs text-ink/60">Aucun lien n&apos;est affiché tant que ce champ est vide (les anciens liens pointaient vers les comptes Wix).</p>
+          <p className="mt-1 text-xs text-ink/70">Aucun lien n&apos;est affiché tant que ce champ est vide (les anciens liens pointaient vers les comptes Wix).</p>
         </div>
       </fieldset>
 
@@ -77,7 +77,7 @@ export default function AdminSettings() {
         <div>
           <Label htmlFor="st-notify">Emails qui reçoivent les commandes et demandes (virgules)</Label>
           <Input id="st-notify" value={s.notifyEmails.join(", ")} onChange={(e) => setS({ ...s, notifyEmails: e.target.value.split(",").map((x) => x.trim()).filter(Boolean) })} />
-          {!IS_DEMO ? <p className="mt-1 text-xs text-ink/60">La variable d&apos;environnement MCI_NOTIFY_EMAILS, si elle est définie, est prioritaire.</p> : null}
+          {!IS_DEMO ? <p className="mt-1 text-xs text-ink/70">La variable d&apos;environnement MCI_NOTIFY_EMAILS, si elle est définie, est prioritaire.</p> : null}
         </div>
       </fieldset>
 

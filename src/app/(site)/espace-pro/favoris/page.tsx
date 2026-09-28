@@ -52,7 +52,7 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
                 </Select>
               </div>
               <Stepper size="sm" value={l.quantity} onChange={(q) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, quantity: q } : x)))} label={`Quantité ${p.code}`} />
-              <button type="button" className="grid size-8 place-items-center rounded-tech text-ink/60 hover:bg-salt hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
+              <button type="button" className="grid size-8 place-items-center rounded-tech text-ink/70 hover:bg-salt hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
                 <Icon name="trash" size={16} />
               </button>
             </li>

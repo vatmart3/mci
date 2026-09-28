@@ -50,7 +50,7 @@ export function SheetButton({ url, code, size = "sm", label = "FT" }: { url?: st
   const open = useOpenPdf();
   if (!url) {
     return (
-      <span className="t-mono inline-flex h-8 items-center px-2 text-xs text-ink/60" title="Fiche technique sur demande">
+      <span className="t-mono inline-flex h-8 items-center px-2 text-xs text-ink/70" title="Fiche technique sur demande">
         FT SUR DEM.
       </span>
     );

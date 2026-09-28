@@ -110,12 +110,12 @@ export function ShelfSection({ groups, total }: { groups: ShelfGroup[]; total: n
             <div key={g.slug} className="flex shrink-0 gap-6">
               {/* montant de l'étagère + étiquette de famille */}
               <div className="flex w-[180px] shrink-0 flex-col justify-end border-l border-ink/60 pl-4">
-                <p className="t-mono text-xs text-ink/60">{g.code}</p>
+                <p className="t-mono text-xs text-ink/70">{g.code}</p>
                 <p className="t-label mt-1">{g.name}</p>
                 <Link href={`/catalogue/${g.slug}`} className="link-u mt-2 inline-flex items-center gap-1 text-sm">
                   {g.count} réf. <Icon name="arrow" size={14} />
                 </Link>
-                <div className="mt-10 h-2" />
+                <div className="mt-12 h-2" />
                 <div className="h-[60px]" />
               </div>
               <ul className="flex">

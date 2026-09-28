@@ -204,12 +204,14 @@ export function FloatingShowcase({
   still = false,
   active = true,
   className,
+  onReady,
 }: {
   items: ShowcaseItem[];
   layout?: "hero" | "panel";
   still?: boolean;
   active?: boolean;
   className?: string;
+  onReady?: () => void;
 }) {
   const fonts = useFontsReady();
   const pointer = useRef({ x: 0, y: 0 });
@@ -240,6 +242,7 @@ export function FloatingShowcase({
         dpr={[1, 1.5]}
         camera={{ position: [0, 0, 9], fov: 30 }}
         gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        onCreated={() => window.setTimeout(() => onReady?.(), 250)}
       >
         <StudioLights />
         <Bodies items={items} layout={layout} still={still} pointer={pointer} />

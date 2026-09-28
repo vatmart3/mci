@@ -74,7 +74,7 @@ export default function AdminOrders() {
           </Select>
         </div>
       </div>
-      <div className="overflow-x-auto rounded-box border border-rule bg-white">
+      <div className="relative overflow-x-auto rounded-box border border-rule bg-white">
         <table className="w-full min-w-[860px] text-sm">
           <thead className="t-mono bg-salt text-left text-xs text-ink/70">
             <tr>
@@ -89,7 +89,7 @@ export default function AdminOrders() {
           <tbody>
             {loading && !orders ? (
               <tr>
-                <td colSpan={6} className="t-mono px-3 py-6 text-xs text-ink/60">
+                <td colSpan={6} className="t-mono px-3 py-6 text-xs text-ink/70">
                   CHARGEMENT…
                 </td>
               </tr>
@@ -106,7 +106,7 @@ export default function AdminOrders() {
                     <span className="flex items-center gap-2">
                       {o.customer.company} {o.isDemo ? <DemoBadge /> : null}
                     </span>
-                    <span className="block text-xs text-ink/60">{o.accountId ? "Compte pro" : "Invité"} · {o.customer.contactName}</span>
+                    <span className="block text-xs text-ink/70">{o.accountId ? "Compte pro" : "Invité"} · {o.customer.contactName}</span>
                   </td>
                   <td className="t-mono px-3 py-2 text-xs">{o.poNumber ?? "—"}</td>
                   <td className="t-mono px-3 py-2 text-right">

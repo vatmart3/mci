@@ -44,7 +44,7 @@ export default function AdminDashboard() {
   const toConfirm = products.filter((p) => p.toConfirm.length).length;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-12">
       <h1 className="t-h2">Tableau de bord</h1>
       <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
         <Kpi label="Commandes (7 jours)" value={stats.week.length} href="/admin/commandes" />
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
                   </Link>
                   <span className="min-w-0 flex-1 truncate px-2">{o.customer.company}</span>
                   {o.isDemo ? <DemoBadge /> : null}
-                  <span className="t-mono text-xs text-ink/60">{formatDateTime(o.createdAt)}</span>
+                  <span className="t-mono text-xs text-ink/70">{formatDateTime(o.createdAt)}</span>
                 </li>
               ))
             ) : (
@@ -107,7 +107,7 @@ export default function AdminDashboard() {
               return (
                 <li key={id} className="flex items-center justify-between py-2 text-sm">
                   <span>
-                    <span className="t-mono mr-3 text-xs text-ink/50">{String(i + 1).padStart(2, "0")}</span>
+                    <span className="t-mono mr-3 text-xs text-ink/70">{String(i + 1).padStart(2, "0")}</span>
                     <span className="t-code text-mci">{p?.code ?? id}</span> <span className="text-ink/70">{p?.short}</span>
                   </span>
                   <span className="t-mono">{q} u.</span>
@@ -134,7 +134,7 @@ export default function AdminDashboard() {
               <li className="py-2 text-sm text-ink/70">Aucun.</li>
             )}
           </ul>
-          <p className="t-mono mt-4 text-xs text-ink/60">{(orders ?? []).reduce((n, o) => n + unitCount(o), 0)} UNITÉS COMMANDÉES AU TOTAL</p>
+          <p className="t-mono mt-4 text-xs text-ink/70">{(orders ?? []).reduce((n, o) => n + unitCount(o), 0)} UNITÉS COMMANDÉES AU TOTAL</p>
         </section>
       </div>
     </div>

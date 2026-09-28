@@ -9,7 +9,9 @@ import { useEffect, useRef } from "react";
  * Rendu : texture de buée pré-calculée × masque basse résolution (lissé à l'agrandissement).
  * Aucune animation si prefers-reduced-motion (vitre déjà propre).
  */
-const CELL = 8; // px écran par cellule de masque
+const CELL = 6; // px de canevas par cellule de masque
+/** La buée est floue par nature : le canevas travaille à mi-résolution (4× moins de pixels). */
+const SCALE = 0.5;
 const REFOG_SECONDS = 8;
 const SWIPE_MS = 1600;
 
@@ -21,6 +23,10 @@ function rand(seed: number) {
   };
 }
 
+/**
+ * Texture de buée. Les nuages de condensation sont peints en basse résolution (¼) puis agrandis :
+ * le lissage bilinéaire fait le flou, sans filtre coûteux. Gouttelettes et traces à pleine résolution.
+ */
 function paintFog(w: number, h: number): HTMLCanvasElement {
   const c = document.createElement("canvas");
   c.width = w;
@@ -30,60 +36,69 @@ function paintFog(w: number, h: number): HTMLCanvasElement {
   // voile de buée : blanc laiteux, plus clair que le fond, pour qu'on voie la vitre
   ctx.fillStyle = "rgba(250, 249, 246, 0.9)";
   ctx.fillRect(0, 0, w, h);
-  // grain de condensation (fines taches grises)
-  ctx.fillStyle = "rgba(14, 37, 51, 0.035)";
-  for (let i = 0; i < (w * h) / 260; i++) ctx.fillRect(r() * w, r() * h, 1 + r() * 1.5, 1 + r() * 1.5);
-  // nuages de condensation, plus denses en bas
-  ctx.filter = "blur(18px)";
+  // nuages de condensation (basse résolution → agrandis)
+  const lw = Math.max(1, Math.round(w / 8));
+  const lh = Math.max(1, Math.round(h / 8));
+  const low = document.createElement("canvas");
+  low.width = lw;
+  low.height = lh;
+  const l = low.getContext("2d")!;
   for (let i = 0; i < 70; i++) {
-    const y = h * Math.pow(r(), 0.7);
-    ctx.fillStyle = r() > 0.5 ? `rgba(255,255,255,${0.35 + r() * 0.3})` : `rgba(213,220,224,${0.18 + r() * 0.2})`;
-    ctx.beginPath();
-    ctx.ellipse(r() * w, y, 60 + r() * 160, 30 + r() * 80, r() * Math.PI, 0, Math.PI * 2);
-    ctx.fill();
+    const y = lh * Math.pow(r(), 0.7);
+    l.fillStyle = r() > 0.5 ? `rgba(255,255,255,${0.3 + r() * 0.3})` : `rgba(213,220,224,${0.15 + r() * 0.2})`;
+    l.beginPath();
+    l.ellipse(r() * lw, y, ((60 + r() * 160) * SCALE) / 8, ((30 + r() * 80) * SCALE) / 8, r() * Math.PI, 0, Math.PI * 2);
+    l.fill();
   }
-  ctx.filter = "none";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(low, 0, 0, w, h);
+  // grain de condensation
+  ctx.fillStyle = "rgba(14, 37, 51, 0.035)";
+  for (let i = 0; i < (w * h) / 300; i++) ctx.fillRect(r() * w, r() * h, 0.6 + r(), 0.6 + r());
   // micro-gouttelettes
-  const drops = Math.round((w * h) / 900);
+  const drops = Math.round((w * h) / 500);
+  ctx.fillStyle = "rgba(255,255,255,0.6)";
+  ctx.beginPath();
+  const big: [number, number, number][] = [];
   for (let i = 0; i < drops; i++) {
     const x = r() * w;
     const y = r() * h;
-    const rad = 0.4 + Math.pow(r(), 3) * 2.6;
-    ctx.fillStyle = `rgba(255,255,255,${0.35 + r() * 0.35})`;
-    ctx.beginPath();
+    const rad = (0.4 + Math.pow(r(), 3) * 2.6) * SCALE + 0.2;
+    ctx.moveTo(x + rad, y);
     ctx.arc(x, y, rad, 0, Math.PI * 2);
-    ctx.fill();
-    if (rad > 1.6) {
-      ctx.strokeStyle = "rgba(14,37,51,0.16)";
-      ctx.lineWidth = 0.6;
-      ctx.beginPath();
-      ctx.arc(x + 0.3, y + 0.4, rad, 0.2, Math.PI * 0.9);
-      ctx.stroke();
-    }
+    if (rad > 1) big.push([x, y, rad]);
   }
-  // traces de calcaire : fines auréoles et coulures sèches
-  ctx.filter = "blur(0.6px)";
+  ctx.fill();
+  ctx.strokeStyle = "rgba(14,37,51,0.16)";
+  ctx.lineWidth = 0.6;
+  ctx.beginPath();
+  for (const [x, y, rad] of big) {
+    ctx.moveTo(x + 0.3 + Math.cos(0.2) * rad, y + 0.4 + Math.sin(0.2) * rad);
+    ctx.arc(x + 0.3, y + 0.4, rad, 0.2, Math.PI * 0.9);
+  }
+  ctx.stroke();
+  // traces de calcaire : coulures sèches
   for (let i = 0; i < 22; i++) {
     const x = r() * w;
     const y = r() * h;
     ctx.strokeStyle = `rgba(200,207,211,${0.18 + r() * 0.2})`;
-    ctx.lineWidth = 0.6 + r() * 1.1;
+    ctx.lineWidth = (0.6 + r() * 1.1) * SCALE + 0.3;
     ctx.beginPath();
     if (r() > 0.8) {
-      ctx.ellipse(x, y, 4 + r() * 10, 3 + r() * 7, r() * Math.PI, 0, Math.PI * 2);
+      ctx.ellipse(x, y, (4 + r() * 10) * SCALE, (3 + r() * 7) * SCALE, r() * Math.PI, 0, Math.PI * 2);
     } else {
       ctx.moveTo(x, y);
       let px = x;
       let py = y;
       for (let k = 0; k < 6; k++) {
-        px += (r() - 0.5) * 8;
-        py += 10 + r() * 22;
+        px += (r() - 0.5) * 8 * SCALE;
+        py += (10 + r() * 22) * SCALE;
         ctx.lineTo(px, py);
       }
     }
     ctx.stroke();
   }
-  ctx.filter = "none";
   return c;
 }
 
@@ -120,8 +135,8 @@ export function GlassFog({ className, onSwiped }: { className?: string; onSwiped
 
     const setup = () => {
       const rect = canvas.getBoundingClientRect();
-      W = Math.max(1, Math.round(rect.width));
-      H = Math.max(1, Math.round(rect.height));
+      W = Math.max(1, Math.round(rect.width * SCALE));
+      H = Math.max(1, Math.round(rect.height * SCALE));
       canvas.width = W;
       canvas.height = H;
       fog = paintFog(W, H);
@@ -167,17 +182,17 @@ export function GlassFog({ className, onSwiped }: { className?: string; onSwiped
           const b = (cx - W / 2) * nx + (cy - H / 2) * ny;
           const edge = halfWidth - Math.abs(b);
           if (a < along && edge > 0) {
-            const soft = Math.min(1, edge / (CELL * 8));
+            const soft = Math.min(1, edge / (CELL * 6));
             const i = y * cols + x;
             level[i] = Math.min(level[i]!, 1 - soft);
             target[i] = Math.min(target[i]!, 1 - soft);
           }
         }
-      const lx = along * ux - halfWidth * nx;
-      const ly = along * uy - halfWidth * ny;
+      const lx = (along * ux - halfWidth * nx) / SCALE;
+      const ly = (along * uy - halfWidth * ny) / SCALE;
       const angle = (Math.atan2(ny, nx) * 180) / Math.PI;
       blade.style.transform = `translate(${lx}px, ${ly}px) rotate(${angle}deg)`;
-      blade.style.width = `${halfWidth * 2}px`;
+      blade.style.width = `${(halfWidth * 2) / SCALE}px`;
       blade.style.opacity = p > 0.94 ? String(Math.max(0, (1 - p) / 0.06)) : "1";
     };
 
@@ -269,9 +284,9 @@ export function GlassFog({ className, onSwiped }: { className?: string; onSwiped
     const onMove = (e: PointerEvent) => {
       if (!swiped) return;
       const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      const radius = e.pointerType === "touch" ? 54 : 70;
+      const x = (e.clientX - rect.left) * SCALE;
+      const y = (e.clientY - rect.top) * SCALE;
+      const radius = (e.pointerType === "touch" ? 54 : 70) * SCALE;
       if (lastPt) {
         const steps = Math.ceil(Math.hypot(x - lastPt.x, y - lastPt.y) / (radius / 3));
         for (let s = 1; s <= steps; s++) wipe(lastPt.x + ((x - lastPt.x) * s) / steps, lastPt.y + ((y - lastPt.y) * s) / steps, radius);

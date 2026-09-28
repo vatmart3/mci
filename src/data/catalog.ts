@@ -163,7 +163,7 @@ const raw: Raw[] = [
   { code: "MCIBIO 02", short: "Entretien bio bacs à graisse", description: "Entretien biologique des bacs à graisse et des canalisations.", families: ["produits-bio"], format: "liquide", props: ["bio-vegetal"], ft: "H2:5f3c99_3348dac47524453cbe83865c6d95a680.pdf", usages: ["Bacs à graisse", "Canalisations de cuisine"] },
 ];
 
-/* ─────────── Correspondance produits ↔ secteurs (proposition, modifiable dans l'admin) ─────────── */
+/* ─────────── Correspondance produits et secteurs (proposition, modifiable dans l'admin) ─────────── */
 export const sectorSelections: Record<SectorSlug, string[]> = {
   mairies: ["detag", "detag-lingettes", "detag-aerosol", "kermex", "speed", "super-granul", "deverglacant", "dda", "oxychoc"],
   "ecoles-universites": ["sanikel-renforce", "stersol", "ecodyl", "multispray", "vitrex-l", "desobio10", "forcegel-ultra", "dg90"],
@@ -265,7 +265,7 @@ function build(): Product[] {
   for (const [a, b] of relations) {
     const pa = bySlug.get(a);
     const pb = bySlug.get(b);
-    if (!pa || !pb) throw new Error(`Relation inconnue ${a} ↔ ${b}`);
+    if (!pa || !pb) throw new Error(`Relation inconnue ${a} - ${b}`);
     if (!pa.related.includes(b)) pa.related.push(b);
     if (!pb.related.includes(a)) pb.related.push(a);
   }

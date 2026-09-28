@@ -251,7 +251,7 @@ export function QuickOrder() {
         <h2 id="grille" className="sr-only">
           Grille de saisie
         </h2>
-        <div className="overflow-x-auto rounded-box border border-ink bg-white">
+        <div className="relative overflow-x-auto rounded-box border border-ink bg-white">
           <table className="w-full min-w-[640px] border-collapse text-sm">
             <thead className="t-mono bg-salt text-left text-xs text-ink/70">
               <tr>
@@ -271,7 +271,7 @@ export function QuickOrder() {
                 const unknown = !p && r.query.trim().length >= 2 && !suggest(r.query).length;
                 return (
                   <tr key={r.key} className="border-b border-rule align-middle last:border-b-0">
-                    <td className="t-mono px-2 text-xs text-ink/50">{String(i + 1).padStart(2, "0")}</td>
+                    <td className="t-mono px-2 text-xs text-ink/70">{String(i + 1).padStart(2, "0")}</td>
                     <td className="px-2 py-2">
                       <CodeCell
                         row={r}
@@ -286,7 +286,7 @@ export function QuickOrder() {
                         onEnterWhenResolved={() => qtyRefs.current.get(r.key)?.focus()}
                       />
                     </td>
-                    <td className="px-2 py-2">{p ? <span className="line-clamp-1">{p.short}</span> : unknown ? <span className="text-danger">Référence inconnue</span> : <span className="text-ink/40">—</span>}</td>
+                    <td className="px-2 py-2">{p ? <span className="line-clamp-1">{p.short}</span> : unknown ? <span className="text-danger">Référence inconnue</span> : <span className="text-ink/70">—</span>}</td>
                     <td className="px-2 py-2">
                       <label htmlFor={`qo-pack-${r.key}`} className="sr-only">
                         Conditionnement ligne {i + 1}
@@ -318,7 +318,7 @@ export function QuickOrder() {
                       />
                     </td>
                     <td className="px-2">
-                      <button type="button" className="grid size-8 place-items-center rounded-tech text-ink/60 hover:bg-salt hover:text-danger" aria-label={`Supprimer la ligne ${i + 1}`} onClick={() => setRows((rs) => (rs.length > 1 ? rs.filter((x) => x.key !== r.key) : [emptyRow()]))}>
+                      <button type="button" className="grid size-8 place-items-center rounded-tech text-ink/70 hover:bg-salt hover:text-danger" aria-label={`Supprimer la ligne ${i + 1}`} onClick={() => setRows((rs) => (rs.length > 1 ? rs.filter((x) => x.key !== r.key) : [emptyRow()]))}>
                         <Icon name="close" size={16} />
                       </button>
                     </td>
@@ -332,7 +332,7 @@ export function QuickOrder() {
           <button type="button" className="link-u inline-flex items-center gap-1 text-sm" onClick={() => setRows((rs) => [...rs, emptyRow()])}>
             <Icon name="plus" size={16} /> Ajouter une ligne
           </button>
-          <p className="t-mono text-xs text-ink/60">ENTRÉE : LIGNE SUIVANTE · ↑↓ : SUGGESTIONS</p>
+          <p className="t-mono text-xs text-ink/70">ENTRÉE : LIGNE SUIVANTE · ↑↓ : SUGGESTIONS</p>
         </div>
 
         <div className="mt-8 flex flex-col gap-4 border-t border-ink pt-6 sm:flex-row sm:items-center">
@@ -351,7 +351,7 @@ export function QuickOrder() {
         </div>
       </section>
 
-      <aside className="col-span-12 space-y-10 lg:col-span-4">
+      <aside className="col-span-12 space-y-12 lg:col-span-4">
         <section aria-labelledby="import-title">
           <h2 id="import-title" className="t-label">
             Coller une liste
@@ -392,7 +392,7 @@ export function QuickOrder() {
                 {favorites.map((f) => (
                   <li key={f.id} className="flex items-center justify-between gap-3">
                     <span>
-                      {f.name} <span className="t-mono text-xs text-ink/60">· {f.lines.length} RÉF.</span>
+                      {f.name} <span className="t-mono text-xs text-ink/70">· {f.lines.length} RÉF.</span>
                     </span>
                     <button type="button" className="link-u text-sm" onClick={() => loadLines(f.lines)}>
                       Charger

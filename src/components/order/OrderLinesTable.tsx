@@ -6,7 +6,7 @@ export function OrderLinesTable({ order }: { order: Order }) {
   const priced = order.lines.some((l) => l.unitPriceHt != null);
   const total = orderTotal(order);
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <table className="w-full min-w-[480px] text-sm">
         <thead>
           <tr className="t-mono border-b border-ink text-left text-xs text-ink/70">

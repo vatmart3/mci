@@ -37,11 +37,11 @@ export default function ProDocuments() {
               {docs.map((d) => (
                 <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
                   <span>
-                    <span className="t-mono mr-3 text-xs text-ink/60">{kinds[d.kind].toUpperCase()}</span>
+                    <span className="t-mono mr-3 text-xs text-ink/70">{kinds[d.kind].toUpperCase()}</span>
                     {d.name}
                   </span>
                   <span className="flex items-center gap-4">
-                    <span className="t-mono text-xs text-ink/60">{formatDate(d.createdAt)}</span>
+                    <span className="t-mono text-xs text-ink/70">{formatDate(d.createdAt)}</span>
                     <a href={d.url} download={d.name} target="_blank" rel="noopener noreferrer" className="link-u inline-flex items-center gap-1 text-sm">
                       <Icon name="download" size={16} /> Télécharger
                     </a>

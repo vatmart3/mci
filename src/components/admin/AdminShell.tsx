@@ -65,7 +65,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </div>
         </div>
         {staff ? (
-          <nav aria-label="Back-office" className="overflow-x-auto border-t border-white/15 px-2 lg:px-6">
+          <nav aria-label="Back-office" className="relative overflow-x-auto border-t border-white/15 px-2 lg:px-6">
             <ul className="flex">
               {nav.map((n) => {
                 const on = n.href === "/admin" ? pathname === n.href : pathname.startsWith(n.href);

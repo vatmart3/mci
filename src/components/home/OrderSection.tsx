@@ -41,7 +41,7 @@ export function OrderSection() {
           const chars = el.textContent?.length ?? 10;
           tl.fromTo(el, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", ease: `steps(${chars})`, duration: chars / 24 });
         });
-        tl.fromTo("[data-stamp]", { scale: 2.2, opacity: 0, rotate: -24 }, { scale: 1, opacity: 1, rotate: -12, ease: "back.out(2)", duration: 0.6 });
+        tl.fromTo("[data-stamp]", { scale: 1.8, opacity: 0, rotate: -24, transformOrigin: "100% 100%" }, { scale: 1, opacity: 1, rotate: -12, ease: "back.out(2)", duration: 0.6 });
       }, sheet);
     });
     return () => {
@@ -75,7 +75,7 @@ export function OrderSection() {
         </div>
 
         <div className="col-span-12 lg:col-span-6 lg:col-start-7">
-          <div ref={sheet} className="crop relative mx-auto max-w-[620px] bg-white p-6 shadow-sheet sm:p-10" aria-label="Exemple de bon de commande rempli" role="img">
+          <div ref={sheet} className="crop relative mx-auto max-w-[620px] bg-white p-6 shadow-sheet sm:p-12" aria-label="Exemple de bon de commande rempli" role="img">
             <div className="flex items-start justify-between gap-4 border-b-2 border-ink pb-4">
               <div className="flex items-center gap-3">
                 <LogoMark size={36} />
@@ -83,23 +83,23 @@ export function OrderSection() {
                   <p className="font-display text-lg font-extrabold leading-none" style={{ fontVariationSettings: '"wdth" 120' }}>
                     BON DE COMMANDE
                   </p>
-                  <p className="t-mono mt-1 text-[11px] text-ink/60">MCI SÈTE · PARC AQUATECHNIQUE</p>
+                  <p className="t-mono mt-1 text-[11px] text-ink/70">MCI SÈTE · PARC AQUATECHNIQUE</p>
                 </div>
               </div>
               <p className="t-mono text-right text-xs">
                 N° MCI-2026-00042
                 <br />
-                <span className="text-ink/60">EXEMPLE</span>
+                <span className="text-ink/70">EXEMPLE</span>
               </p>
             </div>
             <dl className="t-mono mt-6 grid grid-cols-[130px_1fr] gap-y-3 text-xs sm:text-sm">
-              <dt className="text-ink/60">ÉTABLISSEMENT</dt>
+              <dt className="text-ink/70">ÉTABLISSEMENT</dt>
               <dd className="dotted-line pb-1">
                 <span data-type className="inline-block whitespace-nowrap">
                   Services techniques
                 </span>
               </dd>
-              <dt className="text-ink/60">N° ENGAGEMENT</dt>
+              <dt className="text-ink/70">N° ENGAGEMENT</dt>
               <dd className="dotted-line pb-1">
                 <span data-type className="inline-block whitespace-nowrap">
                   ENG-2026-0412
@@ -108,7 +108,7 @@ export function OrderSection() {
             </dl>
             <table className="t-mono mt-8 w-full text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-ink text-left text-ink/60">
+                <tr className="border-b border-ink text-left text-ink/70">
                   <th className="py-2 font-normal">RÉF.</th>
                   <th className="py-2 font-normal">DÉSIGNATION</th>
                   <th className="py-2 text-right font-normal">QTÉ</th>
@@ -141,14 +141,14 @@ export function OrderSection() {
                 </tr>
               </tbody>
             </table>
-            <div className="mt-8 flex items-end justify-between">
-              <p className="t-mono text-[11px] text-ink/60">
+            <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
+              <p className="t-mono text-[11px] text-ink/70">
                 PRIX ET DÉLAI
                 <br />
                 CONFIRMÉS PAR MCI
               </p>
-              <div data-stamp className="rounded-tech border-[3px] border-action px-4 py-2 text-action" style={{ transform: "rotate(-12deg)" }}>
-                <span className="font-display text-2xl font-black tracking-[0.12em]" style={{ fontVariationSettings: '"wdth" 125' }}>
+              <div data-stamp className="ml-auto origin-bottom-right rounded-tech border-[3px] border-action px-3 py-2 text-action sm:px-4" style={{ transform: "rotate(-12deg)" }}>
+                <span className="font-display text-lg font-black sm:text-2xl tracking-[0.12em]" style={{ fontVariationSettings: '"wdth" 125' }}>
                   VALIDÉ
                 </span>
               </div>

@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
 export const inputClass =
-  "w-full bg-white border border-rule rounded-tech text-base text-ink placeholder:text-ink/60 " +
+  "w-full bg-white border border-rule rounded-tech text-base text-ink placeholder:text-ink/70 " +
   "transition-[border-color] duration-200 ease-out hover:border-ink/40 focus:border-mci focus:outline-2 focus:outline-mci/30 focus:outline-offset-0 " +
   "aria-[invalid=true]:border-danger";
 

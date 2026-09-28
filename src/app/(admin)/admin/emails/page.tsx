@@ -19,7 +19,7 @@ export default function AdminEmails() {
           <li key={e.id} className="rounded-box border border-rule bg-white">
             <details>
               <summary className="flex cursor-pointer flex-wrap items-center gap-3 px-4 py-3 text-sm">
-                <span className="t-mono text-xs text-ink/60">{formatDateTime(e.at)}</span>
+                <span className="t-mono text-xs text-ink/70">{formatDateTime(e.at)}</span>
                 <span className="min-w-0 flex-1 font-semibold">{e.subject}</span>
                 <span className="t-mono text-xs text-ink/70">→ {e.to.join(", ")}</span>
                 <Badge tone={e.delivered === "resend" ? "ok" : "warn"}>{e.delivered.toUpperCase()}</Badge>

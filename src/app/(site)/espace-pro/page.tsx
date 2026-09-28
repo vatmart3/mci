@@ -77,7 +77,7 @@ export default function ProDashboard() {
             {favorites.map((f) => (
               <li key={f.id} className="rounded-box border border-rule bg-white p-4">
                 <p className="font-semibold">{f.name}</p>
-                <p className="t-mono text-xs text-ink/60">{f.lines.length} RÉFÉRENCES</p>
+                <p className="t-mono text-xs text-ink/70">{f.lines.length} RÉFÉRENCES</p>
                 <AddSelection lines={f.lines} label="Ajouter au bon" className="mt-4 h-10 w-full px-3 text-sm" />
               </li>
             ))}

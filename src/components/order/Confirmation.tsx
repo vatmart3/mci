@@ -49,7 +49,7 @@ export function Confirmation({ numero }: { numero: string }) {
   const pending = order.status === "pending_approval";
   return (
     <div className="wrap pb-16 pt-8 lg:pt-12">
-      <div className="grid-12 gap-y-10">
+      <div className="grid-12 gap-y-12">
         <div className="col-span-12 lg:col-span-7">
           <p className="t-mono flex items-center gap-2 text-sm text-ok">
             <Icon name="check" size={18} /> {pending ? "ENREGISTRÉE — EN ATTENTE DE VALIDATION INTERNE" : "COMMANDE ENVOYÉE À MCI"}

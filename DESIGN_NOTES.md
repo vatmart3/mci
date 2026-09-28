@@ -74,6 +74,12 @@ Le mouvement **sert la compréhension** : révéler (la vitre), relier (secteur 
 - Une seule scène WebGL active à la fois (montée à l'entrée dans le viewport, démontée à la sortie), `frameloop="demand"` hors hero, DPR ≤ 1,5, pause quand l'onglet est caché.
 - `prefers-reduced-motion` : pas de pin, pas de Lenis, vitre déjà propre, contenants immobiles, bon de commande déjà rempli.
 
+### Performance du mouvement
+
+- Sur mobile / appareil modeste, la 3D ne démarre qu'à la première interaction (toucher, défilement) : les packshots pré-rendus, placés aux mêmes emplacements, occupent la scène d'ici là, puis la 3D prend le relais en fondu. Sur poste fixe, elle démarre dès que le navigateur est inactif.
+- La vitre travaille à mi-résolution (la buée est floue par nature) : nuages peints en ⅛ de résolution puis agrandis, sans filtre de flou.
+- Les titres d'affichage utilisent une instance statique d'Archivo (800, wdth 118, 37 Ko, préchargée) ; la version variable (axe wdth animé dans la liste des secteurs, étiquettes 3D) se charge sans bloquer.
+
 ## 7. Voix
 
 Technico-commerciale : concrète, courte, vérifiable. On nomme la surface, la salissure, le geste. « Graisses cuites sur hottes et fours » plutôt que « une solution performante ». Tout ce qui n'est pas connu s'écrit `[À CONFIRMER]` dans l'admin et disparaît côté public.

@@ -43,16 +43,16 @@ public/        brand/, packshots/, fonts/ (TTF pour les PDF)
 |---|---|
 | `families` | `slug` PK, `name`, `position`, `intro`, `seo_text`, `is_biocide` |
 | `sectors` | `slug` PK, `name`, `group` (administrations / industries / loisirs), `problem`, `seo_text`, `position` |
-| `products` | `id` uuid, `slug` unique, `code`, `name`, `description`, `families text[]`, `sectors text[]`, `properties text[]`, `formats text[]`, `container` (aerosol / spray / can5 / jerrican20 / bucket / cartridge), `packagings jsonb` `[{id,label,unit}]`, `usages text[]`, `instructions`, `dilution`, `technical_sheet_url`, `sds_url`, `image_url`, `related text[]`, `variants`, `notes_admin`, `to_confirm text[]`, `active`, `featured`, `position` |
+| `products` | `id` text (`p-<slug>`, identique en démo et en base), `slug` unique, `code`, `name`, `description`, `families text[]`, `sectors text[]`, `properties text[]`, `formats text[]`, `container` (aerosol / spray / can5 / jerrican20 / bucket / cartridge), `packagings jsonb` `[{id,label,unit}]`, `usages text[]`, `instructions`, `dilution`, `technical_sheet_url`, `sds_url`, `image_url`, `related text[]`, `variants`, `notes_admin`, `to_confirm text[]`, `active`, `featured`, `position` |
 | `accounts` | structure pro : `id`, `company`, `siret`, `kind` (entreprise / collectivite / association), `status` (pending / active / suspended), `price_grid_id`, `requires_approval`, `chorus`, `chorus_service_code`, `is_demo` |
 | `profiles` | `id` = `auth.users.id`, `account_id`, `full_name`, `phone`, `role` (buyer / approver / admin / sales) |
 | `addresses` | `account_id`, `label`, `line1`, `line2`, `postal_code`, `city`, `access_notes`, `is_default` |
-| `price_grids` / `price_grid_items` | `grid_id`, `product_id`, `packaging_id`, `unit_price_ht` |
+| `price_grids` | `id`, `name`, `prices jsonb` (`{"<product_id>:<packaging_id>": prix_ht}`) |
 | `orders` | `id`, `number` unique (`MCI-2026-00042`), `account_id` null (invité), `status`, `customer jsonb` (société, SIRET, type, contact…), `delivery jsonb`, `billing jsonb`, `po_number`, `chorus`, `chorus_service_code`, `delivery_slots`, `comment`, `total_ht`, `lead_time`, `mci_note`, `created_by`, `approved_by`, `is_demo`, timestamps |
 | `order_lines` | `order_id`, `product_id`, `code`, `name`, `packaging_id`, `packaging_label`, `quantity`, `note`, `unit_price_ht` |
 | `order_events` | `order_id`, `status`, `note`, `at`, `by` — frise chronologique |
 | `documents` | `account_id`, `order_id`, `kind` (proforma / bl / facture / autre), `name`, `path` (Storage) |
-| `favorite_lists` / `favorite_items` | listes « Stock atelier », « Rentrée scolaire »… |
+| `favorite_lists` | `account_id`, `name`, `lines jsonb` — listes « Stock atelier », « Rentrée scolaire »… |
 | `settings` | clé/valeur : `price_mode`, `notify_emails`, `hours`, `socials`, `banner`, `lead_time_default` |
 | `email_log` | journal des emails envoyés (ou simulés) |
 

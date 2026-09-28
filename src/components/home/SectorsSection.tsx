@@ -7,7 +7,7 @@ import { sectors, sectorGroups } from "@/data/sectors";
 import { SectionHead } from "@/components/ui/SectionHead";
 import { ProductVisual } from "@/components/catalog/ProductVisual";
 import { Icon } from "@/components/ui/Icon";
-import { webglSupport, prefersReducedMotion } from "@/lib/webgl";
+import { webglSupport, prefersReducedMotion, whenWebGLAllowed } from "@/lib/webgl";
 import { showcaseItem, type MiniProduct } from "./showcase-data";
 import { cx } from "@/lib/cx";
 
@@ -22,15 +22,21 @@ export function SectorsSection({ selections }: { selections: Record<SectorSlug, 
   const [support, setSupport] = useState<"full" | "lite" | "none" | null>(null);
   const [reduced, setReduced] = useState(false);
   const [inView, setInView] = useState(false);
+  const [allowed, setAllowed] = useState(false);
   const stage = useRef<HTMLDivElement>(null);
   const pointerType = useRef<string>("mouse");
 
   useEffect(() => {
-    setSupport(webglSupport());
+    const s = webglSupport();
+    setSupport(s);
     setReduced(prefersReducedMotion());
+    const stop = s === "none" ? () => undefined : whenWebGLAllowed(s, () => setAllowed(true));
     const io = new IntersectionObserver(([e]) => setInView(!!e?.isIntersecting), { rootMargin: "100px 0px" });
     if (stage.current) io.observe(stage.current);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      stop();
+    };
   }, []);
 
   const items = useMemo(() => (selections[active] ?? []).slice(0, 5).map((p) => showcaseItem(p)), [active, selections]);
@@ -60,12 +66,13 @@ export function SectorsSection({ selections }: { selections: Record<SectorSlug, 
                     }
                   }}
                   aria-describedby={`sector-group-${s.slug}`}
-                  className="group grid grid-cols-[40px_1fr_auto] items-baseline gap-4 py-3 lg:py-4"
+                  className="group grid grid-cols-[32px_minmax(0,1fr)_auto] items-baseline gap-3 py-3 sm:grid-cols-[40px_minmax(0,1fr)_auto] sm:gap-4 lg:py-4"
                 >
-                  <span className="t-mono text-xs text-ink/60">{String(s.position).padStart(2, "0")}</span>
+                  <span className="t-mono text-xs text-ink/70">{String(s.position).padStart(2, "0")}</span>
                   <span
-                    className={cx("font-display font-extrabold leading-[0.95] tracking-tight transition-[font-variation-settings,color] duration-500 ease-out", on ? "text-mci" : "text-ink")}
+                    className={cx("font-display font-extrabold leading-[0.95] tracking-tight [overflow-wrap:anywhere] [hyphens:auto] transition-[font-variation-settings,color] duration-500 ease-out", on ? "text-mci" : "text-ink")}
                     style={{ fontSize: "clamp(1.75rem, 0.8rem + 2.9vw, 3.75rem)", fontVariationSettings: `"wdth" ${on ? 125 : 100}` }}
+                    lang="fr"
                   >
                     {s.name}
                   </span>
@@ -98,7 +105,7 @@ export function SectorsSection({ selections }: { selections: Record<SectorSlug, 
         <div className="col-span-12 hidden lg:col-span-5 lg:block">
           <div ref={stage} className="sticky top-24">
             <div className="crop relative aspect-[4/5] border border-rule bg-white tech-grid" aria-hidden="true">
-              {support && support !== "none" && inView ? (
+              {support && support !== "none" && inView && allowed ? (
                 <FloatingShowcase items={items} layout="panel" still={reduced} active={inView} className="absolute inset-0" />
               ) : (
                 <div className="absolute inset-0 grid grid-cols-2 place-items-center p-8">
@@ -107,7 +114,7 @@ export function SectorsSection({ selections }: { selections: Record<SectorSlug, 
                   ))}
                 </div>
               )}
-              <p className="t-mono absolute left-4 top-3 text-xs text-ink/60">SÉLECTION · {sectors.find((s) => s.slug === active)?.name.toUpperCase()}</p>
+              <p className="t-mono absolute left-4 top-3 text-xs text-ink/70">SÉLECTION · {sectors.find((s) => s.slug === active)?.name.toUpperCase()}</p>
             </div>
             <p className="t-mono mt-3 text-xs text-ink/70" aria-live="polite">
               {current.map((p) => p.code).join(" · ")}

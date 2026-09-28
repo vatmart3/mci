@@ -40,19 +40,19 @@ export function TeamSection({ photo }: { photo: string }) {
       <div ref={frame} className={`relative mt-12 w-full overflow-hidden bg-white tech-grid ${failed ? "aspect-[16/5]" : "aspect-[16/9]"}`}>
         {failed ? (
           <div className="absolute inset-0 grid place-items-center p-8 text-center">
-            <p className="t-mono text-sm text-ink/60">PHOTO DE L&apos;ÉQUIPE MCI — {company.city.toUpperCase()}</p>
+            <p className="t-mono text-sm text-ink/70">PHOTO DE L&apos;ÉQUIPE MCI — {company.city.toUpperCase()}</p>
           </div>
         ) : (
           <Image src={photo} alt="L'équipe MCI dans ses locaux du Parc Aquatechnique, à Sète" fill sizes="(max-width: 1440px) 100vw, 1440px" className="object-cover" onError={() => setFailed(true)} />
         )}
       </div>
-      <div className="grid-12 mt-12 gap-y-10">
+      <div className="grid-12 mt-12 gap-y-12">
         <div className="col-span-12 lg:col-span-5">
           <p className="t-lead">
             MCI a été créée à Sète en {company.founded}. Au téléphone, vous avez un interlocuteur sur place, qui connaît le catalogue et vous oriente vers le produit adapté à votre surface.
           </p>
           <address className="mt-8 not-italic">
-            <span className="t-mono block text-xs text-ink/60">ADRESSE</span>
+            <span className="t-mono block text-xs text-ink/70">ADRESSE</span>
             <span className="mt-2 block text-md">
               {company.street}
               <br />

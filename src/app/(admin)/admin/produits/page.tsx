@@ -59,7 +59,7 @@ export default function AdminProducts() {
           <input type="checkbox" checked={onlyTodo} onChange={(e) => setOnlyTodo(e.target.checked)} /> Seulement les fiches avec des champs à confirmer
         </label>
       </div>
-      <div className="overflow-x-auto rounded-box border border-rule bg-white">
+      <div className="relative overflow-x-auto rounded-box border border-rule bg-white">
         <table className="w-full min-w-[900px] text-sm">
           <thead className="t-mono bg-salt text-left text-xs text-ink/70">
             <tr>

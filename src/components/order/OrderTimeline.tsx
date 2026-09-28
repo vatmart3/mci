@@ -28,8 +28,8 @@ export function OrderTimeline({ order }: { order: Order }) {
         return (
           <li key={s} className="min-w-0" aria-current={i === idx ? "step" : undefined}>
             <div className={cx("h-1.5 rounded-tech", done ? (i === idx ? "bg-mci" : "bg-ink") : "bg-rule")} />
-            <p className={cx("mt-2 text-xs leading-tight sm:text-sm", done ? "font-semibold" : "text-ink/60")}>{statusLabels[s].replace(" (prix + délai)", "")}</p>
-            {ev ? <p className="t-mono mt-1 hidden text-[11px] text-ink/60 sm:block">{formatDateTime(ev.at)}</p> : null}
+            <p className={cx("mt-2 text-xs leading-tight sm:text-sm", done ? "font-semibold" : "text-ink/70")}>{statusLabels[s].replace(" (prix + délai)", "")}</p>
+            {ev ? <p className="t-mono mt-1 hidden text-[11px] text-ink/70 sm:block">{formatDateTime(ev.at)}</p> : null}
           </li>
         );
       })}

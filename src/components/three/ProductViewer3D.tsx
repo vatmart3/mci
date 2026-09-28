@@ -7,7 +7,7 @@ import type { ContainerKind, Product } from "@/lib/types";
 import { Container, labelFor, useFontsReady } from "./Container";
 import { StudioLights } from "./Studio";
 import { packshotYaw } from "./PackshotStudio";
-import { webglSupport, prefersReducedMotion } from "@/lib/webgl";
+import { webglSupport, whenWebGLAllowed } from "@/lib/webgl";
 
 /** Rotation au glisser (inertie amortie), léger zoom à la molette / pincement. frameloop="demand". */
 function DragRotate({ children, yaw0 }: { children: React.ReactNode; yaw0: number }) {
@@ -105,15 +105,20 @@ function Hint({ onReady }: { onReady?: () => void }) {
 export function ProductViewer3D({ product, container, onReady }: { product: Product; container: ContainerKind; onReady?: () => void }) {
   const fonts = useFontsReady();
   const [support, setSupport] = useState<"full" | "lite" | "none" | null>(null);
-  useEffect(() => setSupport(webglSupport()), []);
-  if (!support || support === "none" || !fonts) return null;
+  const [allowed, setAllowed] = useState(false);
+  useEffect(() => {
+    const s = webglSupport();
+    setSupport(s);
+    if (s === "none") return;
+    return whenWebGLAllowed(s, () => setAllowed(true));
+  }, []);
+  if (!support || support === "none" || !fonts || !allowed) return null;
   const pack = product.packagings.find((p) => p.container === container) ?? product.packagings[0]!;
-  const reduced = prefersReducedMotion();
   return (
     <div className="absolute inset-0" aria-hidden="true">
       <Canvas frameloop="demand" dpr={[1, 1.5]} camera={{ position: [0, 0.3, 5.4], fov: 26 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
         <StudioLights />
-        <DragRotate key={container} yaw0={packshotYaw[container] + (reduced ? 0 : 0)}>
+        <DragRotate key={container} yaw0={packshotYaw[container]}>
           <Container kind={container} label={labelFor(product, pack.short)} quality={support === "lite" ? "low" : "high"} />
         </DragRotate>
         <ContactShadows position={[0, -1.02, 0]} opacity={0.3} scale={4} blur={2.4} far={1.6} resolution={256} color="#0E2533" frames={1} />

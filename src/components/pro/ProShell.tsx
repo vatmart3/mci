@@ -21,14 +21,18 @@ export function ProShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   if (!ready) {
     return (
-      <div className="wrap py-24" aria-busy="true">
-        <p className="t-mono text-sm text-ink/70">CHARGEMENT…</p>
+      <div className="wrap min-h-[760px] py-12 lg:py-16" aria-busy="true">
+        <div className="mx-auto max-w-[720px]">
+          <h1 className="t-h1">Espace pro</h1>
+          <p className="t-lead mt-4 text-ink/80">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
+          <p className="t-mono mt-8 text-sm text-ink/70">CHARGEMENT DE VOTRE SESSION…</p>
+        </div>
       </div>
     );
   }
   if (!user) {
     return (
-      <div className="wrap py-12 lg:py-16">
+      <div className="wrap min-h-[760px] py-12 lg:py-16">
         <Suspense>
           <AuthPanel />
         </Suspense>

@@ -8,7 +8,7 @@ import { cx } from "@/lib/cx";
 export function OrdersTable({ orders, selected, onSelect }: { orders: Order[]; selected?: string | null; onSelect?: (o: Order) => void }) {
   if (!orders.length) return <p className="py-8 text-ink/70">Aucune commande pour l&apos;instant.</p>;
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto">
       <table className="w-full min-w-[640px] text-sm">
         <thead>
           <tr className="t-mono border-b border-ink text-left text-xs text-ink/70">

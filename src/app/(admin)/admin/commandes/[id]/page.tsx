@@ -87,7 +87,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-6 xl:col-span-2">
           <Block title="Lignes, prix et délai">
-            <div className="overflow-x-auto">
+            <div className="relative overflow-x-auto">
               <table className="w-full min-w-[620px] text-sm">
                 <thead>
                   <tr className="t-mono border-b border-ink text-left text-xs text-ink/70">
@@ -184,7 +184,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
             <ol className="space-y-2 text-sm">
               {order.events.map((e, i) => (
                 <li key={i} className="grid grid-cols-[150px_1fr] gap-3">
-                  <span className="t-mono text-xs text-ink/60">{formatDateTime(e.at)}</span>
+                  <span className="t-mono text-xs text-ink/70">{formatDateTime(e.at)}</span>
                   <span>
                     <strong>{statusLabels[e.status]}</strong>
                     {e.note ? ` — ${e.note}` : ""}
@@ -222,7 +222,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
             {order.deliverySlots ? <p className="mt-1 text-sm">Créneaux : {order.deliverySlots}</p> : null}
             {order.billing ? (
               <p className="mt-3 text-sm">
-                <span className="t-mono text-xs text-ink/60">FACTURATION · </span>
+                <span className="t-mono text-xs text-ink/70">FACTURATION · </span>
                 {order.billing.company}, {order.billing.line1}, {order.billing.postalCode} {order.billing.city}
               </p>
             ) : null}

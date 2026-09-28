@@ -84,7 +84,7 @@ function FilterGroup<T extends string>({
                   />
                   {o.label}
                 </span>
-                <span className="t-mono text-xs text-ink/60">{n}</span>
+                <span className="t-mono text-xs text-ink/70">{n}</span>
               </label>
             </li>
           );
@@ -175,7 +175,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
               Rechercher un produit, un usage, une surface
             </label>
             <div className="relative">
-              <Icon name="search" size={24} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink/60" />
+              <Icon name="search" size={24} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink/70" />
               <input
                 ref={inputRef}
                 id="catalogue-q"
@@ -185,7 +185,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                 placeholder="Graisse cuite, inox, graffiti, guêpes, DG90…"
                 value={f.q}
                 onChange={(e) => setF((s) => ({ ...s, q: e.target.value }))}
-                className="h-16 w-full rounded-tech border border-ink bg-white pl-16 pr-4 text-lg placeholder:text-ink/50 focus:border-mci focus:outline-2 focus:outline-mci/30"
+                className="h-16 w-full rounded-tech border border-ink bg-white pl-16 pr-4 text-lg placeholder:text-ink/70 focus:border-mci focus:outline-2 focus:outline-mci/30"
               />
             </div>
           </div>
@@ -278,7 +278,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                 ))}
               </ul>
             ) : (
-              <ul className="mt-6 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-4">
+              <ul className="mt-6 grid grid-cols-1 gap-4 min-[400px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
                 {results.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}

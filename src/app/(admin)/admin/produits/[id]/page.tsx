@@ -184,7 +184,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
         </div>
         {p.slug ? (
           <Link href={`/produit/${p.slug}`} target="_blank" className="link-u ml-auto text-sm">
-            Voir la fiche publique ↗
+            Voir la fiche publique
           </Link>
         ) : null}
       </div>

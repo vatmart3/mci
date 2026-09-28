@@ -6,7 +6,7 @@ import { ButtonLink } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { Ruler } from "@/components/ui/Ruler";
 import { ProductVisual } from "@/components/catalog/ProductVisual";
-import { webglSupport, prefersReducedMotion } from "@/lib/webgl";
+import { webglSupport, prefersReducedMotion, whenWebGLAllowed } from "@/lib/webgl";
 import { showcaseItem, type MiniProduct } from "./showcase-data";
 import { GlassFog } from "./GlassFog";
 
@@ -14,23 +14,27 @@ const FloatingShowcase = dynamic(() => import("@/components/three/FloatingShowca
 
 /** Repli statique (sans WebGL / appareil faible) : packshots composés à la main. */
 function StaticStage({ products }: { products: { p: MiniProduct; pack?: string }[] }) {
-  const spots = [
-    "left-[52%] top-[10%] w-[20%] rotate-[-6deg]",
-    "left-[70%] top-[4%] w-[16%] rotate-[8deg]",
-    "left-[80%] top-[34%] w-[18%] rotate-[-4deg]",
-    "left-[58%] top-[40%] w-[22%] rotate-[3deg]",
-    "left-[44%] top-[36%] w-[14%] rotate-[-10deg]",
+  // mêmes emplacements que la scène 3D (FloatingShowcase) pour un relais sans saut
+  const spots: [number, number, number][] = [
+    [0.6, 0.2, 11],
+    [0.79, 0.15, 9],
+    [0.93, 0.34, 10],
+    [0.74, 0.42, 12],
+    [0.89, 0.6, 11],
   ];
   return (
     <div className="absolute inset-0" aria-hidden="true">
-      {products.slice(0, 5).map(({ p }, i) => (
-        <div key={p.slug} className={`absolute ${spots[i]} max-md:hidden`}>
-          <ProductVisual product={p} size={320} sizes="22vw" alt="" className="h-auto w-full" priority={i < 2} />
-        </div>
-      ))}
-      <div className="absolute inset-x-0 top-[4%] flex justify-center gap-2 md:hidden">
+      {products.slice(0, 5).map(({ p }, i) => {
+        const [x, y, w] = spots[i]!;
+        return (
+          <div key={p.slug} className="absolute max-md:hidden" style={{ left: `${x * 100 - w / 2}%`, top: `${y * 100}%`, width: `${w}%`, transform: `translateY(-50%) rotate(${[-6, 8, -4, 3, -9][i]}deg)` }}>
+            <ProductVisual product={p} size={320} sizes="12vw" alt="" className="h-auto w-full" priority={i < 2} />
+          </div>
+        );
+      })}
+      <div className="absolute inset-x-0 top-[3%] flex justify-center gap-2 md:hidden">
         {products.slice(0, 3).map(({ p }) => (
-          <ProductVisual key={p.slug} product={p} size={140} alt="" priority />
+          <ProductVisual key={p.slug} product={p} size={120} alt="" priority />
         ))}
       </div>
     </div>
@@ -41,14 +45,21 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
   const [support, setSupport] = useState<"full" | "lite" | "none" | null>(null);
   const [reduced, setReduced] = useState(false);
   const [inView, setInView] = useState(true);
+  const [allowed, setAllowed] = useState(false);
+  const [ready3d, setReady3d] = useState(false);
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    setSupport(webglSupport());
+    const s = webglSupport();
+    setSupport(s);
     setReduced(prefersReducedMotion());
+    const stop = s === "none" ? () => undefined : whenWebGLAllowed(s, () => setAllowed(true));
     const io = new IntersectionObserver(([e]) => setInView(!!e?.isIntersecting), { rootMargin: "0px" });
     if (ref.current) io.observe(ref.current);
-    return () => io.disconnect();
+    return () => {
+      io.disconnect();
+      stop();
+    };
   }, []);
 
   const items = useMemo(() => {
@@ -60,15 +71,17 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
     <section ref={ref} aria-labelledby="hero-title" className="relative isolate h-[calc(100svh-56px)] min-h-[620px] overflow-hidden lg:h-[calc(100svh-72px)] lg:max-h-[1000px]">
       {/* Filet d'horizon du port */}
       <div aria-hidden="true" className="absolute inset-x-0 top-[30%] -z-10 border-t border-rule">
-        <span className="t-mono absolute right-[var(--margin)] top-2 text-[11px] text-ink/50">43°24′ N · 3°41′ E — SÈTE</span>
+        <span className="t-mono absolute right-[var(--margin)] top-2 text-[11px] text-ink/70">43°24′ N · 3°41′ E — SÈTE</span>
       </div>
 
       {/* Scène 3D derrière la vitre (décorative) */}
       <div className="absolute inset-0 -z-10">
-        {support === "full" || support === "lite" ? (
-          <FloatingShowcase items={items} still={reduced} active={inView} className="absolute inset-0" />
-        ) : support === "none" ? (
+        {/* packshots statiques : immédiats, remplacés par la 3D dès qu'elle est prête */}
+        <div className={`absolute inset-0 transition-opacity duration-500 ${ready3d ? "opacity-0" : "opacity-100"}`}>
           <StaticStage products={products} />
+        </div>
+        {allowed && (support === "full" || support === "lite") ? (
+          <FloatingShowcase items={items} still={reduced} active={inView} className="absolute inset-0" onReady={() => setReady3d(true)} />
         ) : null}
       </div>
 
