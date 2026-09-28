@@ -88,6 +88,8 @@ Tout est affiché `[À CONFIRMER]` dans l'admin et **masqué côté public**.
 
 ## 4. Mettre en ligne sur Vercel
 
+**Projet Vercel** : `mci`, relié au dépôt `vatmart3/mci` (déploiement automatique à chaque envoi de code). Pour un accès public sans connexion : Settings → Deployment Protection → désactiver « Vercel Authentication ».
+
 **Présentation (mode démo, 5 minutes)**
 1. Importer le dépôt dans Vercel (framework détecté : Next.js). Aucune variable nécessaire.
 2. Optionnel : `NEXT_PUBLIC_SITE_URL=https://<domaine>` pour les URL canoniques et Open Graph.
