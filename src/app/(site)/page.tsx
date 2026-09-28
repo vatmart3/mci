@@ -1,3 +1,76 @@
-export default function Home() {
-  return <div className="wrap py-24"><h1 className="t-display">Le produit juste pour chaque surface.</h1></div>;
+import { existsSync } from "node:fs";
+import path from "node:path";
+import { getProducts, getStats } from "@/lib/catalog";
+import { families } from "@/data/families";
+import { sectors } from "@/data/sectors";
+import { company } from "@/data/company";
+import type { SectorSlug } from "@/lib/types";
+import { Hero } from "@/components/home/Hero";
+import { SectorsSection } from "@/components/home/SectorsSection";
+import { ShelfSection, type ShelfGroup } from "@/components/home/ShelfSection";
+import { OrderSection } from "@/components/home/OrderSection";
+import { FactsSection } from "@/components/home/FactsSection";
+import { TeamSection } from "@/components/home/TeamSection";
+import { toMini } from "@/components/home/showcase-data";
+import { pageMeta } from "@/lib/seo";
+
+export const metadata = pageMeta({
+  title: "MCI Sète — Nettoyants techniques et produits d'entretien professionnels",
+  description:
+    "Nettoyants techniques, désinfectants, biocides et traitements de maintenance pour mairies, écoles, industries, caves, campings et nautisme. Catalogue, fiches techniques et commande pro en ligne, depuis Sète.",
+  path: "/",
+});
+
+const heroPicks: [string, string?][] = [
+  ["dg90", "5l"],
+  ["cst"],
+  ["kermex", "20l"],
+  ["sanikel-renforce", "1l"],
+  ["super-granul"],
+  ["gralixone", "cartouche"],
+  ["oxychoc"],
+];
+
+// ordre de visite du rayon (brief §8.4)
+const shelfOrder = ["aerosols", "decapants-detartrants", "detergents-desinfectants", "desherbants-insecticides-biocides", "absorbants", "produits-bio", "surodorants-shampooings"] as const;
+
+export default async function HomePage() {
+  const [all, stats] = await Promise.all([getProducts(), getStats()]);
+  const by = new Map(all.map((p) => [p.slug, p]));
+
+  const hero = heroPicks.flatMap(([slug, pack]) => {
+    const p = by.get(slug);
+    return p ? [{ p: toMini(p), pack }] : [];
+  });
+
+  const selections = Object.fromEntries(sectors.map((s) => [s.slug, all.filter((p) => p.sectors.includes(s.slug)).map(toMini)])) as Record<SectorSlug, ReturnType<typeof toMini>[]>;
+
+  const groups: ShelfGroup[] = shelfOrder.map((slug) => {
+    const f = families.find((x) => x.slug === slug)!;
+    const inFamily = all.filter((p) => p.families[0] === slug || (slug === "desherbants-insecticides-biocides" && p.families.includes(slug)));
+    const picks = [...inFamily.filter((p) => p.featured), ...inFamily.filter((p) => !p.featured)].filter((p, i, arr) => arr.indexOf(p) === i).slice(0, 4);
+    return { slug, name: f.name, code: f.code, count: all.filter((p) => p.families.includes(slug)).length, products: picks.map(toMini) };
+  });
+
+  const facts = {
+    references: stats.references,
+    withSheet: stats.withSheet,
+    food: all.filter((p) => p.properties.includes("contact-alimentaire")).length,
+    bio: all.filter((p) => p.properties.includes("bio-vegetal")).length,
+    biocontrol: all.filter((p) => p.properties.includes("biocontrole")).length,
+  };
+
+  const teamLocal = existsSync(path.join(process.cwd(), "public", company.photos.team.local));
+  const photo = teamLocal ? company.photos.team.local : company.photos.team.remote;
+
+  return (
+    <>
+      <Hero products={hero} stats={stats} />
+      <SectorsSection selections={selections} />
+      <ShelfSection groups={groups} total={stats.references} />
+      <OrderSection />
+      <FactsSection facts={facts} />
+      <TeamSection photo={photo} />
+    </>
+  );
 }

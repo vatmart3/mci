@@ -42,6 +42,7 @@ export function ProductVisual({
       sizes={sizes ?? `${size}px`}
       priority={priority}
       className={cx("object-contain", className)}
+      unoptimized={!product.imageUrl}
       onError={() => setFailed(true)}
       data-packshot
     />

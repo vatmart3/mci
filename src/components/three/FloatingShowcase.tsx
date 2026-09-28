@@ -26,8 +26,30 @@ interface Body {
   radius: number;
 }
 
-/** Ancrages répartis en nappe asymétrique (plus dense à droite, pour laisser respirer le titre). */
-function anchorsFor(n: number, layout: "hero" | "panel", aspect: number): THREE.Vector3[] {
+/** Emplacements (fractions d'écran, depuis le haut-gauche) : nappe asymétrique à droite du titre. */
+const HERO_SLOTS: [number, number][] = [
+  [0.6, 0.2],
+  [0.79, 0.15],
+  [0.93, 0.34],
+  [0.74, 0.42],
+  [0.89, 0.6],
+  [0.7, 0.7],
+  [0.95, 0.8],
+];
+const HERO_SLOTS_FEW: [number, number][] = [
+  [0.72, 0.25],
+  [0.9, 0.46],
+  [0.74, 0.66],
+];
+const HERO_SLOTS_NARROW: [number, number][] = [
+  [0.2, 0.13],
+  [0.5, 0.09],
+  [0.8, 0.15],
+  [0.36, 0.24],
+  [0.66, 0.25],
+];
+
+function anchorsFor(n: number, layout: "hero" | "panel", vw: number, vh: number): THREE.Vector3[] {
   const out: THREE.Vector3[] = [];
   if (layout === "panel") {
     const cols = Math.min(n, 3);
@@ -39,22 +61,22 @@ function anchorsFor(n: number, layout: "hero" | "panel", aspect: number): THREE.
     }
     return out;
   }
-  // hero : décalé vers la droite sur desktop, centré-haut sur mobile
-  const narrow = aspect < 0.9;
-  const cx = narrow ? 0 : Math.min(2.6, aspect * 1.2);
-  const spread = narrow ? 1.5 : 2.2;
-  const golden = Math.PI * (3 - Math.sqrt(5));
+  const narrow = vw / vh < 0.9;
+  const slots = narrow ? HERO_SLOTS_NARROW : n <= 3 ? HERO_SLOTS_FEW : HERO_SLOTS;
   for (let i = 0; i < n; i++) {
-    const r = spread * Math.sqrt((i + 0.6) / n);
-    const a = i * golden + 0.6;
-    out.push(new THREE.Vector3(cx + Math.cos(a) * r * 1.15, (narrow ? 1.1 : 0.25) + Math.sin(a) * r * 0.85, -0.6 + ((i * 37) % 7) * 0.2 - 0.6));
+    // pour peu d'objets, on répartit sur l'ensemble des emplacements
+    const k = n >= slots.length ? i % slots.length : Math.round((i * (slots.length - 1)) / Math.max(1, n - 1));
+    const [fx, fy] = slots[k]!;
+    out.push(new THREE.Vector3((fx - 0.5) * vw, (0.5 - fy) * vh, -0.4 - ((i * 37) % 5) * 0.25));
   }
   return out;
 }
 
 function Bodies({ items, layout, still, pointer }: { items: ShowcaseItem[]; layout: "hero" | "panel"; still: boolean; pointer: React.RefObject<{ x: number; y: number }> }) {
   const { viewport, invalidate } = useThree();
-  const aspect = viewport.width / viewport.height;
+  const vw = viewport.width;
+  const vh = viewport.height;
+  const narrow = vw / vh < 0.9;
   const bodies = useRef<Map<string, Body>>(new Map());
   const groups = useRef<Map<string, THREE.Group>>(new Map());
   const root = useRef<THREE.Group>(null);
@@ -62,7 +84,7 @@ function Bodies({ items, layout, still, pointer }: { items: ShowcaseItem[]; layo
   // Liste affichée = présents + sortants (conservés jusqu'à disparition)
   const shown = useRef<ShowcaseItem[]>([]);
   const ids = items.map((i) => i.id).join("|");
-  const anchors = useMemo(() => anchorsFor(items.length, layout, aspect), [items.length, layout, aspect]);
+  const anchors = useMemo(() => anchorsFor(items.length, layout, vw, vh), [items.length, layout, vw, vh]);
 
   useMemo(() => {
     const map = bodies.current;
@@ -82,7 +104,7 @@ function Bodies({ items, layout, still, pointer }: { items: ShowcaseItem[]; layo
           phase: (i * 1.7) % (Math.PI * 2),
           spin: (i % 2 ? 1 : -1) * (0.08 + (i % 3) * 0.03),
           tilt: ((i % 5) - 2) * 0.06,
-          scale: still ? 1 : 0,
+          scale: still || layout === "hero" ? 1 : 0,
           target: 1,
           radius: 0.55 * s,
         });
@@ -137,7 +159,7 @@ function Bodies({ items, layout, still, pointer }: { items: ShowcaseItem[]; layo
       const g = groups.current.get(b.id);
       if (!g) continue;
       g.position.copy(b.pos);
-      const s = containerScale[shown.current.find((x) => x.id === b.id)?.kind ?? "can5"] * b.scale * (layout === "panel" ? 0.72 : 0.8);
+      const s = containerScale[shown.current.find((x) => x.id === b.id)?.kind ?? "can5"] * b.scale * (layout === "panel" ? 0.72 : narrow ? 0.5 : 0.62);
       g.scale.setScalar(Math.max(0.0001, s));
       if (!still) {
         g.rotation.y += b.spin * dt;

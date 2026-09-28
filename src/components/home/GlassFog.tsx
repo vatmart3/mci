@@ -27,14 +27,17 @@ function paintFog(w: number, h: number): HTMLCanvasElement {
   c.height = h;
   const ctx = c.getContext("2d")!;
   const r = rand(20150034);
-  // voile de buée (sel chaud)
-  ctx.fillStyle = "rgba(243, 241, 236, 0.84)";
+  // voile de buée : blanc laiteux, plus clair que le fond, pour qu'on voie la vitre
+  ctx.fillStyle = "rgba(250, 249, 246, 0.9)";
   ctx.fillRect(0, 0, w, h);
+  // grain de condensation (fines taches grises)
+  ctx.fillStyle = "rgba(14, 37, 51, 0.035)";
+  for (let i = 0; i < (w * h) / 260; i++) ctx.fillRect(r() * w, r() * h, 1 + r() * 1.5, 1 + r() * 1.5);
   // nuages de condensation, plus denses en bas
   ctx.filter = "blur(18px)";
   for (let i = 0; i < 70; i++) {
     const y = h * Math.pow(r(), 0.7);
-    ctx.fillStyle = `rgba(255,255,255,${0.12 + r() * 0.18})`;
+    ctx.fillStyle = r() > 0.5 ? `rgba(255,255,255,${0.35 + r() * 0.3})` : `rgba(213,220,224,${0.18 + r() * 0.2})`;
     ctx.beginPath();
     ctx.ellipse(r() * w, y, 60 + r() * 160, 30 + r() * 80, r() * Math.PI, 0, Math.PI * 2);
     ctx.fill();
@@ -51,7 +54,7 @@ function paintFog(w: number, h: number): HTMLCanvasElement {
     ctx.arc(x, y, rad, 0, Math.PI * 2);
     ctx.fill();
     if (rad > 1.6) {
-      ctx.strokeStyle = "rgba(14,37,51,0.10)";
+      ctx.strokeStyle = "rgba(14,37,51,0.16)";
       ctx.lineWidth = 0.6;
       ctx.beginPath();
       ctx.arc(x + 0.3, y + 0.4, rad, 0.2, Math.PI * 0.9);
@@ -60,14 +63,14 @@ function paintFog(w: number, h: number): HTMLCanvasElement {
   }
   // traces de calcaire : fines auréoles et coulures sèches
   ctx.filter = "blur(0.6px)";
-  for (let i = 0; i < 26; i++) {
+  for (let i = 0; i < 22; i++) {
     const x = r() * w;
     const y = r() * h;
-    ctx.strokeStyle = `rgba(255,255,255,${0.35 + r() * 0.3})`;
-    ctx.lineWidth = 0.8 + r() * 1.6;
+    ctx.strokeStyle = `rgba(200,207,211,${0.18 + r() * 0.2})`;
+    ctx.lineWidth = 0.6 + r() * 1.1;
     ctx.beginPath();
-    if (r() > 0.5) {
-      ctx.ellipse(x, y, 10 + r() * 34, 6 + r() * 22, r() * Math.PI, 0, Math.PI * (1.2 + r()));
+    if (r() > 0.8) {
+      ctx.ellipse(x, y, 4 + r() * 10, 3 + r() * 7, r() * Math.PI, 0, Math.PI * 2);
     } else {
       ctx.moveTo(x, y);
       let px = x;
@@ -248,6 +251,13 @@ export function GlassFog({ className, onSwiped }: { className?: string; onSwiped
 
     setup();
     draw();
+    // ?vitre=0.5 : fige la raclette à mi-course (contrôle visuel)
+    const freeze = new URLSearchParams(window.location.search).get("vitre");
+    if (freeze !== null) {
+      swipe(Math.min(1, Math.max(0, Number(freeze))));
+      draw();
+      return;
+    }
     // la raclette part après une courte respiration
     const startTimer = window.setTimeout(() => {
       swipeStart = performance.now();
