@@ -3,23 +3,24 @@ import { propertyLabels, propertyOrder } from "@/data/properties";
 import { Icon } from "@/components/ui/Icon";
 import { cx } from "@/lib/cx";
 
-/** Pictos propriétés façon étiquette : symbole + code court. */
+/** Propriétés en pastilles arrondies : symbole + libellé (complet ou court). */
 export function PropertyBadges({ properties, full = false, className }: { properties: PropertySlug[]; full?: boolean; className?: string }) {
   const list = propertyOrder.filter((p) => properties.includes(p));
   if (!list.length) return null;
   return (
-    <ul className={cx("flex flex-wrap gap-1", className)} aria-label="Propriétés">
+    <ul className={cx("flex flex-wrap", full ? "gap-2" : "gap-1", className)} aria-label="Propriétés">
       {list.map((p) => (
         <li
           key={p}
           title={propertyLabels[p].hint}
           className={cx(
-            "inline-flex items-center gap-1 rounded-tech border px-1 py-px text-ink",
-            p === "biocide" ? "border-warn/60 bg-warn/10" : "border-rule bg-white",
+            "inline-flex items-center rounded-full",
+            full ? "gap-1.5 px-3 py-1.5 text-sm font-medium" : "gap-1 px-2 py-0.5 text-[11px] font-semibold tracking-[0.02em]",
+            p === "biocide" ? "bg-warn/12 text-[#7a4f0c]" : full ? "bg-salt text-ink" : "bg-ink/5 text-ink/80",
           )}
         >
-          <Icon name={p} size={14} />
-          <span className={full ? "text-xs" : "t-mono text-[11px]"}>{full ? propertyLabels[p].label : propertyLabels[p].short}</span>
+          <Icon name={p} size={full ? 16 : 13} className="shrink-0" />
+          <span>{full ? propertyLabels[p].label : propertyLabels[p].short}</span>
           {full ? null : <span className="sr-only">{propertyLabels[p].label}</span>}
         </li>
       ))}

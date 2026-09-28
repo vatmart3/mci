@@ -22,10 +22,10 @@ export function PdfViewerProvider({ children }: { children: React.ReactNode }) {
       <Dialog open={!!doc} onClose={() => setDoc(null)} title={doc?.title ?? "Document"} wide>
         {doc ? (
           <div className="flex flex-col gap-4">
-            <div className="relative h-[70vh] overflow-hidden rounded-tech border border-rule bg-salt">
+            <div className="relative h-[70vh] overflow-hidden rounded-box bg-salt ring-1 ring-black/5">
               <object data={`${doc.url}#view=FitH`} type="application/pdf" className="absolute inset-0 h-full w-full" aria-label={doc.title}>
                 <div className="grid h-full place-items-center p-8 text-center">
-                  <p className="max-w-sm text-ink/80">Votre navigateur n&apos;affiche pas les PDF intégrés. Ouvrez-le dans un nouvel onglet ou téléchargez-le.</p>
+                  <p className="max-w-sm text-ink/70">Votre navigateur n&apos;affiche pas les PDF intégrés. Ouvrez-le dans un nouvel onglet ou téléchargez-le.</p>
                 </div>
               </object>
             </div>
@@ -50,13 +50,13 @@ export function SheetButton({ url, code, size = "sm", label = "FT" }: { url?: st
   const open = useOpenPdf();
   if (!url) {
     return (
-      <span className="t-mono inline-flex h-8 items-center px-2 text-xs text-ink/70" title="Fiche technique sur demande">
-        FT SUR DEM.
+      <span className="inline-flex h-8 items-center whitespace-nowrap rounded-full bg-ink/5 px-3 text-xs font-medium text-ink/70" title="Fiche technique sur demande">
+        FT sur demande
       </span>
     );
   }
   return (
-    <button type="button" onClick={() => open({ url, title: `Fiche technique ${code}` })} className={buttonClass("outline", size, "gap-1")} aria-label={`Fiche technique ${code} (PDF)`}>
+    <button type="button" onClick={() => open({ url, title: `Fiche technique ${code}` })} className={buttonClass("outline", size, "gap-1")} aria-label={`FT : fiche technique ${code} (PDF)`}>
       <Icon name="doc" size={16} />
       {label}
     </button>

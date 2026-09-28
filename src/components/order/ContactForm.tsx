@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { contactSchema, contactSubjects, type ContactInput, type ContactSubject } from "@/lib/schemas/contact";
 import { Input, Label, Select, Textarea, FieldError, Checkbox } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
 import { useSession } from "@/lib/store/session";
 import { sectors } from "@/data/sectors";
 import { company } from "@/data/company";
@@ -53,10 +54,17 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
 
   if (sent) {
     return (
-      <div role="status" className="py-4">
-        <p className="t-h2">Demande envoyée.</p>
-        <p className="mt-3 text-ink/80">
-          MCI vous répond par email ou par téléphone. Pour une urgence : <a className="t-mono text-mci underline" href={`tel:${company.phoneE164}`}>{company.phone}</a>.
+      <div role="status" className="flex flex-col items-start py-4">
+        <span className="grid size-14 place-items-center rounded-full bg-ok/10 text-ok">
+          <Icon name="check" size={28} />
+        </span>
+        <p className="t-h2 mt-6">Demande envoyée.</p>
+        <p className="mt-3 max-w-[48ch] text-ink/70">
+          MCI vous répond par email ou par téléphone. Pour une urgence :{" "}
+          <a className="font-semibold text-mci hover:underline" href={`tel:${company.phoneE164}`}>
+            {company.phone}
+          </a>
+          .
         </p>
       </div>
     );
@@ -65,21 +73,35 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
   const f = (k: keyof ContactInput) => ({ id: `cf-${k}`, "aria-invalid": !!errors[k], "aria-describedby": errors[k] ? `cf-${k}-err` : undefined });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-      <div className={compact ? "sm:col-span-2" : ""}>
-        <Label htmlFor="cf-subject" required>
+    <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
+      <fieldset className="min-w-0 sm:col-span-2">
+        <legend className="mb-3 block text-sm font-semibold text-ink">
           Objet
-        </Label>
-        <Select {...register("subject")} {...f("subject")}>
+          <span className="text-danger" aria-hidden="true">
+            {" "}
+            *
+          </span>
+          <span className="sr-only"> (obligatoire)</span>
+        </legend>
+        <div id="cf-subject" className="flex flex-wrap gap-2">
           {(Object.keys(contactSubjects) as ContactSubject[]).map((k) => (
-            <option key={k} value={k}>
-              {contactSubjects[k]}
-            </option>
+            <label key={k} className="relative cursor-pointer">
+              <input type="radio" value={k} {...register("subject")} className="peer sr-only" />
+              <span
+                className={
+                  "inline-flex h-10 items-center rounded-full bg-white px-4 text-sm font-medium text-ink/80 ring-1 ring-black/10 transition-[background-color,color,box-shadow,transform] duration-200 ease-out " +
+                  "hover:ring-black/25 active:scale-[0.97] peer-checked:bg-mci peer-checked:text-white peer-checked:ring-mci " +
+                  "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-mci"
+                }
+              >
+                {contactSubjects[k]}
+              </span>
+            </label>
           ))}
-        </Select>
-      </div>
+        </div>
+      </fieldset>
       {compact ? null : (
-        <div>
+        <div className="sm:col-span-2">
           <Label htmlFor="cf-sector">Secteur</Label>
           <Select {...register("sector")} id="cf-sector">
             <option value="">—</option>
@@ -147,12 +169,13 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
         <FieldError>{errors.consent?.message}</FieldError>
       </div>
       {error ? (
-        <p role="alert" className="text-danger sm:col-span-2">
-          {error}
+        <p role="alert" className="flex items-start gap-3 rounded-box bg-danger/10 p-4 text-danger sm:col-span-2">
+          <Icon name="warning" size={20} className="mt-0.5 shrink-0" />
+          <span>{error}</span>
         </p>
       ) : null}
       <div className="sm:col-span-2">
-        <Button type="submit" variant="primary" disabled={isSubmitting}>
+        <Button type="submit" variant="primary" size="lg" disabled={isSubmitting} className="w-full sm:w-auto">
           {isSubmitting ? "Envoi…" : "Envoyer la demande"}
         </Button>
       </div>

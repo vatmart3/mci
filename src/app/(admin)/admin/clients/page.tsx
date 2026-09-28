@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Input, Label, Select, Checkbox } from "@/components/ui/Field";
 import { formatDate, norm } from "@/lib/format";
 import { priceModeLabels } from "@/lib/orders";
+import { Icon } from "@/components/ui/Icon";
 import { cx } from "@/lib/cx";
 
 const statusTone: Record<AccountStatus, "ok" | "warn" | "danger"> = { active: "ok", pending: "warn", suspended: "danger" };
@@ -30,18 +31,19 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
     }
   };
   return (
-    <li className="rounded-box border border-rule bg-white">
-      <button type="button" className="flex w-full flex-wrap items-center gap-3 px-4 py-3 text-left" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
-        <span className="min-w-0 flex-1">
+    <li className="overflow-hidden rounded-box bg-white ring-1 ring-black/5">
+      <button type="button" className="flex w-full flex-wrap items-center gap-3 px-4 py-4 text-left transition-colors duration-200 hover:bg-salt/60 sm:px-6" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+        <span className="min-w-0 flex-1 basis-56">
           <span className="font-semibold">{account.company}</span>
           <span className="t-mono ml-2 text-xs text-ink/70">SIRET {account.siret}</span>
         </span>
         <span className="text-xs text-ink/70">{account.kind} · créé le {formatDate(account.createdAt)}</span>
         {account.isDemo ? <DemoBadge /> : null}
         <Badge tone={statusTone[account.status]}>{statusText[account.status]}</Badge>
+        <Icon name="chevronDown" size={18} className={cx("shrink-0 text-ink/70 transition-transform duration-300 ease-out", open && "rotate-180")} />
       </button>
       {open ? (
-        <div className="grid gap-6 border-t border-rule p-4 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-8 border-t border-black/5 p-4 sm:p-6 lg:grid-cols-2">
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
               {account.status !== "active" ? (
@@ -67,9 +69,9 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
             </div>
             <Checkbox id={`ra-${account.id}`} checked={account.requiresApproval} onChange={(e) => patch({ requiresApproval: e.target.checked })} label={<span className="text-sm">Les commandes des acheteurs doivent être validées par un valideur de la structure</span>} />
             <Checkbox id={`ch-${account.id}`} checked={account.chorus} onChange={(e) => patch({ chorus: e.target.checked })} label={<span className="text-sm">Facturation Chorus Pro{account.chorusServiceCode ? ` (${account.chorusServiceCode})` : ""}</span>} />
-            <div className="text-sm">
-              <p className="t-mono text-xs text-ink/70">ADRESSES</p>
-              <ul className="mt-1 space-y-1">
+            <div className="rounded-tech bg-salt p-4 text-sm">
+              <p className="text-xs font-medium text-ink/70">Adresses</p>
+              <ul className="mt-2 space-y-1">
                 {account.addresses.map((a) => (
                   <li key={a.id}>
                     {a.label ? <strong>{a.label} · </strong> : null}
@@ -78,22 +80,22 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
                 ))}
               </ul>
             </div>
-            {err ? <p role="alert" className="text-sm text-danger">{err}</p> : null}
+            {err ? <p role="alert" className="rounded-tech bg-danger/10 px-4 py-3 text-sm text-danger">{err}</p> : null}
           </div>
           <div>
-            <p className="t-mono text-xs text-ink/70">UTILISATEURS</p>
-            <ul className="mt-2 divide-y divide-rule border-y border-rule text-sm">
+            <p className="text-xs font-medium text-ink/70">Utilisateurs</p>
+            <ul className="mt-2 divide-y divide-black/5 overflow-hidden rounded-tech bg-salt text-sm empty:hidden">
               {(users ?? []).map((u) => (
-                <li key={u.id} className="flex items-center justify-between gap-2 py-2">
-                  <span>
-                    {u.fullName} <span className="t-mono text-xs text-ink/70">{u.email}</span>
+                <li key={u.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5">
+                  <span className="min-w-0">
+                    <span className="font-medium">{u.fullName}</span> <span className="t-mono break-all text-xs text-ink/70">{u.email}</span>
                   </span>
                   <Badge tone={u.role === "approver" ? "mci" : "ink"}>{u.role === "approver" ? "VALIDEUR" : "ACHETEUR"}</Badge>
                 </li>
               ))}
             </ul>
             <form
-              className="mt-4 grid gap-2 sm:grid-cols-2"
+              className="mt-4 grid grid-cols-1 gap-2 sm:grid-cols-2"
               onSubmit={async (e) => {
                 e.preventDefault();
                 setErr(null);
@@ -133,16 +135,18 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
   const list = useMemo(() => products.filter((p) => p.active && (!q || norm(`${p.code} ${p.short}`).includes(norm(q)))), [products, q]);
   const filled = Object.values(prices).filter((v) => v.trim()).length;
   return (
-    <div className="rounded-box border border-rule bg-white p-4">
+    <div className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-6">
       <div className="flex flex-wrap items-end gap-3">
-        <div className="w-64">
+        <div className="w-full sm:w-64">
           <Label htmlFor={`gn-${grid.id}`}>Nom de la grille</Label>
           <Input id={`gn-${grid.id}`} fieldSize="sm" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
-        <div className="w-64">
-          <Input fieldSize="sm" aria-label="Filtrer" placeholder="Filtrer les produits…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div className="w-full sm:w-64">
+          <Input fieldSize="sm" className="rounded-full! pl-4!" aria-label="Filtrer" placeholder="Filtrer les produits…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <span className="t-mono text-xs text-ink/70">{filled} PRIX RENSEIGNÉS</span>
+        <span className="inline-flex h-9 items-center rounded-full bg-salt px-3 text-xs text-ink/70">
+          <span className="t-mono mr-1 font-medium text-ink">{filled}</span> prix renseignés
+        </span>
         <Button
           size="sm"
           className="ml-auto"
@@ -161,13 +165,13 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
         </Button>
         {msg ? <span role="status" className="text-sm text-ok">{msg}</span> : null}
       </div>
-      <div className="mt-4 max-h-[60vh] overflow-auto">
+      <div className="relative mt-5 max-h-[60vh] overflow-auto rounded-tech ring-1 ring-black/5">
         <table className="w-full min-w-[640px] text-sm">
-          <thead className="t-mono sticky top-0 bg-white text-left text-xs text-ink/70">
+          <thead className="sticky top-0 z-10 bg-salt text-left text-xs text-ink/70">
             <tr>
-              <th className="py-2 pr-2 font-normal">PRODUIT</th>
-              <th className="py-2 pr-2 font-normal">CONDITIONNEMENT</th>
-              <th className="w-36 py-2 text-right font-normal">PRIX HT (€)</th>
+              <th className="py-2.5 pl-4 pr-2 font-medium">Produit</th>
+              <th className="py-2.5 pr-2 font-medium">Conditionnement</th>
+              <th className="w-40 py-2.5 pl-2 pr-4 text-right font-medium">Prix HT (€)</th>
             </tr>
           </thead>
           <tbody>
@@ -175,10 +179,10 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
               p.packagings.map((k, i) => {
                 const key = `${p.id}:${k.id}`;
                 return (
-                  <tr key={key} className={cx("border-t border-rule", i > 0 && "border-t-0")}>
-                    <td className="py-1 pr-2">{i === 0 ? <span className="t-code text-mci">{p.code}</span> : null}</td>
-                    <td className="py-1 pr-2">{k.label}</td>
-                    <td className="py-1">
+                  <tr key={key} className={cx("border-t border-black/5 transition-colors duration-200 hover:bg-salt/60", i > 0 && "border-t-0")}>
+                    <td className="py-1.5 pl-4 pr-2">{i === 0 ? <span className="t-code text-mci">{p.code}</span> : null}</td>
+                    <td className="py-1.5 pr-2 text-ink/80">{k.label}</td>
+                    <td className="py-1.5 pl-2 pr-4">
                       <Input fieldSize="sm" inputMode="decimal" aria-label={`Prix ${p.code} ${k.label}`} className="t-mono text-right" value={prices[key] ?? ""} placeholder="—" onChange={(e) => setPrices({ ...prices, [key]: e.target.value })} />
                     </td>
                   </tr>
@@ -202,17 +206,27 @@ export default function AdminClients() {
   return (
     <div className="space-y-6">
       <h1 className="t-h2">Clients</h1>
-      <div className="flex border-b border-rule" role="tablist">
+      <div className="flex w-full max-w-md rounded-full bg-black/5 p-1" role="tablist">
         {(["comptes", "grilles"] as const).map((t) => (
-          <button key={t} role="tab" type="button" aria-selected={tab === t} onClick={() => setTab(t)} className={cx("-mb-px border-b-2 px-4 py-2 text-sm font-semibold", tab === t ? "border-mci text-mci" : "border-transparent text-ink/70")}>
+          <button
+            key={t}
+            role="tab"
+            type="button"
+            aria-selected={tab === t}
+            onClick={() => setTab(t)}
+            className={cx(
+              "h-9 min-w-0 flex-1 truncate rounded-full px-3 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ease-out",
+              tab === t ? "bg-white text-ink shadow-sheet" : "text-ink/70 hover:text-ink",
+            )}
+          >
             {t === "comptes" ? `Comptes pros (${accounts?.length ?? "…"})` : "Grilles tarifaires"}
           </button>
         ))}
       </div>
       {tab === "comptes" ? (
         <>
-          <div className="w-72">
-            <Input fieldSize="sm" aria-label="Rechercher" placeholder="Structure, SIRET…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <div className="w-full sm:w-72">
+            <Input fieldSize="sm" className="rounded-full! pl-4!" aria-label="Rechercher" placeholder="Structure, SIRET…" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
           <ul className="space-y-3">
             {list.map((a) => (
@@ -222,7 +236,7 @@ export default function AdminClients() {
         </>
       ) : (
         <div className="space-y-4">
-          <p className="text-sm text-ink/80">
+          <p className="rounded-box bg-white px-5 py-4 text-sm text-ink/70 ring-1 ring-black/5">
             Mode de prix actuel : <strong>{priceModeLabels[priceMode]}</strong>. Les grilles servent en mode « par compte » (grille affectée au compte) et « public » (première grille).
           </p>
           {(grids ?? []).map((g) => (

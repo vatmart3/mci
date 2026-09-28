@@ -27,22 +27,22 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
     onSaved();
   };
   return (
-    <article className="rounded-box border border-rule bg-white p-4 sm:p-6">
+    <article className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
       <div className="flex flex-wrap items-center gap-3">
         <label htmlFor={`fav-${list.id}`} className="sr-only">
           Nom de la liste
         </label>
-        <Input id={`fav-${list.id}`} value={name} onChange={(e) => setName(e.target.value)} className="max-w-sm font-semibold" />
-        <AddSelection lines={lines} label="Ajouter au bon" className="h-12 px-4 text-base" />
+        <Input id={`fav-${list.id}`} value={name} onChange={(e) => setName(e.target.value)} className="min-w-0 flex-1 font-semibold sm:max-w-sm" />
+        <AddSelection lines={lines} label="Ajouter au bon" className="h-12! px-5! text-base! sm:ml-auto" />
       </div>
-      <ul className="mt-4 divide-y divide-rule">
+      <ul className="mt-6 divide-y divide-black/5 overflow-hidden rounded-box bg-salt empty:hidden">
         {lines.map((l, i) => {
           const p = byId(l.productId);
           if (!p) return null;
           return (
-            <li key={`${l.productId}-${i}`} className="flex flex-wrap items-center gap-3 py-2">
-              <span className="t-code w-40 truncate text-sm text-mci">{p.code}</span>
-              <div className="w-44">
+            <li key={`${l.productId}-${i}`} className="flex flex-wrap items-center gap-3 px-4 py-3">
+              <span className="t-code w-full truncate text-sm text-mci sm:w-40">{p.code}</span>
+              <div className="w-44 max-w-full">
                 <Select fieldSize="sm" aria-label={`Conditionnement ${p.code}`} value={l.packagingId} onChange={(e) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, packagingId: e.target.value } : x)))}>
                   {p.packagings.map((k) => (
                     <option key={k.id} value={k.id}>
@@ -52,7 +52,7 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
                 </Select>
               </div>
               <Stepper size="sm" value={l.quantity} onChange={(q) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, quantity: q } : x)))} label={`Quantité ${p.code}`} />
-              <button type="button" className="grid size-8 place-items-center rounded-tech text-ink/70 hover:bg-salt hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
+              <button type="button" className="ml-auto grid size-9 place-items-center rounded-full text-ink/70 transition-colors hover:bg-white hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
                 <Icon name="trash" size={16} />
               </button>
             </li>
@@ -62,7 +62,7 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
       <div className="mt-4 max-w-md">
         <ProductPicker onPick={(p) => setLines((ls) => [...ls, { productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }])} />
       </div>
-      <div className="mt-4 flex flex-wrap items-center gap-3 border-t border-rule pt-4">
+      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-black/5 pt-5">
         <Button size="sm" disabled={!dirty} onClick={save}>
           Enregistrer
         </Button>
@@ -89,7 +89,7 @@ export default function ProFavorites() {
   const accountId = user?.accountId ?? "";
   const { data: lists, reload } = useData((b) => (accountId ? b.listFavorites(accountId) : Promise.resolve([])), [accountId]);
   const [newName, setNewName] = useState("");
-  if (!accountId) return <p className="text-ink/70">Les listes favorites sont rattachées à une structure.</p>;
+  if (!accountId) return <p className="rounded-box bg-white p-6 text-ink/70 ring-1 ring-black/5">Les listes favorites sont rattachées à une structure.</p>;
   const create = async (lines: CartLine[]) => {
     const name = newName.trim() || `Liste du ${new Date().toLocaleDateString("fr-FR")}`;
     await (await getBackend()).saveFavorite({ accountId, name, lines });
@@ -99,8 +99,8 @@ export default function ProFavorites() {
   return (
     <div className="space-y-8">
       <h1 className="t-h2">Listes favorites</h1>
-      <div className="flex flex-wrap items-end gap-3 rounded-box border border-dashed border-ink/40 p-4">
-        <div className="min-w-60 flex-1">
+      <div className="flex flex-col gap-3 rounded-box bg-white p-4 ring-1 ring-black/5 sm:flex-row sm:flex-wrap sm:items-end sm:p-6">
+        <div className="min-w-0 sm:min-w-60 sm:flex-1">
           <label htmlFor="fav-new" className="mb-2 block text-sm font-semibold">
             Nouvelle liste
           </label>
@@ -109,7 +109,7 @@ export default function ProFavorites() {
         <Button variant="outline" onClick={() => create([])}>
           Créer vide
         </Button>
-        <Button variant="primary" disabled={!cartLines.length} onClick={() => create(cartLines)}>
+        <Button variant="primary" className="h-auto! min-h-11 whitespace-normal! py-2 text-center" disabled={!cartLines.length} onClick={() => create(cartLines)}>
           Créer depuis le bon actuel ({cartLines.length})
         </Button>
       </div>

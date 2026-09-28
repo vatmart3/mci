@@ -31,18 +31,27 @@ export default function ProDocuments() {
           <h2 id="docs-mci" className="t-label">
             Bons de livraison et factures
           </h2>
-          {locked ? <p className="mt-3 text-sm text-ink/70">Disponibles après validation de votre compte par MCI.</p> : null}
+          {locked ? (
+            <p className="mt-3 inline-flex items-center gap-2 rounded-full bg-white px-3 py-1 text-sm text-ink/70 ring-1 ring-black/5">
+              <Icon name="lock" size={14} /> Disponibles après validation de votre compte par MCI.
+            </p>
+          ) : null}
           {docs?.length ? (
-            <ul className="mt-4 divide-y divide-rule border-y border-rule">
+            <ul className="mt-5 divide-y divide-black/5 overflow-hidden rounded-box bg-white ring-1 ring-black/5">
               {docs.map((d) => (
-                <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                  <span>
-                    <span className="t-mono mr-3 text-xs text-ink/70">{kinds[d.kind].toUpperCase()}</span>
-                    {d.name}
+                <li key={d.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-4 transition-colors duration-200 hover:bg-salt">
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="grid size-10 shrink-0 place-items-center rounded-tech bg-mci/10 text-mci">
+                      <Icon name="doc" size={20} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-xs font-medium text-ink/70">{kinds[d.kind]}</span>
+                      <span className="block break-words font-medium">{d.name}</span>
+                    </span>
                   </span>
                   <span className="flex items-center gap-4">
                     <span className="t-mono text-xs text-ink/70">{formatDate(d.createdAt)}</span>
-                    <a href={d.url} download={d.name} target="_blank" rel="noopener noreferrer" className="link-u inline-flex items-center gap-1 text-sm">
+                    <a href={d.url} download={d.name} target="_blank" rel="noopener noreferrer" className="link-u inline-flex items-center gap-1 text-sm font-medium">
                       <Icon name="download" size={16} /> Télécharger
                     </a>
                   </span>
@@ -50,7 +59,7 @@ export default function ProDocuments() {
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-ink/70">Aucun document déposé par MCI pour l&apos;instant.</p>
+            <p className="mt-5 rounded-box bg-white p-6 text-sm text-ink/70 ring-1 ring-black/5">Aucun document déposé par MCI pour l&apos;instant.</p>
           )}
         </section>
 
@@ -59,16 +68,16 @@ export default function ProDocuments() {
             Pro-formas
           </h2>
           {priced.length ? (
-            <ul className="mt-4 divide-y divide-rule border-y border-rule">
+            <ul className="mt-5 divide-y divide-black/5 overflow-hidden rounded-box bg-white ring-1 ring-black/5">
               {priced.map((o) => (
-                <li key={o.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                  <span className="t-mono text-mci">{o.number}</span>
+                <li key={o.id} className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 transition-colors duration-200 hover:bg-salt">
+                  <span className="t-mono font-medium text-mci">{o.number}</span>
                   <PdfButton order={o} kind="proforma" label="Pro-forma PDF" />
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-ink/70">Les pro-formas apparaissent ici quand MCI a confirmé prix et délai.</p>
+            <p className="mt-5 rounded-box bg-white p-6 text-sm text-ink/70 ring-1 ring-black/5">Les pro-formas apparaissent ici quand MCI a confirmé prix et délai.</p>
           )}
         </section>
 
@@ -77,19 +86,19 @@ export default function ProDocuments() {
             Fiches techniques des produits commandés
           </h2>
           {bought.length ? (
-            <ul className="mt-4 grid gap-2 sm:grid-cols-2">
+            <ul className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {bought.map((p) => (
-                <li key={p.id} className="flex items-center justify-between gap-3 rounded-tech border border-rule bg-white px-3 py-2">
+                <li key={p.id} className="flex items-center justify-between gap-3 rounded-box bg-white px-5 py-4 ring-1 ring-black/5">
                   <span className="min-w-0">
                     <span className="t-code block text-sm text-mci">{p.code}</span>
-                    <span className="block truncate text-sm text-ink/80">{p.short}</span>
+                    <span className="block truncate text-sm text-ink/70">{p.short}</span>
                   </span>
                   <SheetButton url={p.technicalSheetUrl} code={p.code} />
                 </li>
               ))}
             </ul>
           ) : (
-            <p className="mt-3 text-sm text-ink/70">Les fiches des produits que vous commandez s&apos;afficheront ici.</p>
+            <p className="mt-5 rounded-box bg-white p-6 text-sm text-ink/70 ring-1 ring-black/5">Les fiches des produits que vous commandez s&apos;afficheront ici.</p>
           )}
         </section>
       </div>

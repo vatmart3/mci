@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { archivo, archivoDisplay, instrument, plex } from "./fonts";
+import { geist, geistMono } from "./fonts";
 import { SITE_URL } from "@/lib/env";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
-import { cookieBootScript } from "@/components/layout/CookieBanner";
+import { bootScript } from "@/lib/cookie-boot";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -18,15 +18,15 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#F3F1EC",
+  themeColor: "#FFFFFF",
   colorScheme: "light",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`${archivo.variable} ${archivoDisplay.variable} ${instrument.variable} ${plex.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${geist.variable} ${geistMono.variable}`}>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: cookieBootScript }} />
+        <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
       <body>
         {children}

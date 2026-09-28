@@ -1,9 +1,9 @@
 "use client";
-import { useEffect, useRef } from "react";
-import { SectionHead } from "@/components/ui/SectionHead";
-import { ButtonLink } from "@/components/ui/Button";
-import { LogoMark } from "@/components/brand/Logo";
 import Link from "next/link";
+import { useEffect, useRef } from "react";
+import { ButtonLink } from "@/components/ui/Button";
+import { Icon } from "@/components/ui/Icon";
+import { LogoMark } from "@/components/brand/Logo";
 
 const lines = [
   { ref: "DG90", text: "Dégraissant graisses cuites", qty: "2 × 5 L" },
@@ -12,37 +12,41 @@ const lines = [
 ];
 
 const steps = [
-  "Vous choisissez vos produits et conditionnements.",
-  "Vous indiquez votre n° de bon de commande interne ou d'engagement (collectivités).",
-  "MCI confirme la disponibilité et le délai.",
-  "Livraison et facture dans votre espace pro.",
+  { t: "Choisissez", d: "Vos produits et leurs conditionnements, depuis le catalogue ou par référence." },
+  { t: "Précisez", d: "Votre n° de bon de commande interne, ou d'engagement pour les collectivités." },
+  { t: "MCI confirme", d: "Disponibilité, prix et délai, avant toute préparation." },
+  { t: "Retrouvez tout", d: "Bons de livraison et factures dans votre espace pro." },
 ];
 
 /**
- * 03 — Commander, concrètement : un vrai bon de commande papier qui se remplit au scroll,
- * ligne par ligne, puis le tampon « VALIDÉ ». Mouvement réduit : bon déjà rempli.
+ * Commander, concrètement : les étapes s'allument une à une pendant que le bon de commande
+ * (carte arrondie) se remplit au défilement, jusqu'à la pastille « Confirmée ». Mouvement réduit : bon déjà rempli.
  */
 export function OrderSection() {
-  const sheet = useRef<HTMLDivElement>(null);
+  const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce || !sheet.current) return;
+    if (!root.current) return;
+    if (reduce) return;
     let ctx: { revert: () => void } | null = null;
     let cancelled = false;
     void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (cancelled || !sheet.current) return;
+      if (cancelled || !root.current) return;
       gsap.registerPlugin(ScrollTrigger);
       ctx = gsap.context(() => {
-        const tl = gsap.timeline({
-          scrollTrigger: { trigger: sheet.current, start: "top 75%", end: "bottom 45%", scrub: 0.5 },
+        const tl = gsap.timeline({ scrollTrigger: { trigger: "[data-sheet]", start: "top 80%", end: "bottom 50%", scrub: 0.6 } });
+        const stepsEl = gsap.utils.toArray<HTMLElement>("[data-step] [data-dot]");
+        const on = { backgroundColor: "#1f6a99", color: "#ffffff", scale: 1.08, duration: 0.2 };
+        tl.to(stepsEl[0]!, on);
+        gsap.utils.toArray<HTMLElement>("[data-line]").forEach((el, i) => {
+          tl.fromTo(el, { opacity: 0, y: 16, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" });
+          if (i === 1) tl.to(stepsEl[1]!, on, "<");
         });
-        gsap.utils.toArray<HTMLElement>("[data-type]").forEach((el) => {
-          const chars = el.textContent?.length ?? 10;
-          tl.fromTo(el, { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", ease: `steps(${chars})`, duration: chars / 24 });
-        });
-        tl.fromTo("[data-stamp]", { scale: 1.8, opacity: 0, rotate: -24, transformOrigin: "100% 100%" }, { scale: 1, opacity: 1, rotate: -12, ease: "back.out(2)", duration: 0.6 });
-      }, sheet);
+        tl.to(stepsEl[2]!, on);
+        tl.fromTo("[data-stamp]", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, ease: "back.out(2.2)", duration: 0.5 }, "<");
+        tl.to(stepsEl[3]!, on);
+      }, root);
     });
     return () => {
       cancelled = true;
@@ -51,107 +55,74 @@ export function OrderSection() {
   }, []);
 
   return (
-    <section aria-labelledby="commander-title" className="wrap mt-24 lg:mt-32">
-      <SectionHead index="03" kicker="Commander" id="commander-title" title="Commander, concrètement." />
-      <div className="grid-12 mt-12 gap-y-12">
-        <div className="col-span-12 lg:col-span-5">
-          <ol className="border-t border-ink">
+    <section ref={root} aria-labelledby="commander-title" className="bg-salt py-24 lg:py-32">
+      <div className="wrap grid grid-cols-1 items-center gap-16 lg:grid-cols-2 [&>*]:min-w-0">
+        <div>
+          <div data-reveal>
+            <p className="t-eyebrow">Commander</p>
+            <h2 id="commander-title" className="t-h1 mt-3 max-w-[14ch]">
+              Commander, concrètement.
+            </h2>
+          </div>
+          <ol className="mt-10 space-y-6">
             {steps.map((s, i) => (
-              <li key={s} className="grid grid-cols-[48px_1fr] gap-4 border-b border-rule py-4">
-                <span className="t-mono text-sm text-mci">{String(i + 1).padStart(2, "0")}</span>
-                <span className="text-md">{s}</span>
+              <li key={s.t} data-step className="flex gap-5">
+                <span data-dot className="t-num grid size-12 shrink-0 place-items-center rounded-full bg-white text-lg text-mci shadow-sheet">{i + 1}</span>
+                <span>
+                  <span className="t-label block">{s.t}</span>
+                  <span className="mt-1 block text-ink/70">{s.d}</span>
+                </span>
               </li>
             ))}
           </ol>
-          <p className="mt-6 text-ink/80">Pas de paiement en ligne : virement, facture à échéance ou mandat administratif. Facturation Chorus Pro pour les entités publiques.</p>
+          <p className="mt-8 max-w-[48ch] text-sm text-ink/70">Pas de paiement en ligne : virement, facture à échéance ou mandat administratif. Facturation Chorus Pro pour les entités publiques.</p>
           <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
             <ButtonLink href="/espace-pro?creer=1" variant="primary" size="lg">
               Créer mon compte pro
             </ButtonLink>
-            <Link href="/catalogue" className="link-u font-semibold">
-              Commander sans compte →
+            <Link href="/catalogue" className="text-md font-medium text-mci hover:underline">
+              Commander sans compte ›
             </Link>
           </div>
         </div>
 
-        <div className="col-span-12 lg:col-span-6 lg:col-start-7">
-          <div ref={sheet} className="crop relative mx-auto max-w-[620px] bg-white p-6 shadow-sheet sm:p-12" aria-label="Exemple de bon de commande rempli" role="img">
-            <div className="flex items-start justify-between gap-4 border-b-2 border-ink pb-4">
+        <div data-sheet className="relative">
+          <span aria-hidden="true" className="absolute inset-x-8 -bottom-6 top-8 -z-10 rounded-tile bg-mci/10 blur-2xl" />
+          <div className="mx-auto max-w-[560px] rounded-tile bg-white p-6 shadow-float ring-1 ring-black/5 sm:p-10" aria-label="Exemple de bon de commande rempli" role="img">
+            <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <LogoMark size={36} />
                 <div>
-                  <p className="font-display text-lg font-extrabold leading-none" style={{ fontVariationSettings: '"wdth" 120' }}>
-                    BON DE COMMANDE
-                  </p>
-                  <p className="t-mono mt-1 text-[11px] text-ink/70">MCI SÈTE · PARC AQUATECHNIQUE</p>
+                  <p className="font-semibold leading-none">Bon de commande</p>
+                  <p className="mt-1 text-xs text-ink/70">MCI Sète · exemple</p>
                 </div>
               </div>
-              <p className="t-mono text-right text-xs">
-                N° MCI-2026-00042
-                <br />
-                <span className="text-ink/70">EXEMPLE</span>
-              </p>
+              <p className="t-mono rounded-full bg-salt px-3 py-1 text-xs text-ink/70">MCI-2026-00042</p>
             </div>
-            <dl className="t-mono mt-6 grid grid-cols-[130px_1fr] gap-y-3 text-xs sm:text-sm">
-              <dt className="text-ink/70">ÉTABLISSEMENT</dt>
-              <dd className="dotted-line pb-1">
-                <span data-type className="inline-block whitespace-nowrap">
-                  Services techniques
-                </span>
-              </dd>
-              <dt className="text-ink/70">N° ENGAGEMENT</dt>
-              <dd className="dotted-line pb-1">
-                <span data-type className="inline-block whitespace-nowrap">
-                  ENG-2026-0412
-                </span>
-              </dd>
-            </dl>
-            <table className="t-mono mt-8 w-full text-xs sm:text-sm">
-              <thead>
-                <tr className="border-b border-ink text-left text-ink/70">
-                  <th className="py-2 font-normal">RÉF.</th>
-                  <th className="py-2 font-normal">DÉSIGNATION</th>
-                  <th className="py-2 text-right font-normal">QTÉ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {lines.map((l) => (
-                  <tr key={l.ref} className="dotted-line">
-                    <td className="py-3 pr-2 align-bottom">
-                      <span data-type className="inline-block whitespace-nowrap font-medium text-mci">
-                        {l.ref}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-2 align-bottom">
-                      <span data-type className="inline-block">
-                        {l.text}
-                      </span>
-                    </td>
-                    <td className="py-3 text-right align-bottom">
-                      <span data-type className="inline-block whitespace-nowrap">
-                        {l.qty}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-                <tr className="dotted-line">
-                  <td className="py-3">&nbsp;</td>
-                  <td />
-                  <td />
-                </tr>
-              </tbody>
-            </table>
-            <div className="mt-8 flex flex-wrap items-end justify-between gap-4">
-              <p className="t-mono text-[11px] text-ink/70">
-                PRIX ET DÉLAI
-                <br />
-                CONFIRMÉS PAR MCI
-              </p>
-              <div data-stamp className="ml-auto origin-bottom-right rounded-tech border-[3px] border-action px-3 py-2 text-action sm:px-4" style={{ transform: "rotate(-12deg)" }}>
-                <span className="font-display text-lg font-black sm:text-2xl tracking-[0.12em]" style={{ fontVariationSettings: '"wdth" 125' }}>
-                  VALIDÉ
-                </span>
+            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
+              <div className="rounded-tech bg-salt px-4 py-3">
+                <p className="text-xs text-ink/70">Établissement</p>
+                <p className="mt-1 truncate font-medium">Services techniques</p>
               </div>
+              <div className="rounded-tech bg-salt px-4 py-3">
+                <p className="text-xs text-ink/70">N° d&apos;engagement</p>
+                <p className="t-mono mt-1 truncate font-medium">ENG-2026-0412</p>
+              </div>
+            </div>
+            <ul className="mt-6 space-y-2">
+              {lines.map((l) => (
+                <li key={l.ref} data-line className="flex items-center gap-4 rounded-tech px-2 py-3 ring-1 ring-black/5">
+                  <span className="t-code w-24 shrink-0 text-sm text-mci">{l.ref}</span>
+                  <span className="min-w-0 flex-1 truncate text-sm">{l.text}</span>
+                  <span className="t-mono shrink-0 text-sm text-ink/70">{l.qty}</span>
+                </li>
+              ))}
+            </ul>
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
+              <p className="text-xs text-ink/70">Prix et délai confirmés par MCI</p>
+              <span data-stamp className="inline-flex items-center gap-2 rounded-full bg-ok/12 px-4 py-2 text-sm font-semibold text-ok">
+                <Icon name="check" size={18} /> Commande confirmée
+              </span>
             </div>
           </div>
         </div>

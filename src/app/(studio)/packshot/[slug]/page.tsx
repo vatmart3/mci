@@ -16,6 +16,8 @@ export default async function PackshotPage({ params, searchParams }: { params: P
   if (!product) notFound();
   return (
     <div style={{ width: "100vw", height: "100vh", background: "transparent" }}>
+      {/* fond transparent : le packshot est détouré (le fond du site ne doit pas s'y incruster) */}
+      <style>{"html,body{background:transparent!important}"}</style>
       <PackshotStudio product={product} packId={pack} />
     </div>
   );

@@ -27,7 +27,7 @@ export default function MentionsLegales() {
       <h2 className="t-h2">Conception</h2>
       <p>Site conçu par {company.agency}.</p>
       <h2 className="t-h2">Propriété intellectuelle</h2>
-      <p>Les textes, visuels de conditionnement, logos et fiches techniques sont la propriété de MCI Sète ou de leurs auteurs. Toute reproduction sans autorisation est interdite. Les polices Archivo, Instrument Sans et IBM Plex Mono sont distribuées sous licence SIL Open Font License.</p>
+      <p>Les textes, visuels de conditionnement, logos et fiches techniques sont la propriété de MCI Sète ou de leurs auteurs. Toute reproduction sans autorisation est interdite. Les polices Geist et Geist Mono sont distribuées sous licence SIL Open Font License.</p>
       <h2 className="t-h2">Produits biocides</h2>
       <p>Utilisez les biocides avec précaution. Avant toute utilisation, lisez l&apos;étiquette et les informations concernant le produit.</p>
     </LegalPage>

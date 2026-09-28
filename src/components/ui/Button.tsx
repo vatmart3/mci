@@ -12,22 +12,22 @@ export type ButtonVariant = "action" | "primary" | "outline" | "ghost" | "danger
 export type ButtonSize = "sm" | "md" | "lg";
 
 const base =
-  "inline-flex items-center justify-center gap-2 font-body font-semibold rounded-tech select-none " +
-  "transition-[background-color,border-color,color,transform] duration-200 ease-out active:translate-y-px " +
-  "disabled:opacity-60 disabled:active:translate-y-0 whitespace-nowrap";
+  "inline-flex items-center justify-center gap-2 font-body font-medium rounded-full select-none tracking-[-0.01em] " +
+  "transition-[background-color,border-color,color,transform,box-shadow] duration-300 ease-out active:scale-[0.97] " +
+  "disabled:opacity-50 disabled:active:scale-100 whitespace-nowrap";
 
 const variants: Record<ButtonVariant, string> = {
-  action: "bg-action text-ink border border-action hover:bg-ink hover:border-ink hover:text-action",
-  primary: "bg-mci text-white border border-mci hover:bg-deep hover:border-deep",
-  outline: "bg-white/0 text-ink border border-ink hover:bg-ink hover:text-white",
-  ghost: "text-ink underline underline-offset-4 decoration-1 hover:decoration-2 hover:text-mci px-0!",
-  danger: "bg-white text-danger border border-danger hover:bg-danger hover:text-white",
+  action: "bg-action text-ink border border-action hover:bg-[#ffa55c] hover:shadow-[0_8px_24px_-8px_rgb(248_151_70/0.7)]",
+  primary: "bg-mci text-white border border-mci hover:bg-[#2479ae] hover:shadow-[0_8px_24px_-8px_rgb(31_106_153/0.6)]",
+  outline: "bg-transparent text-mci border border-mci hover:bg-mci hover:text-white",
+  ghost: "text-mci hover:underline underline-offset-4 px-0!",
+  danger: "bg-white text-danger border border-danger/60 hover:bg-danger hover:text-white",
 };
 
 const sizes: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-sm",
-  md: "h-12 px-4 text-base",
-  lg: "h-16 px-6 text-md",
+  sm: "h-8 px-4 text-sm",
+  md: "h-11 px-6 text-base",
+  lg: "h-14 px-8 text-md",
 };
 
 export function buttonClass(variant: ButtonVariant = "primary", size: ButtonSize = "md", extra?: string) {

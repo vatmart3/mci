@@ -16,8 +16,8 @@ import { formatDateTime, formatEur } from "@/lib/format";
 
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-box border border-rule bg-white p-4 sm:p-6">
-      <h2 className="t-mono mb-3 text-xs text-ink/70">{title.toUpperCase()}</h2>
+    <section className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-6">
+      <h2 className="t-label mb-4">{title}</h2>
       {children}
     </section>
   );
@@ -44,8 +44,8 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
     setMciNote(order.mciNote ?? "");
   }, [order, settingsLead]);
 
-  if (loading && !order) return <p className="t-mono text-sm text-ink/70">CHARGEMENT…</p>;
-  if (!order) return <p>Commande introuvable. <Link href="/admin/commandes" className="link-u">Retour</Link></p>;
+  if (loading && !order) return <p className="text-sm text-ink/70">Chargement…</p>;
+  if (!order) return <p className="rounded-box bg-white p-6 ring-1 ring-black/5">Commande introuvable. <Link href="/admin/commandes" className="link-u">Retour</Link></p>;
 
   const parsed = prices.map((p) => (p.trim() === "" ? null : Number(p.replace(",", "."))));
   const invalid = parsed.some((p) => p !== null && (!Number.isFinite(p) || p < 0));
@@ -72,36 +72,36 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
 
   return (
     <div className="space-y-6">
-      <Link href="/admin/commandes" className="link-u text-sm">
+      <Link href="/admin/commandes" className="link-u inline-flex text-sm font-medium">
         ← Commandes
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="t-mono text-2xl text-mci">{order.number}</h1>
+        <h1 className="t-mono break-all text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">{order.number}</h1>
         <StatusBadge status={order.status} />
         {order.customerAcceptedAt ? <Badge tone="ok">PRO-FORMA VALIDÉE PAR LE CLIENT</Badge> : null}
         {order.isDemo ? <DemoBadge /> : null}
         {order.accountId ? <Badge tone="mci">COMPTE PRO</Badge> : <Badge>INVITÉ</Badge>}
       </div>
-      <p className="text-sm text-ink/70">Reçue le {formatDateTime(order.createdAt)} · dernière mise à jour {formatDateTime(order.updatedAt)}</p>
+      <p className="-mt-3 text-sm text-ink/70">Reçue le {formatDateTime(order.createdAt)} · dernière mise à jour {formatDateTime(order.updatedAt)}</p>
 
-      <div className="grid gap-6 xl:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
         <div className="space-y-6 xl:col-span-2">
           <Block title="Lignes, prix et délai">
             <div className="relative overflow-x-auto">
               <table className="w-full min-w-[620px] text-sm">
                 <thead>
-                  <tr className="t-mono border-b border-ink text-left text-xs text-ink/70">
-                    <th className="py-2 pr-2 font-normal">RÉF.</th>
-                    <th className="py-2 pr-2 font-normal">DÉSIGNATION</th>
-                    <th className="py-2 pr-2 font-normal">CONDIT.</th>
-                    <th className="py-2 pr-2 text-right font-normal">QTÉ</th>
-                    <th className="w-32 py-2 pr-2 text-right font-normal">PU HT (€)</th>
-                    <th className="py-2 text-right font-normal">TOTAL</th>
+                  <tr className="text-left text-xs text-ink/70">
+                    <th className="py-2 pr-2 font-medium">Réf.</th>
+                    <th className="py-2 pr-2 font-medium">Désignation</th>
+                    <th className="py-2 pr-2 font-medium">Condit.</th>
+                    <th className="py-2 pr-2 text-right font-medium">Qté</th>
+                    <th className="w-32 py-2 pr-2 text-right font-medium">PU HT (€)</th>
+                    <th className="py-2 text-right font-medium">Total</th>
                   </tr>
                 </thead>
                 <tbody>
                   {order.lines.map((l, i) => (
-                    <tr key={i} className="border-b border-rule align-top">
+                    <tr key={i} className="border-t border-black/5 align-top transition-colors duration-200 hover:bg-salt/60">
                       <td className="t-code py-2 pr-2 text-mci">{l.code}</td>
                       <td className="py-2 pr-2">
                         {l.name}
@@ -120,17 +120,17 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                   ))}
                 </tbody>
                 <tfoot>
-                  <tr>
-                    <td colSpan={5} className="t-mono pt-3 text-right text-xs text-ink/70">
-                      TOTAL HT
+                  <tr className="border-t border-black/10">
+                    <td colSpan={5} className="pr-2 pt-3 text-right text-sm font-medium text-ink/70">
+                      Total HT
                     </td>
-                    <td className="t-mono pt-3 text-right">{draftTotal != null ? formatEur(draftTotal) : orderTotal(order) != null ? formatEur(orderTotal(order)!) : "—"}</td>
+                    <td className="t-mono pt-3 text-right font-semibold">{draftTotal != null ? formatEur(draftTotal) : orderTotal(order) != null ? formatEur(orderTotal(order)!) : "—"}</td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             {invalid ? <p className="mt-2 text-sm text-danger">Prix invalide.</p> : null}
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
                 <Label htmlFor="lead">Délai de livraison</Label>
                 <Input id="lead" fieldSize="sm" value={leadTime} onChange={(e) => setLeadTime(e.target.value)} placeholder="Ex. sous 72 h ouvrées" />
@@ -141,8 +141,8 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                 <Input id="mcinote" fieldSize="sm" value={mciNote} onChange={(e) => setMciNote(e.target.value)} />
               </div>
             </div>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <Button size="sm" variant="outline" disabled={busy || invalid} onClick={() => apply(order.status)}>
+            <div className="mt-6 flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" className="h-auto! min-h-8 whitespace-normal! py-1.5 text-left" disabled={busy || invalid} onClick={() => apply(order.status)}>
                 Enregistrer sans changer le statut
               </Button>
               <PdfButton order={{ ...order, lines: order.lines.map((l, i) => ({ ...l, unitPriceHt: parsed[i] ?? null })), leadTime }} kind="proforma" label="Pro-forma PDF" />
@@ -174,17 +174,17 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
               <p className="text-sm text-ink/70">Commande clôturée.</p>
             )}
             {msg ? (
-              <p role="status" className="mt-3 text-sm text-ok">
+              <p role="status" className="mt-4 rounded-tech bg-ok/10 px-4 py-3 text-sm text-ok">
                 {msg}
               </p>
             ) : null}
           </Block>
 
           <Block title="Frise">
-            <ol className="space-y-2 text-sm">
+            <ol className="space-y-3 text-sm">
               {order.events.map((e, i) => (
-                <li key={i} className="grid grid-cols-[150px_1fr] gap-3">
-                  <span className="t-mono text-xs text-ink/70">{formatDateTime(e.at)}</span>
+                <li key={i} className="grid grid-cols-1 gap-0.5 sm:grid-cols-[160px_1fr] sm:gap-3">
+                  <span className="t-mono pt-px text-xs text-ink/70">{formatDateTime(e.at)}</span>
                   <span>
                     <strong>{statusLabels[e.status]}</strong>
                     {e.note ? ` — ${e.note}` : ""}
@@ -200,16 +200,25 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
 
         <div className="space-y-6">
           <Block title="Client">
-            <p className="font-semibold">{order.customer.company}</p>
-            <p className="t-mono text-xs">SIRET {order.customer.siret}</p>
+            <p className="break-words font-semibold">{order.customer.company}</p>
+            <p className="t-mono mt-0.5 text-xs text-ink/70">SIRET {order.customer.siret}</p>
             <p className="mt-2 text-sm">{order.customer.contactName}</p>
-            <p className="text-sm">
+            <p className="break-words text-sm">
               <a className="link-u" href={`tel:${order.customer.phone}`}>{order.customer.phone}</a> ·{" "}
-              <a className="link-u" href={`mailto:${order.customer.email}`}>{order.customer.email}</a>
+              <a className="link-u break-all" href={`mailto:${order.customer.email}`}>{order.customer.email}</a>
             </p>
-            <p className="mt-2 text-sm">Type : {order.customer.kind}</p>
-            {order.poNumber ? <p className="t-mono mt-2 text-sm">ENGAGEMENT · {order.poNumber}</p> : null}
-            {order.chorus ? <p className="t-mono text-sm">CHORUS PRO{order.chorusServiceCode ? ` · ${order.chorusServiceCode}` : ""}</p> : null}
+            <p className="mt-2 text-sm text-ink/70">Type : {order.customer.kind}</p>
+            {order.poNumber ? (
+              <p className="mt-3 text-sm">
+                <span className="text-xs font-medium text-ink/70">Engagement · </span>
+                <span className="t-mono">{order.poNumber}</span>
+              </p>
+            ) : null}
+            {order.chorus ? (
+              <p className="mt-1 text-sm">
+                Chorus Pro{order.chorusServiceCode ? <span className="t-mono"> · {order.chorusServiceCode}</span> : null}
+              </p>
+            ) : null}
           </Block>
           <Block title="Livraison">
             <p className="text-sm">
@@ -222,11 +231,11 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
             {order.deliverySlots ? <p className="mt-1 text-sm">Créneaux : {order.deliverySlots}</p> : null}
             {order.billing ? (
               <p className="mt-3 text-sm">
-                <span className="t-mono text-xs text-ink/70">FACTURATION · </span>
+                <span className="text-xs font-medium text-ink/70">Facturation · </span>
                 {order.billing.company}, {order.billing.line1}, {order.billing.postalCode} {order.billing.city}
               </p>
             ) : null}
-            {order.comment ? <p className="mt-3 rounded-tech bg-salt p-2 text-sm">« {order.comment} »</p> : null}
+            {order.comment ? <p className="mt-4 rounded-tech bg-salt px-4 py-3 text-sm">« {order.comment} »</p> : null}
           </Block>
           {order.accountId ? (
             <Block title="Déposer un document (espace pro du client)">
@@ -251,7 +260,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                   <option value="proforma">Pro-forma</option>
                   <option value="autre">Autre</option>
                 </Select>
-                <label className="flex cursor-pointer items-center gap-2 rounded-tech border border-dashed border-ink/40 px-3 py-2 text-sm hover:border-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
+                <label className="flex cursor-pointer items-center gap-2 rounded-tech bg-salt px-4 py-3 text-sm ring-1 ring-black/5 transition-shadow duration-200 hover:ring-black/20 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
                   <input type="file" accept="application/pdf,image/*" className="sr-only" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
                   <Icon name="doc" size={16} />
                   <span className="truncate">{file ? file.name : "Choisir un fichier (PDF, image)"}</span>

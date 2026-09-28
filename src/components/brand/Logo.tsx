@@ -31,16 +31,16 @@ export function Logo({ className, inverted = false }: { className?: string; inve
       <LogoMark size={40} />
       <span className="flex flex-col leading-none">
         <span
-          className="font-display font-black"
-          style={{ color: ink, fontSize: 26, fontVariationSettings: '"wdth" 125', letterSpacing: "-0.01em" }}
+          className="font-display font-extrabold"
+          style={{ color: ink, fontSize: 27, letterSpacing: "-0.04em" }}
         >
           MCI
-        </span>
-        <span className="t-mono mt-1 text-[10px] tracking-[0.3em]" style={{ color: inverted ? "#FFFFFF" : "#0E2533" }}>
+        </span>{" "}
+        <span className="mt-1 text-[10px] font-semibold tracking-[0.34em]" style={{ color: inverted ? "#FFFFFF" : "#0E2533" }}>
           SÈTE
         </span>
       </span>
-      <span className="sr-only">MCI Sète — accueil</span>
+      <span className="sr-only"> — accueil</span>
     </span>
   );
 }

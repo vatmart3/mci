@@ -6,13 +6,13 @@ export function FooterLive() {
   const settings = useSession((s) => s.settings);
   return (
     <>
-      <p className="t-mono mb-2 mt-8 text-xs text-white/70">HORAIRES</p>
-      <p className="text-sm text-white/90">{settings.hours || "Appelez-nous : on vous répond aux heures de bureau."}</p>
+      <p className="mb-2 mt-6 text-xs font-semibold text-ink">Horaires</p>
+      <p className="text-xs text-ink/70">{settings.hours || "Appelez-nous : on vous répond aux heures de bureau."}</p>
       {settings.socials.length ? (
         <ul className="mt-6 space-y-1 text-sm">
           {settings.socials.map((s) => (
             <li key={s.url}>
-              <a href={s.url} target="_blank" rel="noopener noreferrer" className="link-u text-white/90 hover:text-white">
+              <a href={s.url} target="_blank" rel="noopener noreferrer" className="text-xs text-ink/70 hover:text-ink hover:underline">
                 {s.label}
               </a>
             </li>

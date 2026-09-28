@@ -154,8 +154,8 @@ export function Icon({
       fill="none"
       stroke="currentColor"
       strokeWidth={1.5}
-      strokeLinecap="square"
-      strokeLinejoin="miter"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       aria-hidden={title ? undefined : true}
       role={title ? "img" : undefined}
       focusable="false"

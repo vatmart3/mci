@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Contrôle automatique des interdits de charte (brief §6 / §18).
+ * Contrôle automatique des interdits de charte (v2, refonte arrondie).
  * Échoue (code 1) si un motif interdit apparaît dans src/ ou dans les styles.
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -16,19 +16,15 @@ const files = [];
   }
 })(path.join(root, "src"));
 
-const ALLOWED_SPACING = new Set(["0", "px", "1", "2", "3", "4", "6", "8", "12", "16", "24", "32"]);
+// Charte v2 (refonte « Apple ») : arrondis, dégradés, flous et ombres douces autorisés.
+// Restent interdits : polices génériques, bibliothèques d'icônes, emojis, curseur perso, mode sombre auto.
 const rules = [
-  { name: "dégradé", re: /gradient/i },
-  { name: "texte en dégradé / background-clip", re: /bg-clip-text|background-clip\s*:\s*text/ },
-  { name: "glassmorphism", re: /backdrop-blur|backdrop-filter/ },
   { name: "police interdite", re: /\b(Inter|Roboto|Poppins)\b(?!\w)/ },
   { name: "icônes Lucide / Heroicons", re: /lucide|heroicons/i },
-  { name: "rayon > 6 px", re: /\brounded-(lg|xl|2xl|3xl)\b/ },
-  { name: "grosse ombre floue", re: /\bshadow-(md|lg|xl|2xl)\b/ },
-  { name: "liseré coloré de carte", re: /\bborder-(l|t)-(2|4|8)\b/ },
   { name: "curseur personnalisé", re: /cursor\s*:\s*url\(|cursor-\[url/ },
-  { name: "mode sombre", re: /\bdark:(?=\S)|prefers-color-scheme:\s*dark/ },
+  { name: "mode sombre automatique", re: /\bdark:(?=\S)|prefers-color-scheme:\s*dark/ },
   { name: "emoji", re: /\p{Extended_Pictographic}/u },
+  { name: "Lorem ipsum", re: /lorem ipsum/i },
 ];
 
 const issues = [];
@@ -37,10 +33,6 @@ for (const file of files) {
   const lines = readFileSync(file, "utf8").split("\n");
   lines.forEach((line, i) => {
     for (const r of rules) if (r.re.test(line)) issues.push(`${rel}:${i + 1}  [${r.name}]  ${line.trim().slice(0, 120)}`);
-    // échelle d'espacement stricte : 4 · 8 · 12 · 16 · 24 · 32 · 48 · 64 · 96 · 128
-    for (const m of line.matchAll(/(?<![\w-])-?(?:p|px|py|pt|pb|pl|pr|ps|pe|m|mx|my|mt|mb|ml|mr|gap|gap-x|gap-y|space-x|space-y)-(\d+(?:\.\d+)?|px)(?![\w.\]])/g)) {
-      if (!ALLOWED_SPACING.has(m[1])) issues.push(`${rel}:${i + 1}  [espacement hors échelle]  ${m[0]}`);
-    }
   });
 }
 

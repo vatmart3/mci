@@ -17,7 +17,7 @@ export function AddSelection({ lines, label = "Ajouter la sélection au bon de c
     <button
       ref={ref}
       type="button"
-      className={buttonClass("action", "lg", `!whitespace-normal text-left ${className ?? ""}`)}
+      className={buttonClass("action", "lg", `!whitespace-normal text-center leading-tight ${className ?? ""}`)}
       onClick={() => {
         addMany(lines);
         if (image && ref.current) fly(ref.current.getBoundingClientRect(), image);

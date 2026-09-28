@@ -5,7 +5,7 @@ import { useSession } from "@/lib/store/session";
 import { getBackend } from "@/lib/backend";
 import { Button } from "@/components/ui/Button";
 import { Input, Label, Textarea } from "@/components/ui/Field";
-import { ToConfirm } from "@/components/ui/Badge";
+import { ToConfirm, DemoBadge } from "@/components/ui/Badge";
 import { priceModeLabels } from "@/lib/orders";
 import { IS_DEMO } from "@/lib/env";
 import { cx } from "@/lib/cx";
@@ -35,14 +35,20 @@ export default function AdminSettings() {
     <div className="max-w-3xl space-y-8">
       <h1 className="t-h2">Réglages</h1>
 
-      <fieldset className="rounded-box border border-rule bg-white p-4 sm:p-6">
-        <legend className="t-mono px-1 text-xs text-ink/70">PRIX</legend>
-        <div className="space-y-2">
+      <fieldset className="min-w-0 rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
+        <legend className="t-label float-left mb-5 w-full">Prix</legend>
+        <div className="clear-both space-y-2">
           {(Object.keys(priceModeLabels) as PriceMode[]).map((m) => (
-            <label key={m} className={cx("flex cursor-pointer items-start gap-3 rounded-tech border p-3", s.priceMode === m ? "border-ink" : "border-rule")}>
-              <input type="radio" name="pm" className="mt-1" checked={s.priceMode === m} onChange={() => setS({ ...s, priceMode: m })} />
-              <span>
-                <span className="t-mono block text-xs">{m.toUpperCase()}</span>
+            <label
+              key={m}
+              className={cx(
+                "flex cursor-pointer items-start gap-3 rounded-tech p-4 transition-[background-color,box-shadow] duration-200",
+                s.priceMode === m ? "bg-mci/5 ring-2 ring-mci" : "bg-salt ring-1 ring-transparent hover:ring-black/10",
+              )}
+            >
+              <input type="radio" name="pm" className="mt-1 size-4 shrink-0 accent-mci" checked={s.priceMode === m} onChange={() => setS({ ...s, priceMode: m })} />
+              <span className="min-w-0">
+                <span className="t-mono block text-xs text-ink/70">{m}</span>
                 {priceModeLabels[m]}
               </span>
             </label>
@@ -50,12 +56,12 @@ export default function AdminSettings() {
         </div>
       </fieldset>
 
-      <fieldset className="grid gap-4 rounded-box border border-rule bg-white p-4 sm:p-6">
-        <legend className="t-mono px-1 text-xs text-ink/70">INFORMATIONS PUBLIQUES</legend>
-        <div>
+      <fieldset className="grid grid-cols-1 min-w-0 gap-5 rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
+        <legend className="t-label float-left mb-1 w-full">Informations publiques</legend>
+        <div className="clear-both">
           <Label htmlFor="st-hours">Horaires {s.hours ? null : <ToConfirm />}</Label>
           <Input id="st-hours" value={s.hours} onChange={(e) => setS({ ...s, hours: e.target.value })} placeholder="Du lundi au vendredi, 8 h – 12 h / 14 h – 17 h" />
-          <p className="mt-1 text-xs text-ink/70">Vide = masqué côté public (« Appelez-nous »).</p>
+          <p className="mt-1.5 text-xs text-ink/70">Vide = masqué côté public (« Appelez-nous »).</p>
         </div>
         <div>
           <Label htmlFor="st-banner">Bandeau d&apos;information</Label>
@@ -68,28 +74,30 @@ export default function AdminSettings() {
         <div>
           <Label htmlFor="st-socials">Réseaux sociaux (une ligne « Nom | https://… »)</Label>
           <Textarea id="st-socials" rows={3} className="t-mono text-sm" value={socialsText} onChange={(e) => setSocialsText(e.target.value)} placeholder="LinkedIn | https://www.linkedin.com/company/…" />
-          <p className="mt-1 text-xs text-ink/70">Aucun lien n&apos;est affiché tant que ce champ est vide (les anciens liens pointaient vers les comptes Wix).</p>
+          <p className="mt-1.5 text-xs text-ink/70">Aucun lien n&apos;est affiché tant que ce champ est vide (les anciens liens pointaient vers les comptes Wix).</p>
         </div>
       </fieldset>
 
-      <fieldset className="grid gap-4 rounded-box border border-rule bg-white p-4 sm:p-6">
-        <legend className="t-mono px-1 text-xs text-ink/70">NOTIFICATIONS</legend>
-        <div>
+      <fieldset className="grid grid-cols-1 min-w-0 gap-5 rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
+        <legend className="t-label float-left mb-1 w-full">Notifications</legend>
+        <div className="clear-both">
           <Label htmlFor="st-notify">Emails qui reçoivent les commandes et demandes (virgules)</Label>
           <Input id="st-notify" value={s.notifyEmails.join(", ")} onChange={(e) => setS({ ...s, notifyEmails: e.target.value.split(",").map((x) => x.trim()).filter(Boolean) })} />
-          {!IS_DEMO ? <p className="mt-1 text-xs text-ink/70">La variable d&apos;environnement MCI_NOTIFY_EMAILS, si elle est définie, est prioritaire.</p> : null}
+          {!IS_DEMO ? <p className="mt-1.5 text-xs text-ink/70">La variable d&apos;environnement MCI_NOTIFY_EMAILS, si elle est définie, est prioritaire.</p> : null}
         </div>
       </fieldset>
 
-      <div className="flex items-center gap-4">
+      <div className="glass sticky bottom-4 z-10 flex flex-wrap items-center gap-4 rounded-box p-3 pl-4 shadow-float ring-1 ring-black/5">
         <Button onClick={save}>Enregistrer</Button>
-        {msg ? <span role="status" className="text-sm text-ok">{msg}</span> : null}
+        {msg ? <span role="status" className="text-sm font-medium text-ok">{msg}</span> : null}
       </div>
 
       {IS_DEMO ? (
-        <fieldset className="rounded-box border border-warn/60 bg-warn/10 p-4 sm:p-6">
-          <legend className="t-mono px-1 text-xs">DONNÉES DE DÉMONSTRATION</legend>
-          <p className="text-sm">5 comptes et 12 commandes fictifs, étiquetés DÉMO. Stockés dans ce navigateur uniquement.</p>
+        <fieldset className="min-w-0 rounded-box bg-warn/10 p-4 sm:p-8">
+          <legend className="t-label float-left mb-4 flex w-full flex-wrap items-center gap-2">
+            Données de démonstration <DemoBadge />
+          </legend>
+          <p className="clear-both text-sm">5 comptes et 12 commandes fictifs, étiquetés DÉMO. Stockés dans ce navigateur uniquement.</p>
           <div className="mt-4 flex flex-wrap gap-3">
             <Button
               variant="outline"
@@ -116,7 +124,7 @@ export default function AdminSettings() {
               Supprimer les données DÉMO
             </Button>
           </div>
-          <p className="mt-3 text-xs">Connecté en tant que {user?.email}.</p>
+          <p className="mt-4 break-all text-xs text-ink/70">Connecté en tant que {user?.email}.</p>
         </fieldset>
       ) : null}
     </div>

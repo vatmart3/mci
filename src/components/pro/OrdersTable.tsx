@@ -6,44 +6,48 @@ import { ReorderButton } from "./OrderActions";
 import { cx } from "@/lib/cx";
 
 export function OrdersTable({ orders, selected, onSelect }: { orders: Order[]; selected?: string | null; onSelect?: (o: Order) => void }) {
-  if (!orders.length) return <p className="py-8 text-ink/70">Aucune commande pour l&apos;instant.</p>;
+  if (!orders.length) return <p className="rounded-box bg-white px-6 py-10 text-center text-ink/70 ring-1 ring-black/5">Aucune commande pour l&apos;instant.</p>;
   return (
-    <div className="relative overflow-x-auto">
-      <table className="w-full min-w-[640px] text-sm">
-        <thead>
-          <tr className="t-mono border-b border-ink text-left text-xs text-ink/70">
-            <th className="py-2 pr-3 font-normal">N°</th>
-            <th className="py-2 pr-3 font-normal">DATE</th>
-            <th className="py-2 pr-3 font-normal">RÉF.</th>
-            <th className="py-2 pr-3 font-normal">STATUT</th>
-            <th className="py-2 font-normal">
-              <span className="sr-only">Actions</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {orders.map((o) => (
-            <tr key={o.id} className={cx("border-b border-rule", selected === o.id && "bg-white")}>
-              <td className="py-3 pr-3">
-                <button type="button" className="t-mono text-mci underline-offset-4 hover:underline" onClick={() => onSelect?.(o)} aria-expanded={selected === o.id}>
-                  {o.number}
-                </button>
-                {o.isDemo ? <span className="ml-2"><DemoBadge /></span> : null}
-              </td>
-              <td className="t-mono py-3 pr-3">{formatDate(o.createdAt)}</td>
-              <td className="py-3 pr-3 text-ink/80">
-                <span className="line-clamp-1">{o.lines.map((l) => l.code).join(", ")}</span>
-              </td>
-              <td className="py-3 pr-3">
-                <StatusBadge status={o.status} />
-              </td>
-              <td className="py-3 text-right">
-                <ReorderButton order={o} />
-              </td>
+    <div className="overflow-hidden rounded-box bg-white ring-1 ring-black/5">
+      <div className="relative overflow-x-auto">
+        <table className="w-full min-w-[640px] text-sm">
+          <thead>
+            <tr className="text-left text-xs text-ink/70">
+              <th className="py-3 pl-5 pr-3 font-medium">N°</th>
+              <th className="px-3 py-3 font-medium">Date</th>
+              <th className="px-3 py-3 font-medium">Réf.</th>
+              <th className="px-3 py-3 font-medium">Statut</th>
+              <th className="py-3 pl-3 pr-5 font-medium">
+                <span className="sr-only">Actions</span>
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {orders.map((o) => (
+              <tr key={o.id} className={cx("border-t border-black/5 transition-colors duration-200", selected === o.id ? "bg-mci/5" : "hover:bg-salt")}>
+                <td className="py-3.5 pl-5 pr-3">
+                  <span className="flex items-center gap-2">
+                    <button type="button" className="t-mono font-medium text-mci underline-offset-4 hover:underline" onClick={() => onSelect?.(o)} aria-expanded={selected === o.id}>
+                      {o.number}
+                    </button>
+                    {o.isDemo ? <DemoBadge /> : null}
+                  </span>
+                </td>
+                <td className="t-mono px-3 py-3.5 text-ink/70">{formatDate(o.createdAt)}</td>
+                <td className="max-w-[240px] px-3 py-3.5 text-ink/70">
+                  <span className="line-clamp-1">{o.lines.map((l) => l.code).join(", ")}</span>
+                </td>
+                <td className="px-3 py-3.5">
+                  <StatusBadge status={o.status} />
+                </td>
+                <td className="py-3.5 pl-3 pr-5 text-right">
+                  <ReorderButton order={o} />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

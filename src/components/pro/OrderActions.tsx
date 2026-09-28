@@ -61,7 +61,9 @@ export function OrderClientActions({ order, onChange }: { order: Order; onChange
     setBusy(true);
     setErr(null);
     try {
-      onChange?.(await fn());
+      // exécuter l'action d'abord : `onChange?.(await fn())` n'appellerait pas fn() sans onChange
+      const updated = await fn();
+      onChange?.(updated);
     } catch (e) {
       setErr(e instanceof Error ? e.message : "Action impossible");
     } finally {
@@ -73,17 +75,17 @@ export function OrderClientActions({ order, onChange }: { order: Order; onChange
   return (
     <div className="flex flex-wrap items-center gap-2">
       {canApprove ? (
-        <Button variant="action" size="sm" disabled={busy} onClick={() => run(async () => (await getBackend()).approveOrder(order.id))}>
+        <Button variant="action" size="sm" className="h-auto! min-h-8 whitespace-normal! py-1.5 text-left" disabled={busy} onClick={() => run(async () => (await getBackend()).approveOrder(order.id))}>
           <Icon name="check" size={16} /> Valider et transmettre à MCI
         </Button>
       ) : null}
-      {order.status === "pending_approval" && user?.role === "buyer" ? <span className="text-sm text-ink/70">En attente de votre valideur.</span> : null}
+      {order.status === "pending_approval" && user?.role === "buyer" ? <span className="rounded-full bg-salt px-3 py-1 text-sm text-ink/70">En attente de votre valideur.</span> : null}
       {canAccept ? (
-        <Button variant="action" size="sm" disabled={busy} onClick={() => run(async () => (await getBackend()).acceptProforma(order.id))}>
+        <Button variant="action" size="sm" className="h-auto! min-h-8 whitespace-normal! py-1.5 text-left" disabled={busy} onClick={() => run(async () => (await getBackend()).acceptProforma(order.id))}>
           <Icon name="check" size={16} /> Valider la pro-forma
         </Button>
       ) : null}
-      {order.status === "confirmed" && order.customerAcceptedAt ? <span className="text-sm text-ok">Pro-forma validée.</span> : null}
+      {order.status === "confirmed" && order.customerAcceptedAt ? <span className="rounded-full bg-ok/10 px-3 py-1 text-sm font-medium text-ok">Pro-forma validée.</span> : null}
       {err ? <span role="alert" className="text-sm text-danger">{err}</span> : null}
     </div>
   );

@@ -1,6 +1,6 @@
 /**
  * Étiquette produit générée dynamiquement (CanvasTexture) :
- * bandeau bleu MCI + soleil orange, code en Archivo large, famille, réf. mono, pictogramme.
+ * bandeau bleu MCI + soleil orange, code en Geist, famille, réf. mono, pictogramme.
  */
 import * as THREE from "three";
 
@@ -16,7 +16,7 @@ export interface LabelInput {
   wrap?: boolean;
 }
 
-const C = { mci: "#206996", action: "#F89746", ink: "#0E2533", white: "#FFFFFF", rule: "#D5DCE0", salt: "#F3F1EC", warn: "#C98A1B" };
+const C = { mci: "#1F6A99", action: "#F89746", ink: "#1D1D1F", white: "#FFFFFF", rule: "#D2D2D7", salt: "#F5F5F7", warn: "#B7791F" };
 
 function cssFont(varName: string, fallback: string) {
   if (typeof window === "undefined") return fallback;
@@ -27,11 +27,11 @@ function cssFont(varName: string, fallback: string) {
 let fontsReady: Promise<void> | null = null;
 export function ensureFonts(): Promise<void> {
   if (fontsReady) return fontsReady;
-  const display = cssFont("--font-archivo", "Archivo, sans-serif");
-  const mono = cssFont("--font-plex", "monospace");
-  const body = cssFont("--font-instrument", "sans-serif");
+  const display = cssFont("--font-geist", "Geist, sans-serif");
+  const mono = cssFont("--font-geist-mono", "monospace");
+  const body = cssFont("--font-geist", "sans-serif");
   fontsReady = Promise.all([
-    document.fonts.load(`800 64px ${display}`),
+    document.fonts.load(`700 64px ${display}`),
     document.fonts.load(`500 24px ${mono}`),
     document.fonts.load(`500 24px ${body}`),
   ])
@@ -78,9 +78,9 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
-  const display = cssFont("--font-archivo", "Archivo, sans-serif");
-  const mono = cssFont("--font-plex", "monospace");
-  const body = cssFont("--font-instrument", "sans-serif");
+  const display = cssFont("--font-geist", "Geist, sans-serif");
+  const mono = cssFont("--font-geist-mono", "monospace");
+  const body = cssFont("--font-geist", "sans-serif");
 
   // Pour les étiquettes enveloppantes (aérosol, cartouche), le contenu occupe la face avant.
   const wrapAround = input.wrap ?? input.aspect > 2.2;
@@ -101,8 +101,7 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
   ctx.arc(x0 + pad + band * 0.28, band * 0.5, band * 0.26, 0, Math.PI * 2);
   ctx.fill();
   ctx.fillStyle = C.white;
-  ctx.font = `900 ${Math.round(band * 0.46)}px ${display}`;
-  (ctx as CanvasRenderingContext2D & { fontStretch?: string }).fontStretch = "expanded";
+  ctx.font = `800 ${Math.round(band * 0.46)}px ${display}`;
   ctx.textBaseline = "middle";
   ctx.fillText("MCI", x0 + pad + band * 0.66, band * 0.53);
   const mciEnd = x0 + pad + band * 0.66 + ctx.measureText("MCI").width;
@@ -120,7 +119,7 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
   // Code produit (nom commercial)
   ctx.fillStyle = C.ink;
   ctx.textBaseline = "alphabetic";
-  const codeSize = fitText(ctx, input.code, (s) => `800 ${s}px ${display}`, cw - pad * 2, Math.round(H * 0.2), 28);
+  const codeSize = fitText(ctx, input.code, (s) => `700 ${s}px ${display}`, cw - pad * 2, Math.round(H * 0.2), 28);
   const codeY = band + H * 0.1 + codeSize * 0.85;
   ctx.fillText(input.code, x0 + pad, codeY);
 

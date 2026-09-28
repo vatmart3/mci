@@ -7,6 +7,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ProductList } from "@/components/catalog/ProductList";
 import { AddSelection } from "@/components/cart/AddSelection";
 import { BiocideNotice } from "@/components/catalog/BiocideNotice";
+import { Icon } from "@/components/ui/Icon";
 import { JsonLd, pageMeta } from "@/lib/seo";
 import { SITE_URL } from "@/lib/env";
 import { company } from "@/data/company";
@@ -37,48 +38,55 @@ export default async function SectorPage({ params }: { params: Promise<{ secteur
     <>
       <div className="wrap pt-8 lg:pt-12">
         <Breadcrumb items={[{ name: "Accueil", path: "/" }, { name: "Secteurs", path: "/#secteurs" }, { name: sector.name, path: `/secteurs/${sector.slug}` }]} />
-        <div className="grid-12 mt-8 gap-y-6">
-          <p className="t-mono col-span-12 text-sm text-ink/70">
-            <span className="text-mci">SECTEUR {String(sector.position).padStart(2, "0")}</span> — {sectorGroups[sector.group].toUpperCase()}
+        <header className="mt-10 grid grid-cols-1 gap-6 lg:mt-14 lg:grid-cols-12 lg:items-end lg:gap-x-6">
+          <div data-reveal className="min-w-0 lg:col-span-8">
+            <p className="t-eyebrow">
+              Secteur {String(sector.position).padStart(2, "0")} <span className="text-ink/70">· {sectorGroups[sector.group]}</span>
+            </p>
+            <h1 className="t-h1 mt-3">{sector.name}</h1>
+          </div>
+          <p data-reveal className="t-lead min-w-0 text-ink/70 lg:col-span-4" style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
+            {sector.buyer}
           </p>
-          <h1 className="t-display col-span-12 lg:col-span-9">{sector.name}</h1>
-          <p className="col-span-12 text-ink/80 lg:col-span-5">{sector.buyer}</p>
-        </div>
+        </header>
 
-        {/* Le problème terrain, façon fiche d'intervention */}
-        <section aria-labelledby="terrain" className="crop mt-12 grid-12 gap-y-4 border border-rule bg-white p-6 lg:p-12">
-          <h2 id="terrain" className="t-mono col-span-12 text-xs text-ink/70 lg:col-span-3">
-            LE PROBLÈME, SUR LE TERRAIN
-          </h2>
-          <p className="t-h2 col-span-12 font-semibold lg:col-span-9" style={{ fontWeight: 600 }}>
-            {sector.problem}
-          </p>
+        {/* Le problème terrain */}
+        <section data-reveal aria-labelledby="terrain" className="relative mt-12 overflow-hidden rounded-tile bg-deep p-8 text-white sm:p-12 lg:mt-16 lg:p-16">
+          <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-mci/40 blur-3xl" />
+          <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-x-6">
+            <h2 id="terrain" className="t-label min-w-0 text-sky lg:col-span-3">
+              Le problème, sur le terrain
+            </h2>
+            <p className="t-h2 min-w-0 text-white lg:col-span-9" style={{ fontWeight: 600 }}>
+              {sector.problem}
+            </p>
+          </div>
         </section>
       </div>
 
-      <section className="wrap mt-16" aria-labelledby="selection">
-        <div className="flex flex-col gap-6 pb-6 lg:flex-row lg:items-end lg:justify-between">
-          <div>
-            <p className="t-mono text-sm text-ink/70">
-              <span className="text-mci">{String(list.length).padStart(2, "0")}</span> — LA SÉLECTION
+      <section className="wrap mt-20 lg:mt-24" aria-labelledby="selection">
+        <div data-reveal className="flex flex-col gap-6 pb-8 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0">
+            <p className="t-eyebrow">
+              La sélection <span className="text-ink/70">· {list.length} référence{list.length > 1 ? "s" : ""}</span>
             </p>
-            <h2 id="selection" className="t-h2 mt-3">
+            <h2 id="selection" className="t-h1 mt-3 max-w-[18ch]">
               Ce que MCI propose pour {sector.name.toLowerCase()}.
             </h2>
           </div>
-          <AddSelection lines={list.map((p) => ({ productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }))} image={list[0] ? `/packshots/${list[0].slug}.webp` : undefined} />
+          <AddSelection lines={list.map((p) => ({ productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }))} image={list[0] ? `/packshots/${list[0].slug}.webp` : undefined} className="self-start lg:self-auto" />
         </div>
         {hasBiocide ? <BiocideNotice className="mb-6 max-w-[720px]" /> : null}
         <ProductList products={list} />
-        <p className="mt-4 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
+        <p className="mt-4 px-2 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
       </section>
 
-      <section className="wrap mt-24" aria-labelledby="seo-secteur">
-        <div className="grid-12 gap-y-6">
-          <h2 id="seo-secteur" className="t-h2 col-span-12 lg:col-span-4">
+      <section className="wrap mt-20 lg:mt-28" aria-labelledby="seo-secteur">
+        <div data-reveal className="grid grid-cols-1 gap-8 rounded-tile bg-salt p-8 sm:p-12 lg:grid-cols-12 lg:gap-x-6 lg:p-16">
+          <h2 id="seo-secteur" className="t-h2 min-w-0 lg:col-span-4">
             {sector.name} : comment on travaille
           </h2>
-          <div className="prose-mci col-span-12 max-w-[68ch] text-ink/85 lg:col-span-7 lg:col-start-6">
+          <div className="prose-mci min-w-0 max-w-[68ch] text-ink/70 lg:col-span-7 lg:col-start-6">
             {sector.seo.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
@@ -90,13 +98,17 @@ export default async function SectorPage({ params }: { params: Promise<{ secteur
         </div>
       </section>
 
-      <nav className="wrap mt-24" aria-label="Autres secteurs">
-        <p className="t-mono mb-4 text-xs text-ink/70">AUTRES SECTEURS</p>
-        <ul className="flex flex-wrap gap-x-8 gap-y-3 border-t border-rule pt-6">
+      <nav className="wrap mt-20 lg:mt-24" aria-label="Autres secteurs">
+        <p className="t-label">Autres secteurs</p>
+        <ul className="mt-5 flex flex-wrap gap-2">
           {others.map((s) => (
-            <li key={s.slug}>
-              <Link href={`/secteurs/${s.slug}`} className="t-label hover:text-mci hover:underline">
-                {s.name}
+            <li key={s.slug} className="min-w-0 max-w-full">
+              <Link
+                href={`/secteurs/${s.slug}`}
+                className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-salt py-2.5 pl-5 pr-4 font-medium text-ink transition-colors duration-300 ease-out hover:bg-ink hover:text-white"
+              >
+                <span className="truncate">{s.name}</span>
+                <Icon name="chevronRight" size={16} className="shrink-0 opacity-50" />
               </Link>
             </li>
           ))}

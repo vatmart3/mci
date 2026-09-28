@@ -6,7 +6,7 @@ export const metadata = pageMeta({ title: "Conditions générales de vente", des
 
 export default function Cgv() {
   return (
-    <LegalPage title="Conditions générales de vente" path="/cgv" updated="VERSION PROVISOIRE — LES CONDITIONS PARTICULIÈRES DE LA PRO-FORMA PRÉVALENT">
+    <LegalPage title="Conditions générales de vente" path="/cgv" updated="Version provisoire — les conditions particulières de la pro-forma prévalent.">
       <p>Les présentes conditions s&apos;appliquent aux ventes de {company.name} à des clients professionnels (entreprises, collectivités, associations). Elles ne s&apos;appliquent pas aux consommateurs.</p>
       <h2 className="t-h2">1. Commande</h2>
       <p>Le bon de commande transmis en ligne constitue une demande. La vente est formée à la confirmation de MCI (prix, disponibilité et délai), le cas échéant par la pro-forma validée par le client.</p>

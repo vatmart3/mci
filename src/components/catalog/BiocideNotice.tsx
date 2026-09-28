@@ -5,9 +5,11 @@ import { cx } from "@/lib/cx";
 /** Mention réglementaire obligatoire pour les produits biocides. */
 export function BiocideNotice({ className }: { className?: string }) {
   return (
-    <p role="note" className={cx("flex items-start gap-3 rounded-tech border border-warn/60 bg-warn/10 p-3 text-sm text-ink", className)}>
-      <Icon name="warning" size={20} className="mt-px shrink-0 text-warn" />
-      <span>{BIOCIDE_NOTICE}</span>
+    <p role="note" className={cx("flex items-start gap-3 rounded-box bg-warn/10 px-4 py-3.5 text-sm leading-relaxed text-ink", className)}>
+      <span className="grid size-7 shrink-0 place-items-center rounded-full bg-warn/15 text-warn">
+        <Icon name="warning" size={16} />
+      </span>
+      <span className="pt-0.5">{BIOCIDE_NOTICE}</span>
     </p>
   );
 }

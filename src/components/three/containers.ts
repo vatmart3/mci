@@ -20,11 +20,11 @@ export const containerScale: Record<ContainerKind, number> = {
 };
 
 interface Mats {
-  plastic: THREE.MeshStandardMaterial;
-  cap: THREE.MeshStandardMaterial;
-  metal: THREE.MeshStandardMaterial;
+  plastic: THREE.MeshPhysicalMaterial;
+  cap: THREE.MeshPhysicalMaterial;
+  metal: THREE.MeshPhysicalMaterial;
   dark: THREE.MeshStandardMaterial;
-  capDark: THREE.MeshStandardMaterial;
+  capDark: THREE.MeshPhysicalMaterial;
 }
 
 let shared: Mats | null = null;
@@ -32,12 +32,12 @@ function mats(): Mats {
   if (shared) return shared;
   shared = {
     // PEHD blanc cassé, légèrement satiné
-    plastic: new THREE.MeshPhysicalMaterial({ color: "#EFECE3", roughness: 0.48, metalness: 0, clearcoat: 0.25, clearcoatRoughness: 0.6, sheen: 0.3, sheenColor: new THREE.Color("#ffffff") }),
-    cap: new THREE.MeshStandardMaterial({ color: "#206996", roughness: 0.32, metalness: 0.05 }),
-    // métal brossé
-    metal: new THREE.MeshStandardMaterial({ color: "#D3D8DC", roughness: 0.36, metalness: 0.85 }),
-    dark: new THREE.MeshStandardMaterial({ color: "#8E979E", roughness: 0.4, metalness: 0.8 }),
-    capDark: new THREE.MeshStandardMaterial({ color: "#1B5A80", roughness: 0.4 }),
+    plastic: new THREE.MeshPhysicalMaterial({ color: "#F4F2EE", roughness: 0.34, metalness: 0, clearcoat: 0.55, clearcoatRoughness: 0.28, sheen: 0.4, sheenRoughness: 0.5, sheenColor: new THREE.Color("#ffffff") }),
+    cap: new THREE.MeshPhysicalMaterial({ color: "#1F6A99", roughness: 0.22, metalness: 0.05, clearcoat: 0.8, clearcoatRoughness: 0.12 }),
+    // métal brossé, reflets nets
+    metal: new THREE.MeshPhysicalMaterial({ color: "#DDE2E6", roughness: 0.22, metalness: 1, clearcoat: 0.4, clearcoatRoughness: 0.2 }),
+    dark: new THREE.MeshStandardMaterial({ color: "#8E979E", roughness: 0.3, metalness: 0.9 }),
+    capDark: new THREE.MeshPhysicalMaterial({ color: "#17557D", roughness: 0.3, clearcoat: 0.5 }),
   };
   return shared;
 }
@@ -45,7 +45,8 @@ function mats(): Mats {
 function labelMaterial(spec: LabelSpec | null, aspect: number, wrap: boolean) {
   if (!spec) return new THREE.MeshStandardMaterial({ color: "#FFFFFF", roughness: 0.6 });
   const map = makeLabelTexture({ ...spec, aspect, wrap });
-  return new THREE.MeshStandardMaterial({ map, roughness: 0.55, metalness: 0 });
+  // étiquette pelliculée : léger vernis
+  return new THREE.MeshPhysicalMaterial({ map, roughness: 0.4, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.25 });
 }
 
 function lathe(points: [number, number][], segments: number) {

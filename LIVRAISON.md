@@ -2,6 +2,8 @@
 
 Branche : `claude/funny-mccarthy-vvhy72` · Next.js 15 · déployable tel quel sur Vercel (mode démo sans aucune clé).
 
+> **Refonte v2 (septembre 2026)** : tout le site est passé à un langage visuel arrondi inspiré d'Apple (Geist, pilules, tuiles, fonds animés en shader, 3D pilotée par le défilement). Détails dans DESIGN_NOTES.md (section v2). Les fonctionnalités, données et parcours sont inchangés et re-testés.
+
 ---
 
 ## 1. Ce qui est fait
@@ -30,13 +32,13 @@ Branche : `claude/funny-mccarthy-vvhy72` · Next.js 15 · déployable tel quel s
 
 | Critère | État | Comment c'est vérifié |
 |---|---|---|
-| Aucun élément de la liste §6 | ✅ | `npm run lint:design` (grep automatisé : gradient, backdrop-blur, Inter/Roboto/Poppins, lucide/heroicons, rounded-lg→3xl, bg-clip-text, grosses ombres, liserés, curseurs, dark mode, emojis, espacements hors échelle) : 0 écart sur 141 fichiers |
-| Palette limitée aux tokens, orange = actions | ✅ | Thème Tailwind remis à zéro : seules les 10 couleurs MCI existent. Orange utilisé pour ajouter / commander / valider / recommander (+ soleil du logo, tampon « VALIDÉ » demandé par le brief) |
+| Charte v2 (arrondis, dégradés et flous désormais autorisés à la demande du client) | ✅ | `npm run lint:design` (polices génériques, bibliothèques d'icônes, emojis, curseur perso, mode sombre auto, lorem ipsum) : 0 écart sur 150 fichiers |
+| Palette limitée aux tokens, orange = actions | ✅ | Thème Tailwind remis à zéro : seules les couleurs MCI existent. Orange vif pour ajouter / commander / valider / recommander ; sur-titres en orange brûlé (contraste AA) |
 | Aucun débordement horizontal 320 → 1920 px | ✅ | Script Playwright : 16 pages × 8 largeurs (320, 375, 414, 768, 1024, 1280, 1440, 1920) |
 | « graisse cuite » → DG90 5 L × 2 → commande invité < 2 min | ✅ | Parcours automatisé de bout en bout (dont refus sans n° d'engagement pour une collectivité, PDF téléchargé) |
 | Compte pro : recommander en 1 clic | ✅ | Parcours automatisé : « Recommander » → bon prérempli → envoi |
 | Back-office : Reçue → Livrée avec emails | ✅ | Parcours automatisé : saisie des prix, Confirmée → En préparation → Expédiée → Livrée, 6 emails journalisés |
-| Validation interne acheteur → valideur | ✅ | Parcours automatisé (commune démo) |
+| Validation interne acheteur → valideur | ✅ | Parcours automatisé (commune démo). Corrigé en v2 : le bouton « Valider et transmettre » du tableau de bord n'enregistrait rien (appel optionnel `onChange?.(await …)` qui court-circuitait l'action) |
 | Toutes les fiches techniques existantes s'ouvrent | ⚠️ à vérifier | Les 74 liens d'origine (usrfiles.com) sont repris à l'identique du brief. L'environnement de développement n'avait pas accès à ces domaines : lancez `npm run mirror:pdfs -- --dry-run` (avec Supabase) ou ouvrez quelques fiches après déploiement |
 | Mention biocides | ✅ | Fiches des produits biocides, page famille Biocides, pages secteur concernées, CGV, mentions légales |
 | Lighthouse mobile ≥ 85 / ≥ 95 / 100 / ≥ 95 | ✅ | Voir tableau ci-dessous |
@@ -45,19 +47,19 @@ Branche : `claude/funny-mccarthy-vvhy72` · Next.js 15 · déployable tel quel s
 | Aucun contenu inventé présenté comme un fait | ✅ | Pas de témoignage, logo client, certification ni prix public. Comptes et commandes démo étiquetés DÉMO (tarifs de démo marqués « fictifs »). Chiffres affichés calculés depuis la base |
 | `npm run build` sans erreur ni warning TypeScript | ✅ | `npm run check` (typecheck + lint:design + build) |
 
-**Lighthouse mobile** (build de production local, émulation mobile, 4G simulée) :
+**Lighthouse mobile — refonte v2** (build de production local, émulation mobile, 4G simulée) :
 
 | Page | Perf. | Access. | Bonnes pratiques | SEO |
 |---|---|---|---|---|
-| `/` | 90 | 100 | 100 | 100 |
-| `/catalogue` | 85 | 100 | 100 | 100 |
-| `/catalogue/aerosols` | 89 | 100 | 100 | 100 |
-| `/produit/dg90` | 89 | 100 | 100 | 100 |
-| `/secteurs/viticulture` | 91 | 100 | 100 | 100 |
-| `/commande-rapide` | 90 | 100 | 100 | 100 |
-| `/societe` | 97 | 100 | 96* | 100 |
+| `/` | 74–80 | 100 | 100 | 100 |
+| `/catalogue` | 77 | 100 | 100 | 100 |
+| `/produit/dg90` | 91 | 100 | 100 | 100 |
+| `/secteurs/viticulture` | 85 | 100 | 100 | 100 |
+| `/commande-rapide` | 97 | 100 | 100 | 100 |
+| `/societe` | 84 | 100 | 96* | 100 |
 | `/contact` | 97 | 100 | 100 | 100 |
 
+Mesures du build final (l'accueil varie de 74 à 80 d'un passage à l'autre). La performance de l'accueil et du catalogue baisse par rapport à la v1 (fonds animés, 3D, plus d'images) : c'est le prix des effets demandés. Les shaders démarrent quand le navigateur est inactif, la 3D après la première interaction sur mobile, et tout est suspendu hors écran.
 \* 96 uniquement parce que les photos Wix étaient bloquées par le réseau de l'environnement de test (erreur console). `/espace-pro` et `/admin` sont volontairement en `noindex` (SEO non applicable).
 Mesures CPU-bound en émulation logicielle : les scores sur Vercel + vrai mobile seront du même ordre ou meilleurs. LCP simulé 2,4–3,3 s (objectif < 2,5 s sur 4G réelle atteint sur les pages les plus légères ; le catalogue reste la page la plus lourde). CLS ≤ 0,01 hors espace pro.
 

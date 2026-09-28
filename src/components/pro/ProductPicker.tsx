@@ -39,24 +39,24 @@ export function ProductPicker({ onPick, label = "Ajouter un produit" }: { onPick
             setQ("");
           }
         }}
-        className={cx(inputClass, "h-10 px-3 text-sm")}
+        className={cx(inputClass, "h-10 px-4 text-sm")}
       />
       {results.length ? (
-        <ul id={`${id}-list`} role="listbox" className="absolute left-0 right-0 top-full z-20 mt-1 rounded-tech border border-ink bg-white shadow-sheet">
+        <ul id={`${id}-list`} role="listbox" className="absolute left-0 right-0 top-full z-20 mt-2 overflow-hidden rounded-box bg-white p-1.5 shadow-float ring-1 ring-black/5">
           {results.map((p, i) => (
             <li
               key={p.id}
               role="option"
               aria-selected={i === hi}
-              className={cx("flex cursor-pointer gap-3 px-3 py-2 text-sm", i === hi && "bg-salt")}
+              className={cx("flex cursor-pointer gap-3 rounded-tech px-3 py-2.5 text-sm transition-colors duration-150", i === hi ? "bg-salt" : "hover:bg-salt/60")}
               onMouseDown={(e) => {
                 e.preventDefault();
                 onPick(p);
                 setQ("");
               }}
             >
-              <span className="t-code w-36 shrink-0 truncate text-mci">{p.code}</span>
-              <span className="truncate">{p.short}</span>
+              <span className="t-code w-28 shrink-0 truncate text-mci sm:w-36">{p.code}</span>
+              <span className="min-w-0 truncate text-ink/80">{p.short}</span>
             </li>
           ))}
         </ul>

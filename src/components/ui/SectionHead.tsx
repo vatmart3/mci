@@ -1,15 +1,16 @@
 import type { ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
-/** Titre de section numéroté façon fiche : « 01 — Secteurs » */
+/** Titre de section : sur-titre coloré, grand titre, chapeau. `index` est conservé pour compatibilité. */
 export function SectionHead({
-  index,
+  index: _index,
   kicker,
   title,
   children,
   id,
   className,
   inverted = false,
+  center = false,
 }: {
   index?: string;
   kicker: string;
@@ -18,18 +19,15 @@ export function SectionHead({
   id?: string;
   className?: string;
   inverted?: boolean;
+  center?: boolean;
 }) {
   return (
-    <div className={cx("grid-12 gap-y-4", className)}>
-      <p className={cx("t-mono col-span-12 text-sm", inverted ? "text-white/80" : "text-ink/70")}>
-        {index ? <span className={inverted ? "text-white" : "text-mci"}>{index}</span> : null}
-        {index ? " — " : null}
-        {kicker}
-      </p>
-      <h2 id={id} className={cx("t-h2 col-span-12 lg:col-span-8", inverted ? "text-white" : "text-ink")}>
+    <div data-reveal className={cx("flex flex-col gap-4", center && "items-center text-center", className)}>
+      <p className="t-eyebrow">{kicker}</p>
+      <h2 id={id} className={cx("t-h1 max-w-[18ch]", inverted ? "text-white" : "text-ink")}>
         {title}
       </h2>
-      {children ? <div className={cx("col-span-12 lg:col-span-6 t-lead", inverted ? "text-white/85" : "text-ink/80")}>{children}</div> : null}
+      {children ? <div className={cx("t-lead max-w-[46ch]", inverted ? "text-white/70" : "text-ink/70")}>{children}</div> : null}
     </div>
   );
 }

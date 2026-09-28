@@ -1,5 +1,26 @@
 # DESIGN NOTES — MCI Sète
 
+> **Charte v2 (refonte « arrondie », septembre 2026)** — à la demande du client, la direction « fiche technique / papier » ci-dessous (§1 à §8) est remplacée par un langage inspiré d'Apple. La v1 est conservée plus bas pour mémoire ; en cas de contradiction, **la v2 fait foi**.
+
+## v2 — Langage visuel
+
+- **Formes** : tout est arrondi. Champs 12 px (`rounded-tech`), cartes 22 px (`rounded-box`), grandes tuiles 32 px (`rounded-tile`), boutons et filtres en pilules (`rounded-full`). Ombres longues et douces (`shadow-sheet`, `shadow-tile`, `shadow-float`), anneaux fins `ring-black/5` plutôt que des bordures.
+- **Typographie** : Geist (grotesque contemporaine, SIL OFL) pour tout, Geist Mono uniquement pour les références produit, numéros de commande et SIRET. Grands titres serrés (`.t-display`, `.t-h1`, approche −0,035 à −0,045 em), sur-titres en orange brûlé `#b64400` (`.t-eyebrow`, contraste AA), chapeaux `.t-lead` en gris.
+- **Couleurs** : blanc et gris Apple `#f5f5f7` (`salt`) en alternance de sections, encre `#1d1d1f`, bleu MCI pour les liens, **orange `#f89746` toujours réservé aux gestes d'achat**, bleu nuit (`night`, `deep`) pour les sections immersives.
+- **Fonds animés** (`src/components/fx/ShaderBackground.tsx`) : un fragment shader WebGL léger (sans three.js), rendu à ½ résolution, mis en pause hors écran, démarré quand le navigateur est inactif, image fixe en mouvement réduit, dégradé CSS de repli. Variantes : `aurora` (hero), `night` (caustiques, histoire défilée), `sea` (bandeau d'appel). Tuiles : nappes CSS floues qui dérivent (`fx/Blobs.tsx`).
+- **3D** : matières physiques (vernis, métal brossé net, étiquettes pelliculées), éclairage de studio par panneaux lumineux et contre-jours (`three/Stage.tsx`), mappage ACES.
+  - Hero (`three/HeroScene.tsx`) : la gamme en arc sur un sol studio, pilotée par le défilement et la souris / le gyroscope.
+  - « Un geste, le bon produit » (`home/StorySection.tsx` + `three/StoryScene.tsx`) : section épinglée, un contenant par chapitre qui entre en tournant au défilement.
+  - Packshots des 90 produits re-rendus détourés (fond transparent) avec le nouvel éclairage.
+- **Mouvement** : apparitions au défilement (`data-reveal`, IntersectionObserver global), compteurs qui s'incrémentent (uniquement des chiffres calculés depuis le catalogue), bon de commande qui se remplit (GSAP), photo d'équipe qui s'agrandit, carrousel secteurs aimanté. Tout est coupé en `prefers-reduced-motion`.
+- **Accueil** : Hero → Histoire défilée (5 gestes : dégraisser, désinfecter, démousser, dégripper, absorber) → Secteurs (carrousel) → Pourquoi MCI (bento) → La gamme (familles) → Commander → L'équipe → Bandeau d'appel.
+- **Inchangé** : aucun contenu inventé (pas d'avis, logo client, certification, prix ni chiffre non calculé), pas de mode sombre automatique, pas d'emoji, pictogrammes maison (traits arrondis), pas de bibliothèque d'icônes. `npm run lint:design` contrôle ces règles v2.
+
+---
+
+## v1 (archive)
+
+
 > Concept : **« Fiche technique habitée »**. Le site parle la langue des objets que MCI vend : étiquettes de bidons, fiches techniques, bons de commande, plans d'atelier. On ne décore pas, on *étiquette*.
 
 ---

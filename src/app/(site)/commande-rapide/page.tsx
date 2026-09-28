@@ -10,12 +10,13 @@ export const metadata = pageMeta({
 
 export default function QuickOrderPage() {
   return (
-    <div className="wrap pb-16 pt-8 lg:pt-12">
+    <div className="wrap pb-24 pt-8 lg:pt-12">
       <Breadcrumb items={[{ name: "Accueil", path: "/" }, { name: "Commande rapide", path: "/commande-rapide" }]} />
-      <div className="grid-12 mt-8 gap-y-4 pb-12">
-        <h1 className="t-h1 col-span-12 lg:col-span-8">Commande rapide, par référence.</h1>
-        <p className="t-lead col-span-12 text-ink/80 lg:col-span-6">Tapez un code, choisissez le conditionnement, la quantité, Entrée : ligne suivante. Ou collez votre liste habituelle.</p>
-      </div>
+      <header className="mt-10 max-w-[820px] pb-12 lg:mt-14 lg:pb-16">
+        <p className="t-eyebrow">Commande rapide</p>
+        <h1 className="t-h1 mt-3">Commande rapide, par référence.</h1>
+        <p className="t-lead mt-6 max-w-[52ch] text-ink/70">Tapez un code, choisissez le conditionnement, la quantité, Entrée : ligne suivante. Ou collez votre liste habituelle.</p>
+      </header>
       <QuickOrder />
     </div>
   );

@@ -13,33 +13,57 @@ export const metadata = pageMeta({
 
 export default function ContactPage() {
   return (
-    <div className="wrap pb-8 pt-8 lg:pt-12">
+    <div className="wrap pb-24 pt-8 lg:pt-12">
       <Breadcrumb items={[{ name: "Accueil", path: "/" }, { name: "Contact", path: "/contact" }]} />
-      <div className="grid-12 mt-8 gap-y-12">
-        <div className="col-span-12 lg:col-span-5">
-          <h1 className="t-h1">Une question, un devis, un échantillon.</h1>
-          <p className="t-lead mt-6 text-ink/80">Le plus rapide reste le téléphone. Pour une demande écrite, le formulaire arrive directement chez MCI.</p>
-          <a href={`tel:${company.phoneE164}`} className="t-mono mt-8 block text-3xl text-mci hover:underline">
-            {company.phone}
+      <header className="mt-10 max-w-[820px] lg:mt-14">
+        <p className="t-eyebrow">Contact</p>
+        <h1 className="t-h1 mt-3">Une question, un devis, un échantillon.</h1>
+        <p className="t-lead mt-6 max-w-[48ch] text-ink/70">Le plus rapide reste le téléphone. Pour une demande écrite, le formulaire arrive directement chez MCI.</p>
+      </header>
+
+      <div className="grid-12 mt-12 gap-y-6 lg:mt-16">
+        <div className="col-span-12 flex flex-col gap-4 lg:col-span-5">
+          <a
+            href={`tel:${company.phoneE164}`}
+            className="tile tile-hover group block bg-salt p-6 sm:p-8"
+          >
+            <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
+              <Icon name="phone" size={16} className="text-mci" /> Téléphone
+            </span>
+            <span className="t-h2 mt-3 block whitespace-nowrap text-ink transition-colors duration-300 group-hover:text-mci">{company.phone}</span>
           </a>
-          <a href={`mailto:${company.email}`} className="link-u mt-3 inline-flex items-center gap-2">
-            <Icon name="mail" size={18} /> {company.email}
-          </a>
-          <address className="mt-8 not-italic">
-            <span className="t-mono block text-xs text-ink/70">ADRESSE</span>
-            {company.name}
-            <br />
-            {company.street}
-            <br />
-            {company.postalCode} {company.city}
-          </address>
-          <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className="link-u mt-3 inline-flex items-center gap-1">
-            <Icon name="pin" size={16} /> Itinéraire
-          </a>
-          <SeteMap className="mt-12 hidden lg:block" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <a href={`mailto:${company.email}`} className="tile tile-hover group block min-w-0 bg-salt p-6">
+              <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
+                <Icon name="mail" size={16} className="text-mci" /> Email
+              </span>
+              <span className="mt-2 block break-words font-semibold text-ink transition-colors duration-300 group-hover:text-mci">{company.email}</span>
+            </a>
+            <div className="tile min-w-0 bg-salt p-6">
+              <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
+                <Icon name="pin" size={16} className="text-mci" /> Adresse
+              </span>
+              <address className="mt-2 not-italic font-semibold leading-snug">
+                {company.name}
+                <br />
+                <span className="font-normal text-ink/70">
+                  {company.street}
+                  <br />
+                  {company.postalCode} {company.city}
+                </span>
+              </address>
+              <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className="link-u mt-3 inline-flex items-center gap-1 text-sm">
+                Itinéraire ›
+              </a>
+            </div>
+          </div>
+          <div className="tile hidden bg-salt p-6 lg:block">
+            <SeteMap />
+          </div>
         </div>
-        <div className="col-span-12 lg:col-span-6 lg:col-start-7">
-          <div className="rounded-box border border-rule bg-white p-6 lg:p-8">
+        <div className="col-span-12 lg:col-span-7">
+          <div className="rounded-tile bg-salt p-5 sm:p-8 lg:p-10">
+            <h2 className="t-label mb-6">Écrire à MCI</h2>
             <ContactFromQuery />
           </div>
         </div>

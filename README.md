@@ -73,4 +73,4 @@ Sécurité : toutes les tables sont en RLS ; la création de commande passe par 
 
 ## Crédits
 
-Polices Archivo, Instrument Sans, IBM Plex Mono — SIL Open Font License. Site conçu par MJAGENCY.
+Polices Geist et Geist Mono (site), Archivo, Instrument Sans et IBM Plex Mono (PDF et images Open Graph) — SIL Open Font License. Site conçu par MJAGENCY.

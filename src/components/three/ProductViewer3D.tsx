@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import type { ContainerKind, Product } from "@/lib/types";
 import { Container, labelFor, useFontsReady } from "./Container";
-import { StudioLights } from "./Studio";
+import { StageLights } from "./Stage";
 import { packshotYaw } from "./PackshotStudio";
 import { webglSupport, whenWebGLAllowed } from "@/lib/webgl";
 
@@ -116,12 +116,12 @@ export function ProductViewer3D({ product, container, onReady }: { product: Prod
   const pack = product.packagings.find((p) => p.container === container) ?? product.packagings[0]!;
   return (
     <div className="absolute inset-0" aria-hidden="true">
-      <Canvas frameloop="demand" dpr={[1, 1.5]} camera={{ position: [0, 0.3, 5.4], fov: 26 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
-        <StudioLights />
+      <Canvas frameloop="demand" dpr={[1, 1.5]} camera={{ position: [0, 0.3, 5.4], fov: 26 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance", toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}>
+        <StageLights mood="light" shadow={false} />
         <DragRotate key={container} yaw0={packshotYaw[container]}>
           <Container kind={container} label={labelFor(product, pack.short)} quality={support === "lite" ? "low" : "high"} />
         </DragRotate>
-        <ContactShadows position={[0, -1.02, 0]} opacity={0.3} scale={4} blur={2.4} far={1.6} resolution={256} color="#0E2533" frames={1} />
+        <ContactShadows position={[0, -1.02, 0]} opacity={0.3} scale={4} blur={2.4} far={1.6} resolution={256} color="#0A2233" frames={1} />
         <Hint onReady={onReady} />
       </Canvas>
     </div>

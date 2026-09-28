@@ -15,7 +15,7 @@ import { formatEur } from "@/lib/format";
 function PriceTag({ productId, packagingId }: { productId: string; packagingId: string }) {
   const price = usePrice(productId, packagingId);
   if (price == null) return null;
-  return <span className="t-mono text-sm">{formatEur(price)} HT</span>;
+  return <span className="whitespace-nowrap text-sm font-semibold tabular-nums">{formatEur(price)} HT</span>;
 }
 
 /** Ligne dense du catalogue : les acheteurs pros scannent. */
@@ -24,27 +24,35 @@ export function ProductRow({ product, priority = false }: { product: Product; pr
   const [qty, setQty] = useState(1);
   const id = `row-${product.slug}`;
   return (
-    <li data-product-row className="grid grid-cols-[64px_1fr] gap-x-4 gap-y-3 border-b border-rule py-4 md:grid-cols-[72px_minmax(0,1fr)_auto] md:items-center lg:grid-cols-[72px_minmax(0,1.3fr)_minmax(0,0.9fr)_auto]">
-      <Link href={`/produit/${product.slug}`} className="row-span-2 self-start rounded-tech bg-white md:row-span-1" tabIndex={-1} aria-hidden="true">
-        <ProductVisual product={product} size={72} priority={priority} alt="" className="size-16 md:size-18" />
+    <li
+      data-product-row
+      className="group relative grid grid-cols-[56px_minmax(0,1fr)] gap-x-4 gap-y-3 rounded-box px-3 py-4 transition-colors duration-300 ease-out after:absolute after:inset-x-4 after:bottom-0 after:h-px after:bg-black/5 after:transition-opacity after:duration-300 last:after:hidden hover:bg-salt hover:after:opacity-0 sm:grid-cols-[64px_minmax(0,1fr)] sm:px-4 md:grid-cols-[72px_minmax(0,1fr)_auto] md:items-center lg:grid-cols-[72px_minmax(0,1.3fr)_minmax(0,0.9fr)_auto]"
+    >
+      <Link
+        href={`/produit/${product.slug}`}
+        className="row-span-2 grid size-14 place-items-center self-start overflow-hidden rounded-tech bg-salt transition-colors duration-300 group-hover:bg-white sm:size-16 md:row-span-1 md:size-18"
+        tabIndex={-1}
+        aria-hidden="true"
+      >
+        <ProductVisual product={product} size={72} priority={priority} alt="" className="size-12 transition-transform duration-500 ease-out group-hover:scale-105 sm:size-14 md:size-16" />
       </Link>
       <div className="min-w-0">
-        <Link href={`/produit/${product.slug}`} className="group">
-          <span className="t-code text-mci group-hover:underline">{product.code}</span>
-          <span className="block font-semibold leading-snug">{product.short}</span>
+        <Link href={`/produit/${product.slug}`} className="group/name block">
+          <span className="t-code text-sm text-mci transition-colors group-hover/name:underline group-hover/name:underline-offset-4">{product.code}</span>
+          <span className="block font-semibold leading-snug tracking-[-0.015em]">{product.short}</span>
         </Link>
-        <p className="mt-1 line-clamp-2 text-sm text-ink/80">{product.description}</p>
+        <p className="mt-1 line-clamp-2 text-sm text-ink/70">{product.description}</p>
       </div>
-      <div className="col-start-2 flex flex-wrap items-center gap-x-3 gap-y-2 md:col-start-2 lg:col-start-3">
-        <span className="t-mono text-xs text-ink/70">{product.formats.map((f) => formatLabels[f].toUpperCase()).join(" · ")}</span>
+      <div className="col-start-2 flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 md:col-start-2 lg:col-start-3">
+        <span className="text-xs text-ink/70">{product.formats.map((f) => formatLabels[f]).join(" · ")}</span>
         <PropertyBadges properties={product.properties} />
       </div>
-      <div className="col-span-2 flex flex-wrap items-center gap-2 md:col-span-1 md:col-start-3 md:row-start-1 md:row-span-2 md:justify-end lg:col-start-4 lg:row-span-1">
+      <div className="col-span-2 flex min-w-0 flex-wrap items-center gap-2 md:col-span-1 md:col-start-3 md:row-span-2 md:row-start-1 md:justify-end lg:col-start-4 lg:row-span-1">
         <SheetButton url={product.technicalSheetUrl} code={product.code} />
         <label htmlFor={`${id}-pack`} className="sr-only">
           Conditionnement {product.code}
         </label>
-        <div className="w-40">
+        <div className="w-36 sm:w-40">
           <Select id={`${id}-pack`} value={pack} onChange={(e) => setPack(e.target.value)} fieldSize="sm">
             {product.packagings.map((p) => (
               <option key={p.id} value={p.id}>
@@ -65,16 +73,27 @@ export function ProductRow({ product, priority = false }: { product: Product; pr
 export function ProductCard({ product }: { product: Product }) {
   const pack = product.packagings[0]?.id ?? "";
   return (
-    <li data-product-row className="flex flex-col rounded-box border border-rule bg-white">
-      <Link href={`/produit/${product.slug}`} className="group flex flex-1 flex-col p-4">
-        <span className="grid aspect-square place-items-center bg-salt">
-          <ProductVisual product={product} size={200} sizes="(max-width: 640px) 45vw, 220px" alt="" className="h-4/5 w-4/5" />
+    <li
+      data-product-row
+      className="group flex min-w-0 flex-col rounded-box bg-white p-2 ring-1 ring-black/5 transition-[transform,box-shadow] duration-500 ease-out hover:-translate-y-1 hover:shadow-tile"
+    >
+      <Link href={`/produit/${product.slug}`} className="flex flex-1 flex-col rounded-tech">
+        <span className="grid aspect-square place-items-center overflow-hidden rounded-tech bg-salt">
+          <ProductVisual
+            product={product}
+            size={200}
+            sizes="(max-width: 640px) 45vw, 220px"
+            alt=""
+            className="h-3/4 w-3/4 transition-transform duration-500 ease-out group-hover:scale-105"
+          />
         </span>
-        <span className="t-code mt-4 text-sm text-mci group-hover:underline">{product.code}</span>
-        <span className="font-semibold leading-snug">{product.short}</span>
-        <PropertyBadges properties={product.properties} className="mt-2" />
+        <span className="flex flex-1 flex-col px-2 pt-4">
+          <span className="t-code text-xs text-mci">{product.code}</span>
+          <span className="mt-1 font-semibold leading-snug tracking-[-0.015em]">{product.short}</span>
+          <PropertyBadges properties={product.properties} className="mt-3" />
+        </span>
       </Link>
-      <div className="flex items-center justify-between gap-2 border-t border-rule p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-2 pb-2 pt-4">
         <SheetButton url={product.technicalSheetUrl} code={product.code} />
         <AddToCartButton product={product} packagingId={pack} size="sm" label="Ajouter" />
       </div>

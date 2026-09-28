@@ -66,25 +66,27 @@ function FilterGroup<T extends string>({
   counts: Map<string, number>;
 }) {
   return (
-    <fieldset className="border-t border-rule py-4">
-      <legend className="t-mono float-left mb-3 w-full text-xs text-ink/70">{legend.toUpperCase()}</legend>
-      <ul className="clear-both space-y-1">
+    <fieldset className="min-w-0 py-4 first:pt-0">
+      <legend className="sr-only">{legend}</legend>
+      <p aria-hidden="true" className="mb-3 text-sm font-semibold text-ink">
+        {legend}
+      </p>
+      <ul className="flex flex-wrap gap-2">
         {options.map((o) => {
           const n = counts.get(o.value) ?? 0;
           const on = selected.includes(o.value);
           return (
-            <li key={o.value}>
-              <label className={cx("flex cursor-pointer items-center justify-between gap-2 rounded-tech px-2 py-1 text-sm hover:bg-white", on && "bg-white", !n && !on && "opacity-50")}>
-                <span className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={on}
-                    onChange={() => onToggle(o.value)}
-                    className="size-4 shrink-0 cursor-pointer appearance-none rounded-tech border border-ink bg-white checked:border-mci checked:bg-mci"
-                  />
-                  {o.label}
-                </span>
-                <span className="t-mono text-xs text-ink/70">{n}</span>
+            <li key={o.value} className="min-w-0 max-w-full">
+              <label
+                className={cx(
+                  "flex max-w-full cursor-pointer items-center gap-2 rounded-full py-1.5 pl-3.5 pr-2 text-sm transition-[background-color,color,opacity,box-shadow] duration-300 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mci",
+                  on ? "bg-ink text-white shadow-sheet" : "bg-salt text-ink hover:bg-ink/10",
+                  !n && !on && "opacity-40",
+                )}
+              >
+                <input type="checkbox" checked={on} onChange={() => onToggle(o.value)} className="sr-only" />
+                <span className="min-w-0 leading-snug">{o.label}</span>
+                <span className={cx("grid h-5 min-w-5 shrink-0 place-items-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums", on ? "bg-white/20 text-white" : "bg-white text-ink/70")}>{n}</span>
               </label>
             </li>
           );
@@ -169,13 +171,13 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
     <PdfViewerProvider>
       <div className="wrap">
         {/* Recherche */}
-        <div className="grid-12 gap-y-4 pb-8">
-          <div className="col-span-12 lg:col-span-8">
+        <div className="flex flex-col gap-3 pb-8 lg:flex-row lg:items-center lg:gap-4">
+          <div className="min-w-0 flex-1">
             <label htmlFor="catalogue-q" className="sr-only">
               Rechercher un produit, un usage, une surface
             </label>
             <div className="relative">
-              <Icon name="search" size={24} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink/70" />
+              <Icon name="search" size={22} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-ink/70" />
               <input
                 ref={inputRef}
                 id="catalogue-q"
@@ -185,28 +187,46 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                 placeholder="Graisse cuite, inox, graffiti, guêpes, DG90…"
                 value={f.q}
                 onChange={(e) => setF((s) => ({ ...s, q: e.target.value }))}
-                className="h-16 w-full rounded-tech border border-ink bg-white pl-16 pr-4 text-lg placeholder:text-ink/70 focus:border-mci focus:outline-2 focus:outline-mci/30"
+                className="h-14 w-full min-w-0 rounded-full bg-salt pl-14 pr-6 text-md text-ink transition-[background-color,box-shadow] duration-300 ease-out placeholder:text-ink/40 hover:bg-ink/[0.06] focus:bg-white focus:shadow-[0_0_0_4px_rgb(31_106_153/0.18)] focus:outline-none sm:h-16 sm:text-lg"
               />
             </div>
           </div>
-          <div className="col-span-12 flex items-center gap-3 lg:col-span-4 lg:justify-end">
-            <button type="button" className="inline-flex h-12 items-center gap-2 rounded-tech border border-ink bg-white px-4 font-semibold lg:hidden" onClick={() => setPanel((v) => !v)} aria-expanded={panel} aria-controls="filtres">
-              Filtres{active ? <span className="t-mono rounded-tech bg-ink px-1 text-xs text-white">{active}</span> : null}
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <button
+              type="button"
+              className="inline-flex h-11 items-center gap-2 rounded-full bg-salt px-5 text-sm font-medium transition-colors duration-300 ease-out hover:bg-ink/10 lg:hidden"
+              onClick={() => setPanel((v) => !v)}
+              aria-expanded={panel}
+              aria-controls="filtres"
+            >
+              Filtres
+              {active ? <span className="grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">{active}</span> : null}
+              <Icon name="chevronDown" size={16} className={cx("transition-transform duration-300 ease-out", panel && "rotate-180")} />
             </button>
             <div className="w-40">
               <label htmlFor="tri" className="sr-only">
                 Trier
               </label>
-              <Select id="tri" value={f.tri} onChange={(e) => setF((s) => ({ ...s, tri: e.target.value as Sort }))}>
+              <Select id="tri" value={f.tri} onChange={(e) => setF((s) => ({ ...s, tri: e.target.value as Sort }))} className="h-11! rounded-full! border-transparent! bg-salt! pl-5! text-sm! hover:border-transparent!">
                 <option value="pertinence">Pertinence</option>
                 <option value="az">A → Z</option>
                 <option value="famille">Par famille</option>
               </Select>
             </div>
-            <div className="flex rounded-tech border border-rule bg-white" role="group" aria-label="Affichage">
+            <div className="ml-auto flex rounded-full bg-salt p-1 lg:ml-0" role="group" aria-label="Affichage">
               {(["liste", "grille"] as const).map((v) => (
-                <button key={v} type="button" onClick={() => setF((s) => ({ ...s, vue: v }))} aria-pressed={f.vue === v} className={cx("grid size-12 place-items-center", f.vue === v ? "bg-ink text-white" : "hover:bg-salt")} aria-label={v === "liste" ? "Liste dense" : "Grille visuelle"}>
-                  <Icon name={v === "liste" ? "list" : "grid"} />
+                <button
+                  key={v}
+                  type="button"
+                  onClick={() => setF((s) => ({ ...s, vue: v }))}
+                  aria-pressed={f.vue === v}
+                  className={cx(
+                    "grid h-9 w-11 place-items-center rounded-full transition-[background-color,color,box-shadow] duration-300 ease-out",
+                    f.vue === v ? "bg-white text-ink shadow-sheet" : "text-ink/70 hover:text-ink",
+                  )}
+                  aria-label={v === "liste" ? "Liste dense" : "Grille visuelle"}
+                >
+                  <Icon name={v === "liste" ? "list" : "grid"} size={18} />
                 </button>
               ))}
             </div>
@@ -216,7 +236,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
         <div className="grid-12 gap-y-8">
           {/* Filtres */}
           <aside id="filtres" className={cx("col-span-12 lg:col-span-3 lg:block", panel ? "block" : "hidden")} aria-label="Filtres">
-            <div className="lg:sticky lg:top-20 lg:max-h-[calc(100vh-96px)] lg:overflow-y-auto lg:pr-2">
+            <div className="rounded-tile bg-white p-5 ring-1 ring-black/5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-96px)] lg:overflow-y-auto lg:p-0 lg:pr-2 lg:ring-0">
               <FilterGroup legend="Famille" options={families.map((x) => ({ value: x.slug, label: x.name }))} selected={f.famille} onToggle={(v) => toggle("famille", v)} counts={counts.famille} />
               <FilterGroup legend="Secteur" options={sectors.map((x) => ({ value: x.slug, label: x.name }))} selected={f.secteur} onToggle={(v) => toggle("secteur", v)} counts={counts.secteur} />
               <FilterGroup legend="Propriétés" options={propertyOrder.map((x) => ({ value: x, label: propertyLabels[x].label }))} selected={f.prop} onToggle={(v) => toggle("prop", v)} counts={counts.prop} />
@@ -226,23 +246,28 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
 
           {/* Résultats */}
           <section className="col-span-12 lg:col-span-9" aria-labelledby="resultats">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink pb-3">
-              <h2 id="resultats" className="t-mono text-sm" aria-live="polite">
-                {results.length} RÉFÉRENCE{results.length > 1 ? "S" : ""}
-                {f.q ? ` POUR « ${f.q.toUpperCase()} »` : ""} <span className="sr-only">— {title}</span>
+            <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
+              <h2 id="resultats" className="t-label" aria-live="polite">
+                {results.length} référence{results.length > 1 ? "s" : ""}
+                {f.q ? <span className="text-ink/70"> pour « {f.q} »</span> : null} <span className="sr-only">— {title}</span>
               </h2>
               {chips.length ? (
-                <ul className="flex flex-wrap gap-2">
+                <ul className="flex min-w-0 flex-wrap items-center gap-2">
                   {chips.map((c) => (
-                    <li key={`${c.k}-${c.v}`}>
-                      <button type="button" onClick={() => toggle(c.k, c.v as never)} className="inline-flex items-center gap-1 rounded-tech border border-ink bg-white px-2 py-1 text-sm hover:bg-ink hover:text-white" aria-label={`Retirer le filtre ${c.label}`}>
-                        {c.label}
-                        <Icon name="close" size={14} />
+                    <li key={`${c.k}-${c.v}`} className="min-w-0 max-w-full">
+                      <button
+                        type="button"
+                        onClick={() => toggle(c.k, c.v as never)}
+                        className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-ink py-1.5 pl-3.5 pr-2.5 text-sm text-white transition-colors duration-300 ease-out hover:bg-ink/80"
+                        aria-label={`Retirer le filtre ${c.label}`}
+                      >
+                        <span className="truncate">{c.label}</span>
+                        <Icon name="close" size={14} className="shrink-0" />
                       </button>
                     </li>
                   ))}
                   <li>
-                    <button type="button" className="link-u px-1 py-1 text-sm" onClick={() => setF((s) => ({ ...empty, q: s.q, tri: s.tri, vue: s.vue }))}>
+                    <button type="button" className="link-u px-2 py-1 text-sm" onClick={() => setF((s) => ({ ...empty, q: s.q, tri: s.tri, vue: s.vue }))}>
                       Tout effacer
                     </button>
                   </li>
@@ -251,34 +276,37 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
             </div>
 
             {results.length === 0 ? (
-              <div className="py-16">
-                <p className="t-h2 max-w-[22ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
-                <p className="t-lead mt-4 max-w-[52ch] text-ink/80">
+              <div className="rounded-tile bg-salt px-6 py-12 sm:px-12 sm:py-16">
+                <span className="grid size-12 place-items-center rounded-full bg-white text-ink/70 shadow-sheet">
+                  <Icon name="search" size={22} />
+                </span>
+                <p className="t-h2 mt-6 max-w-[22ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
+                <p className="t-lead mt-4 max-w-[52ch] text-ink/70">
                   Appelez-nous au{" "}
-                  <a href={`tel:${company.phoneE164}`} className="t-mono text-mci underline underline-offset-4">
+                  <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline hover:underline-offset-4">
                     {company.phone}
                   </a>
                   , on a peut-être le produit hors catalogue.
                 </p>
-                <div className="mt-6 flex flex-wrap gap-4">
-                  <Link href={`/contact?objet=produit-specifique${f.q ? `&message=${encodeURIComponent(`Je cherche : ${f.q}`)}` : ""}`} className="link-u">
+                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+                  <Link href={`/contact?objet=produit-specifique${f.q ? `&message=${encodeURIComponent(`Je cherche : ${f.q}`)}` : ""}`} className="link-u font-medium">
                     Décrire mon besoin par écrit
                   </Link>
                   {active || f.q ? (
-                    <button type="button" className="link-u" onClick={() => setF(empty)}>
+                    <button type="button" className="link-u font-medium" onClick={() => setF(empty)}>
                       Réinitialiser la recherche
                     </button>
                   ) : null}
                 </div>
               </div>
             ) : f.vue === "liste" ? (
-              <ul>
+              <ul className="rounded-tile bg-white p-1.5 ring-1 ring-black/5 sm:p-2.5">
                 {results.map((p, i) => (
                   <ProductRow key={p.id} product={p} priority={i < 4} />
                 ))}
               </ul>
             ) : (
-              <ul className="mt-6 grid grid-cols-1 gap-4 min-[400px]:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
                 {results.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}

@@ -48,7 +48,7 @@ export function FlyLayer() {
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[80]">
       {flights.map((f) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={f.id} id={`flight-${f.id}`} src={f.image} alt="" className="absolute left-0 top-0 object-contain" style={{ width: 0, height: 0 }} />
+        <img key={f.id} id={`flight-${f.id}`} src={f.image} alt="" className="absolute left-0 top-0 object-contain drop-shadow-[0_16px_24px_rgb(0_0_0/0.22)] will-change-transform" style={{ width: 0, height: 0 }} />
       ))}
     </div>
   );

@@ -20,7 +20,7 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
   const [noteOpen, setNoteOpen] = useState(!!line.note);
   if (!product) {
     return (
-      <li className="flex items-center justify-between gap-4 py-4 text-sm text-ink/70">
+      <li className="flex items-center justify-between gap-4 py-5 text-sm text-ink/70">
         Référence retirée du catalogue.
         <button type="button" className="link-u" onClick={() => remove(index)}>
           Retirer
@@ -30,18 +30,26 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
   }
   const id = `l-${index}-${product.slug}`;
   return (
-    <li className="py-4" data-product-row>
+    <li className="py-5" data-product-row>
       <div className="flex gap-4">
-        <Link href={`/produit/${product.slug}`} className="shrink-0 rounded-tech bg-salt">
+        <Link
+          href={`/produit/${product.slug}`}
+          className="shrink-0 self-start overflow-hidden rounded-box bg-salt p-1 transition-transform duration-300 ease-out hover:scale-[1.03]"
+        >
           <ProductVisual product={product} size={dense ? 56 : 72} alt="" />
         </Link>
         <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0">
               <p className="t-code text-sm text-mci">{product.code}</p>
-              <p className="truncate text-sm text-ink/80">{product.short}</p>
+              <p className="mt-0.5 truncate text-sm text-ink/70">{product.short}</p>
             </div>
-            <button type="button" onClick={() => remove(index)} className="grid size-8 shrink-0 place-items-center rounded-tech text-ink/70 hover:bg-salt hover:text-danger" aria-label={`Retirer ${product.code}`}>
+            <button
+              type="button"
+              onClick={() => remove(index)}
+              className="-mr-1 -mt-1 grid size-9 shrink-0 place-items-center rounded-full text-ink/70 transition-colors duration-200 hover:bg-danger/10 hover:text-danger"
+              aria-label={`Retirer ${product.code}`}
+            >
               <Icon name="trash" size={18} />
             </button>
           </div>
@@ -50,7 +58,7 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
               Conditionnement
             </label>
             <div className="min-w-0 flex-1 basis-40">
-              <Select id={`${id}-pack`} value={line.packagingId} onChange={(e) => update(index, { packagingId: e.target.value })} fieldSize="sm">
+              <Select id={`${id}-pack`} value={line.packagingId} onChange={(e) => update(index, { packagingId: e.target.value })} fieldSize="sm" className="!rounded-full !pl-4">
                 {product.packagings.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.label}
@@ -60,13 +68,14 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
             </div>
             <Stepper size="sm" value={line.quantity} onChange={(q) => update(index, { quantity: q })} label={`Quantité ${product.code}`} />
           </div>
-          <div className="mt-2 flex items-center justify-between gap-2">
+          <div className="mt-3 flex items-center justify-between gap-2">
             {noteOpen ? null : (
-              <button type="button" className="text-sm text-ink/70 underline underline-offset-4 hover:text-mci" onClick={() => setNoteOpen(true)}>
+              <button type="button" className="inline-flex items-center gap-1 text-sm text-ink/70 transition-colors hover:text-mci" onClick={() => setNoteOpen(true)}>
+                <Icon name="plus" size={14} />
                 Ajouter une note
               </button>
             )}
-            {price != null ? <p className="t-mono ml-auto text-sm">{formatEur(price * line.quantity)} HT</p> : null}
+            {price != null ? <p className="ml-auto text-sm font-semibold tabular-nums">{formatEur(price * line.quantity)} HT</p> : null}
           </div>
           {noteOpen ? (
             <div className="mt-2">
@@ -75,7 +84,7 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
               </label>
               <input
                 id={`${id}-note`}
-                className={cx(inputClass, "h-8 px-2 text-sm")}
+                className={cx(inputClass, "h-9 px-3 text-sm")}
                 placeholder="Note (parfum, livraison séparée…)"
                 value={line.note ?? ""}
                 maxLength={200}
