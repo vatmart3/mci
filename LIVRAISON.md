@@ -92,7 +92,7 @@ Tout est affiché `[À CONFIRMER]` dans l'admin et **masqué côté public**.
 
 **Projet Vercel** : `mci`, relié au dépôt `vatmart3/mci` (déploiement automatique à chaque envoi de code). Pour un accès public sans connexion : Settings → Deployment Protection → désactiver « Vercel Authentication ».
 
-**En ligne (démo)** : https://mci-git-claude-funny-mccarthy-vvhy72-crm-mjagency.vercel.app (déploiement : https://mci-51y27f3fg-crm-mjagency.vercel.app, production : https://mci-crm-mjagency.vercel.app). Protection « Vercel Authentication » active : connexion Vercel requise tant qu'elle n'est pas désactivée.
+**En ligne (démo)** : https://mci-git-claude-funny-mccarthy-vvhy72-crm-mjagency.vercel.app (déploiement : https://mci-51y27f3fg-crm-mjagency.vercel.app, production : https://mci-crm-mjagency.vercel.app). Protection « Vercel Authentication » désactivée par le client : accès public sans connexion.
 
 **Présentation (mode démo, 5 minutes)**
 1. Importer le dépôt dans Vercel (framework détecté : Next.js). Aucune variable nécessaire.
