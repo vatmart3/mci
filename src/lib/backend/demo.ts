@@ -490,6 +490,14 @@ export class DemoBackend implements Backend {
     });
   }
 
+  /** journalise des emails envoyés hors backend (formulaire de contact) */
+  recordEmails(emails: OutgoingEmail[]) {
+    const db = load();
+    const at = new Date().toISOString();
+    for (const e of emails) db.emails.unshift({ id: uid("em-"), at, to: e.to, subject: e.subject, text: e.text, kind: e.kind, delivered: "demo" });
+    save();
+  }
+
   async listEmails() {
     return clone(load().emails);
   }

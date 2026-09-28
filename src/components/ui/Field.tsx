@@ -2,7 +2,7 @@ import type { ComponentProps, ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
 export const inputClass =
-  "w-full h-12 px-3 bg-white border border-rule rounded-tech text-base text-ink placeholder:text-ink/60 " +
+  "w-full bg-white border border-rule rounded-tech text-base text-ink placeholder:text-ink/60 " +
   "transition-[border-color] duration-200 ease-out hover:border-ink/40 focus:border-mci focus:outline-2 focus:outline-mci/30 focus:outline-offset-0 " +
   "aria-[invalid=true]:border-danger";
 
@@ -16,18 +16,21 @@ export function Label({ children, htmlFor, required, className }: { children: Re
   );
 }
 
-export function Input({ className, ...rest }: ComponentProps<"input">) {
-  return <input className={cx(inputClass, className)} {...rest} />;
+export type FieldSize = "sm" | "md";
+export const fieldSize: Record<FieldSize, string> = { sm: "h-8 px-2 text-sm", md: "h-12 px-3 text-base" };
+
+export function Input({ className, fieldSize: fs = "md", ...rest }: ComponentProps<"input"> & { fieldSize?: FieldSize }) {
+  return <input className={cx(inputClass, fieldSize[fs], className)} {...rest} />;
 }
 
 export function Textarea({ className, ...rest }: ComponentProps<"textarea">) {
-  return <textarea className={cx(inputClass, "h-auto min-h-24 py-3 leading-normal", className)} {...rest} />;
+  return <textarea className={cx(inputClass, "min-h-24 px-3 py-3 leading-normal", className)} {...rest} />;
 }
 
-export function Select({ className, children, ...rest }: ComponentProps<"select">) {
+export function Select({ className, children, fieldSize: fs = "md", ...rest }: ComponentProps<"select"> & { fieldSize?: FieldSize }) {
   return (
     <span className="relative block">
-      <select className={cx(inputClass, "appearance-none pr-8 cursor-pointer", className)} {...rest}>
+      <select className={cx(inputClass, fieldSize[fs], "appearance-none !pr-8 cursor-pointer", className)} {...rest}>
         {children}
       </select>
       <svg className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2" width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">

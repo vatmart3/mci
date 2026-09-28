@@ -9,7 +9,7 @@ function MontSaintClair({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 1440 160" preserveAspectRatio="none" className={className} aria-hidden="true" focusable="false">
       <path
-        d="M0 150 L180 150 C260 150 300 146 360 140 C430 133 470 122 520 108 C560 96 590 80 625 66 C650 56 668 50 690 46 C698 44 702 43 706 43 M706 43 V30 M702 34 H710 M706 43 C724 44 740 46 772 54 806 70 C846 90 884 110 940 124 C990 136 1040 142 1110 146 C1180 150 1260 150 1440 150"
+        d="M0 150 H180 C260 150 300 146 360 140 C430 133 470 122 520 108 C560 96 590 80 625 66 C650 56 670 49 690 46 C696 45 701 44 706 44 C730 45 760 52 806 70 C846 90 884 110 940 124 C990 136 1040 142 1110 146 C1180 150 1260 150 1440 150 M706 44 V30 M701 35 H711"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.25"

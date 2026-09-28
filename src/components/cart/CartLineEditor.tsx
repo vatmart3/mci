@@ -50,7 +50,7 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
               Conditionnement
             </label>
             <div className="min-w-0 flex-1 basis-40">
-              <Select id={`${id}-pack`} value={line.packagingId} onChange={(e) => update(index, { packagingId: e.target.value })} className="h-8 text-sm">
+              <Select id={`${id}-pack`} value={line.packagingId} onChange={(e) => update(index, { packagingId: e.target.value })} fieldSize="sm">
                 {product.packagings.map((p) => (
                   <option key={p.id} value={p.id}>
                     {p.label}
@@ -75,7 +75,7 @@ export function CartLineEditor({ line, index, dense = false }: { line: CartLine;
               </label>
               <input
                 id={`${id}-note`}
-                className={cx(inputClass, "h-8 text-sm")}
+                className={cx(inputClass, "h-8 px-2 text-sm")}
                 placeholder="Note (parfum, livraison séparée…)"
                 value={line.note ?? ""}
                 maxLength={200}
