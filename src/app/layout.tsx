@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { archivo, instrument, plex } from "./fonts";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { Providers } from "@/components/layout/Providers";
 import { SITE_URL } from "@/lib/env";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 
@@ -28,13 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="fr" className={`${archivo.variable} ${instrument.variable} ${plex.variable}`}>
       <body>
-        <Providers>
-          <Header />
-          <main id="contenu" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
-          <Footer />
-        </Providers>
+        {children}
         <JsonLd data={organizationJsonLd()} />
       </body>
     </html>

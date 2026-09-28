@@ -28,7 +28,7 @@ export const PACK = {
 
 const defaultPacks: Record<Format, Packaging[]> = {
   aerosol: [PACK.carton12],
-  liquide: [PACK.l1, PACK.l5, PACK.l20],
+  liquide: [PACK.l5, PACK.l20, PACK.l1],
   gel: [PACK.ml750, PACK.l5],
   poudre: [PACK.kg10, PACK.kg20],
   granules: [PACK.kg10, PACK.kg20],
@@ -115,7 +115,7 @@ const raw: Raw[] = [
   { code: "REDOX NF", short: "Super dégraissant contact alimentaire", description: "Super dégraissant multifonction à contact alimentaire, pour le secteur agricole.", families: ["decapants-detartrants"], format: "liquide", props: ["contact-alimentaire"], ft: "H2:5f3c99_b134bc976f8a43499726113d4f30f73f.pdf", usages: ["Matériel de cave et de récolte", "Sols et équipements agricoles"] },
   { code: "SANIBIO18", short: "Entretien bio des sanitaires", description: "Entretien bio des sanitaires à base d'enzymes acides.", families: ["decapants-detartrants", "produits-bio"], format: "liquide", props: ["bio-vegetal"], ft: "H2:5f3c99_acffc1bed02846c49570f6c876666e4a.pdf", usages: ["Cuvettes, urinoirs, lavabos", "Entretien quotidien"] },
   { code: "SANIKEL RENFORCÉ", slug: "sanikel-renforce", short: "Détartrant désodorisant sanitaires", description: "Nettoyant détartrant désodorisant pour l'entretien quotidien des sanitaires.", families: ["decapants-detartrants"], format: "liquide", ft: "H2:5f3c99_e73f44ac03354179abaf6b08aa309eba.pdf", usages: ["Blocs sanitaires", "Douches et robinetterie", "Entretien quotidien"], featured: true },
-  { code: "SANITARTRE", short: "Rénovateur sanitaires", description: "Rénovateur spécial sanitaires. Existe en gel parfumé.", families: ["decapants-detartrants"], format: "liquide", extraFormats: ["gel"], variants: "Existe en gel parfumé.", packs: [PACK.l1, PACK.l5, PACK.l20, PACK.ml750], ft: "H2:5f3c99_ec406e39ab8e41dbba4ea5e9929214ef.pdf", usages: ["Tartre incrusté", "Remise en état de sanitaires"] },
+  { code: "SANITARTRE", short: "Rénovateur sanitaires", description: "Rénovateur spécial sanitaires. Existe en gel parfumé.", families: ["decapants-detartrants"], format: "liquide", extraFormats: ["gel"], variants: "Existe en gel parfumé.", packs: [PACK.l5, PACK.l20, PACK.l1, PACK.ml750], ft: "H2:5f3c99_ec406e39ab8e41dbba4ea5e9929214ef.pdf", usages: ["Tartre incrusté", "Remise en état de sanitaires"] },
 
   /* ──────────────── Désherbants – Insecticides – Biocides ──────────────── */
   { code: "DOBOL", short: "Appât fourmis en seringue", description: "Appât fourmis en seringue, compatible pistolet applicateur.", families: ["desherbants-insecticides-biocides"], format: "gel", props: ["biocide"], container: "cartridge", packs: [PACK.seringue], ft: "H2:5f3c99_e5025ddd91a744bc9ca2056e9fff2db3.pdf", usages: ["Fourmis", "Application en points"] },
