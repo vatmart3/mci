@@ -322,7 +322,7 @@ export class DemoBackend implements Backend {
     if (!isStaff(me)) list = me?.accountId ? list.filter((o) => o.accountId === me.accountId) : [];
     if (filter?.accountId) list = list.filter((o) => o.accountId === filter.accountId);
     if (filter?.status) list = list.filter((o) => o.status === filter.status);
-    return clone(list);
+    return clone([...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
   }
 
   async getOrder(idOrNumber: string) {
