@@ -71,7 +71,7 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
     <section ref={ref} aria-labelledby="hero-title" className="relative isolate h-[calc(100svh-56px)] min-h-[620px] overflow-hidden lg:h-[calc(100svh-72px)] lg:max-h-[1000px]">
       {/* Filet d'horizon du port */}
       <div aria-hidden="true" className="absolute inset-x-0 top-[30%] -z-10 border-t border-rule">
-        <span className="t-mono absolute right-[var(--margin)] top-2 text-[11px] text-ink/70">43°24′ N · 3°41′ E — SÈTE</span>
+        <span className="t-mono absolute right-[var(--margin)] top-2 hidden text-[11px] text-ink/70 md:block">43°24′ N · 3°41′ E — SÈTE</span>
       </div>
 
       {/* Scène 3D derrière la vitre (décorative) */}
@@ -89,7 +89,7 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
       <GlassFog className="absolute inset-0 z-0 h-full w-full" />
 
       {/* Texte : visible immédiatement, au-dessus de la vitre */}
-      <div className="wrap pointer-events-none relative z-10 flex h-full flex-col justify-end pb-6">
+      <div className="wrap pointer-events-none relative z-10 flex h-full flex-col justify-end pb-20 lg:pb-6">
         <div className="grid-12">
           <div className="pointer-events-auto col-span-12 md:col-span-10 lg:col-span-8">
             <h1 id="hero-title" className="t-display" style={{ fontSize: "clamp(2.75rem, 0.9rem + 5.4vw, 6.5rem)" }}>
