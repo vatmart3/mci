@@ -12,7 +12,7 @@
     "render:packshots": "node scripts/render-packshots.mjs",
     "mirror:pdfs": "node scripts/mirror-pdfs.mjs",
     "fetch:brand": "node scripts/fetch-brand.mjs",
-    "seed:sql": "node --experimental-strip-types scripts/gen-seed-sql.mts",
+    "seed:sql": "tsx scripts/gen-seed-sql.ts",
     "check": "npm run typecheck && npm run lint:design && npm run build"
   },
   "engines": {
@@ -32,6 +32,7 @@
     "react-dom": "19.2.8",
     "react-hook-form": "^7.89.0",
     "resend": "^6.30.0",
+    "server-only": "^0.0.1",
     "three": "^0.186.1",
     "zod": "^4.6.5",
     "zustand": "^5.0.15"
@@ -45,6 +46,7 @@
     "playwright-core": "1.56.1",
     "sharp": "^0.35.5",
     "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
     "typescript": "^5.9.3"
   }
 }
