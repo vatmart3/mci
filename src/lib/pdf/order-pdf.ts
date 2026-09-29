@@ -19,12 +19,13 @@ export interface PdfFonts {
   monoMed: Uint8Array;
 }
 
+// Charte v3 : Barlow (texte) et Barlow Semi Condensed (titres, codes, numéros, chiffres).
 const FONT_FILES: Record<keyof PdfFonts, string> = {
-  display: "archivo-800-w118.ttf",
-  body: "instrument-400.ttf",
-  bodyBold: "instrument-600.ttf",
-  mono: "plex-mono-400.ttf",
-  monoMed: "plex-mono-500.ttf",
+  display: "barlow-sc-700.ttf",
+  body: "barlow-400.ttf",
+  bodyBold: "barlow-600.ttf",
+  mono: "barlow-sc-600.ttf",
+  monoMed: "barlow-sc-700.ttf",
 };
 
 export async function fetchPdfFonts(base = ""): Promise<PdfFonts> {
@@ -37,11 +38,13 @@ export async function fetchPdfFonts(base = ""): Promise<PdfFonts> {
   return Object.fromEntries(entries) as unknown as PdfFonts;
 }
 
-const INK = rgb(14 / 255, 37 / 255, 51 / 255);
-const MCI = rgb(32 / 255, 105 / 255, 150 / 255);
-const ORANGE = rgb(248 / 255, 151 / 255, 70 / 255);
-const RULE = rgb(213 / 255, 220 / 255, 224 / 255);
-const MUTED = rgb(0.38, 0.45, 0.5);
+// tokens v3 (DESIGN.md)
+const INK = rgb(0x16 / 255, 0x23 / 255, 0x2d / 255);
+const MCI = rgb(0x1f / 255, 0x6a / 255, 0x99 / 255);
+const ORANGE = rgb(0xf8 / 255, 0x97 / 255, 0x46 / 255);
+const RULE = rgb(0xd5 / 255, 0xdd / 255, 0xe3 / 255);
+// niveau secondaire : encre à ~72 % sur blanc
+const MUTED = rgb((0x16 * 0.72 + 255 * 0.28) / 255, (0x23 * 0.72 + 255 * 0.28) / 255, (0x2d * 0.72 + 255 * 0.28) / 255);
 
 function wrapText(text: string, font: PDFFont, size: number, max: number): string[] {
   const words = text.split(/\s+/);
@@ -71,14 +74,16 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
   doc.setTitle(`${kind === "proforma" ? "Pro-forma" : "Bon de commande"} ${order.number} — MCI Sète`);
   doc.setAuthor("MCI Sète");
   doc.setCreator("mci-sete.com");
+  // chiffres tabulaires pour les codes, numéros et montants (règle « Code-Is-Data »)
+  const tnum = { tnum: true };
   const F = {
     display: await doc.embedFont(fonts.display, { subset: true }),
     body: await doc.embedFont(fonts.body, { subset: true }),
     bold: await doc.embedFont(fonts.bodyBold, { subset: true }),
-    mono: await doc.embedFont(fonts.mono, { subset: true }),
-    monoMed: await doc.embedFont(fonts.monoMed, { subset: true }),
+    mono: await doc.embedFont(fonts.mono, { subset: true, features: tnum }),
+    monoMed: await doc.embedFont(fonts.monoMed, { subset: true, features: tnum }),
   };
-  // la copie du site utilise l'espace fine insécable (U+202F), absente de ces polices : on la remplace par l'espace insécable
+  // la copie du site utilise l'espace fine insécable (U+202F), absente de Barlow : on la remplace par l'espace insécable
   for (const f of Object.values(F)) {
     const enc = f.encodeText.bind(f);
     const width = f.widthOfTextAtSize.bind(f);
@@ -96,12 +101,12 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
 
   const header = () => {
     logo(page, M, y + 6, 0.9);
-    text("MCI", M + 50, y - 20, F.display, 20, MCI);
-    text("SÈTE", M + 51, y - 32, F.mono, 7.5);
+    text("MCI", M + 50, y - 20, F.display, 24, MCI);
+    text("SÈTE", M + 51, y - 32, F.mono, 8);
     const title = kind === "proforma" ? "FACTURE PRO-FORMA" : "BON DE COMMANDE";
-    right(title, W - M, y - 14, F.display, 16);
-    right(`N° ${order.number}`, W - M, y - 30, F.monoMed, 10, MCI);
-    right(`Date : ${formatDate(order.createdAt)}   ·   Statut : ${statusLabels[order.status]}`, W - M, y - 43, F.mono, 7.5, MUTED);
+    right(title, W - M, y - 14, F.display, 19);
+    right(`N° ${order.number}`, W - M, y - 30, F.monoMed, 11, MCI);
+    right(`Date : ${formatDate(order.createdAt)}   ·   Statut : ${statusLabels[order.status]}`, W - M, y - 43, F.mono, 8, MUTED);
     y -= 58;
     page.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: 1.5, color: INK });
     y -= 18;
@@ -109,7 +114,7 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
   header();
 
   if (opts.demo) {
-    text("DOCUMENT DE DÉMONSTRATION — SANS VALEUR COMMERCIALE", M, y, F.monoMed, 8, ORANGE);
+    text("DOCUMENT DE DÉMONSTRATION — SANS VALEUR COMMERCIALE", M, y, F.monoMed, 8.5, ORANGE);
     y -= 16;
   }
 
@@ -117,7 +122,7 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
   const colW = (W - M * 2 - 20) / 2;
   const block = (label: string, lines: string[], x: number, top: number) => {
     let yy = top;
-    text(label, x, yy, F.mono, 7.5, MUTED);
+    text(label, x, yy, F.mono, 8, MUTED);
     yy -= 13;
     for (const l of lines.filter(Boolean)) {
       for (const w of wrapText(l, F.body, 9.5, colW)) {
@@ -153,13 +158,13 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
   const tableHead = () => {
     y -= 8;
     page.drawLine({ start: { x: M, y: y + 12 }, end: { x: W - M, y: y + 12 }, thickness: 1, color: INK });
-    text("RÉF.", cols.ref, y, F.mono, 7.5, MUTED);
-    text("DÉSIGNATION", cols.des, y, F.mono, 7.5, MUTED);
-    text("CONDITIONNEMENT", cols.pack, y, F.mono, 7.5, MUTED);
-    right("QTÉ", cols.qty, y, F.mono, 7.5, MUTED);
+    text("RÉF.", cols.ref, y, F.mono, 8, MUTED);
+    text("DÉSIGNATION", cols.des, y, F.mono, 8, MUTED);
+    text("CONDITIONNEMENT", cols.pack, y, F.mono, 8, MUTED);
+    right("QTÉ", cols.qty, y, F.mono, 8, MUTED);
     if (priced) {
-      right("PU HT", cols.pu, y, F.mono, 7.5, MUTED);
-      right("TOTAL HT", cols.tot, y, F.mono, 7.5, MUTED);
+      right("PU HT", cols.pu, y, F.mono, 8, MUTED);
+      right("TOTAL HT", cols.tot, y, F.mono, 8, MUTED);
     }
     y -= 8;
     page.drawLine({ start: { x: M, y }, end: { x: W - M, y }, thickness: 0.75, color: INK });
@@ -176,13 +181,15 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
       header();
       tableHead();
     }
-    text(l.code, cols.ref, y, F.monoMed, 8.5, MCI);
+    // les codes longs (ex. INSECTICIDE TERRE DE DIATOMÉE) sont réduits pour tenir dans leur colonne
+    const codeSize = Math.min(9.5, (cols.des - cols.ref - 8) / F.monoMed.widthOfTextAtSize(l.code, 1));
+    text(l.code, cols.ref, y, F.monoMed, codeSize, MCI);
     des.forEach((t, i) => text(t, cols.des, y - i * 12, F.body, 9));
     packLines.forEach((t, i) => text(t, cols.pack, y - i * 12, F.body, 9));
-    right(String(l.quantity), cols.qty, y, F.monoMed, 9);
+    right(String(l.quantity), cols.qty, y, F.monoMed, 9.5);
     if (priced) {
-      right(l.unitPriceHt != null ? formatEur(l.unitPriceHt) : "—", cols.pu, y, F.mono, 8.5);
-      right(l.unitPriceHt != null ? formatEur(l.unitPriceHt * l.quantity) : "—", cols.tot, y, F.mono, 8.5);
+      right(l.unitPriceHt != null ? formatEur(l.unitPriceHt) : "—", cols.pu, y, F.mono, 9);
+      right(l.unitPriceHt != null ? formatEur(l.unitPriceHt * l.quantity) : "—", cols.tot, y, F.mono, 9);
     }
     let yy = y - Math.max(des.length, packLines.length) * 12;
     if (l.note) {
@@ -199,7 +206,7 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
   const total = orderTotal(order);
   y -= 6;
   if (total != null) {
-    right(`TOTAL HT  ${formatEur(total)}`, W - M, y, F.monoMed, 11);
+    right(`TOTAL HT  ${formatEur(total)}`, W - M, y, F.monoMed, 12);
     y -= 14;
     right("TVA et frais de port selon conditions en vigueur", W - M, y, F.body, 7.5, MUTED);
     y -= 16;
@@ -229,7 +236,7 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
     p.drawText(`${company.name} · ${company.street}, ${company.postalCode} ${company.city}`, { x: M, y: 44, size: 7.5, font: F.body, color: MUTED });
     p.drawText(`Tél. ${company.phone} · ${company.email} · mci-sete.com`, { x: M, y: 33, size: 7.5, font: F.body, color: MUTED });
     const pn = `${i + 1}/${pages.length}`;
-    p.drawText(pn, { x: W - M - F.mono.widthOfTextAtSize(pn, 7.5), y: 33, size: 7.5, font: F.mono, color: MUTED });
+    p.drawText(pn, { x: W - M - F.mono.widthOfTextAtSize(pn, 8), y: 33, size: 8, font: F.mono, color: MUTED });
   });
 
   return doc.save();

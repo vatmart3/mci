@@ -10,7 +10,7 @@ import { Icon, type IconName } from "@/components/ui/Icon";
 export function SectorsSection({ counts }: { counts: Record<SectorSlug, number> }) {
   const groups = Object.keys(sectorGroups) as (keyof typeof sectorGroups)[];
   return (
-    <section id="secteurs" aria-labelledby="secteurs-title" className="scroll-mt-24 py-16 lg:py-24">
+    <section id="secteurs" aria-labelledby="secteurs-title" className="scroll-mt-24 bg-salt py-16 lg:py-24">
       <div className="wrap">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
@@ -30,7 +30,7 @@ export function SectorsSection({ counts }: { counts: Record<SectorSlug, number> 
                   .filter((s) => s.group === g)
                   .map((s) => (
                     <li key={s.slug}>
-                      <Link href={`/secteurs/${s.slug}`} className="group -mx-3 flex items-start gap-4 rounded-[6px] px-3 py-4 transition-colors duration-150 hover:bg-salt">
+                      <Link href={`/secteurs/${s.slug}`} className="group -mx-3 flex items-start gap-4 rounded-[6px] px-3 py-4 transition-colors duration-150 hover:bg-white">
                         <span className="grid size-12 shrink-0 place-items-center rounded-[6px] bg-sky/60 text-mci transition-colors duration-150 group-hover:bg-mci group-hover:text-white">
                           <Icon name={`sec-${s.slug}` as IconName} size={26} />
                         </span>

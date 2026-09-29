@@ -20,7 +20,7 @@ export function ShelfSection({ groups, total }: { groups: ShelfGroup[]; total: n
   const smSpan = ["sm:col-span-2", "sm:col-span-1"][stocked.length % 2];
   const lgSpan = ["lg:col-span-3", "lg:col-span-2", "lg:col-span-1"][stocked.length % 3];
   return (
-    <section aria-labelledby="gamme-title" className="bg-salt py-16 lg:py-24">
+    <section aria-labelledby="gamme-title" className="py-16 lg:py-24">
       <div className="wrap">
         <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
           <div>

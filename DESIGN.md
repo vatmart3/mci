@@ -180,7 +180,7 @@ Une palette industrielle froide : blanc, acier teinté de bleu, bleu de marque e
 **Character:** une grotesque de signalétique routière, condensée et grasse pour les titres, pleine et calme pour le texte : l'aplomb d'une étiquette de bidon, la lisibilité d'une fiche technique.
 
 ### Hierarchy
-- **Display** (700, clamp 2,5 → 4,5 rem, 1,02) : le seul titre du bandeau d'accueil.
+- **Display** (700, clamp 2,5 → 4,5 rem, 1,02) : réservé aux deux temps forts de l'accueil, le titre du bandeau et « Quel est le problème ? ». Toutes les autres sections restent en Headline : c'est ce contraste qui donne le rythme.
 - **Headline** (700, clamp 2 → 3,25 rem, 1,06) : titres de section et H1 des pages internes.
 - **Title** (700, clamp 1,5 → 2,25 rem, 1,1) : sous-sections, états vides.
 - **Label** (600, 1,25 rem, 1,2) : titres de panneaux et de tiroirs.
@@ -252,6 +252,9 @@ Francs et denses, typés par leur fonction plutôt que par leur importance.
 
 ### Recherche instantanée (signature)
 Combobox ARIA : résultats du moteur dès la deuxième lettre, avec vignette sur plateau, code en Barlow Semi Condensed bleu, désignation et famille. Chaque résultat porte un bouton « Ajouter » orange (conditionnement par défaut, quantité 1), atteignable au clavier (Tab, ou Maj+Entrée sur le résultat actif). Au pied : « Voir les N résultats dans le catalogue ». Version bandeau de 64 px avec bouton Rechercher orange ; version compacte de 40 px dans l'en-tête des pages internes.
+
+### Sélecteur de problème (signature)
+Section dominante de l'accueil, juste après le bandeau. À gauche, une grande liste filetée de problèmes de terrain en Barlow Semi Condensed 32 px (graisse cuite, tags, tartre…), avec le lieu où on les rencontre en petit ; le problème actif passe en bleu MCI avec une flèche. À droite, un panneau sel de 12 px liste les produits réels du catalogue qui le traitent : vignette sur plateau, code, désignation, usages, sélecteur de conditionnement et bouton « Ajouter ». Onglets ARIA pilotables au clavier ; sur mobile, les problèmes deviennent des pastilles défilantes au-dessus du panneau. Les associations problème → produits sont vérifiées sur les usages déclarés des fiches, jamais inventées.
 
 ### Tiroir du bon de commande
 `<dialog>` natif à droite, 480 px au plus. Il glisse depuis la droite en 220 ms (ease-out expo) avec un voile nuit à 40 % en fondu, puis ressort de la même manière. « Vider » demande confirmation à l'intérieur du tiroir.
