@@ -1,4 +1,6 @@
-# DESIGN NOTES — MCI Sète
+# DESIGN NOTES — MCI Sète (archive)
+
+> **Obsolète.** La charte en vigueur est la **v3 « Le comptoir du fournisseur »**, décrite dans [`DESIGN.md`](DESIGN.md) (jetons normatifs) et `.impeccable/design.json`. Les notes v2 et v1 ci-dessous ne sont conservées que pour l'historique.
 
 > **Charte v2 (refonte « arrondie », septembre 2026)** — à la demande du client, la direction « fiche technique / papier » ci-dessous (§1 à §8) est remplacée par un langage inspiré d'Apple. La v1 est conservée plus bas pour mémoire ; en cas de contradiction, **la v2 fait foi**.
 

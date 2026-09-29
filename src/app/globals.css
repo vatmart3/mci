@@ -124,6 +124,10 @@
   :where(.bg-mci, .bg-deep, .bg-night, [data-site-footer]) :focus-visible {
     outline-color: var(--color-white);
   }
+  /* …sauf sur les panneaux clairs posés sur ces fonds (recherche, extraits, cartes) */
+  :where(.bg-mci, .bg-deep, .bg-night, [data-site-footer]) :where(.bg-white, .bg-salt) :focus-visible {
+    outline-color: var(--color-mci);
+  }
   a {
     color: inherit;
     text-decoration: none;

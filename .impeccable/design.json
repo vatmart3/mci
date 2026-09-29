@@ -1,0 +1,443 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-29T09:39:25.456404+00:00",
+  "title": "Design System: MCI Sète",
+  "extensions": {
+    "colorMeta": {
+      "mci-blue": {
+        "role": "primary",
+        "displayName": "Bleu MCI",
+        "canonical": "#1f6a99",
+        "tonalRamp": [
+          "#0d2c40",
+          "#15496a",
+          "#1e6794",
+          "#2784bf",
+          "#4da4db",
+          "#88c2e7",
+          "#bfdff2",
+          "#eaf4fb"
+        ]
+      },
+      "harbour-deep": {
+        "role": "primary",
+        "displayName": "Bleu port",
+        "canonical": "#154d72",
+        "tonalRamp": [
+          "#0c2c41",
+          "#14496c",
+          "#1c6697",
+          "#2483c2",
+          "#4aa3de",
+          "#86c2e9",
+          "#bedef3",
+          "#e9f4fb"
+        ]
+      },
+      "night-navy": {
+        "role": "primary",
+        "displayName": "Bleu nuit",
+        "canonical": "#0c2b40",
+        "tonalRamp": [
+          "#0c2b40",
+          "#14486b",
+          "#1c6596",
+          "#2482c1",
+          "#4ba2dd",
+          "#87c1e8",
+          "#bfdef3",
+          "#eaf4fb"
+        ]
+      },
+      "sky-wash": {
+        "role": "primary",
+        "displayName": "Ciel",
+        "canonical": "#cfe3f1",
+        "tonalRamp": [
+          "#112a3b",
+          "#1d4663",
+          "#28628a",
+          "#347eb2",
+          "#599ecf",
+          "#90bfdf",
+          "#c4dcee",
+          "#ebf3f9"
+        ]
+      },
+      "order-orange": {
+        "role": "secondary",
+        "displayName": "Orange commande",
+        "canonical": "#f89746",
+        "tonalRamp": [
+          "#4a2303",
+          "#7b3a05",
+          "#ac5207",
+          "#dd6908",
+          "#f78b31",
+          "#fab275",
+          "#fcd6b5",
+          "#fef1e6"
+        ]
+      },
+      "order-orange-hover": {
+        "role": "secondary",
+        "displayName": "Orange commande (survol)",
+        "canonical": "#ec8431",
+        "tonalRamp": [
+          "#462306",
+          "#753a0b",
+          "#a3510f",
+          "#d26813",
+          "#ed8a3b",
+          "#f3b17c",
+          "#f9d5b9",
+          "#fdf1e8"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Encre",
+        "canonical": "#16232d",
+        "tonalRamp": [
+          "#192833",
+          "#2a4356",
+          "#3b5d78",
+          "#4b789a",
+          "#6f99b9",
+          "#9fbbd0",
+          "#ccdae6",
+          "#eef3f7"
+        ]
+      },
+      "white": {
+        "role": "neutral",
+        "displayName": "Blanc",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#262626",
+          "#404040",
+          "#595959",
+          "#737373",
+          "#949494",
+          "#b8b8b8",
+          "#d9d9d9",
+          "#f2f2f2"
+        ]
+      },
+      "salt": {
+        "role": "neutral",
+        "displayName": "Sel",
+        "canonical": "#f3f6f8",
+        "tonalRamp": [
+          "#1c2830",
+          "#2f4351",
+          "#425e71",
+          "#557991",
+          "#789ab0",
+          "#a5bbca",
+          "#cfdbe3",
+          "#eff3f6"
+        ]
+      },
+      "steel": {
+        "role": "neutral",
+        "displayName": "Acier",
+        "canonical": "#e6ecf0",
+        "tonalRamp": [
+          "#1d2830",
+          "#304350",
+          "#435e70",
+          "#56788f",
+          "#7999af",
+          "#a6bbc9",
+          "#cfdbe2",
+          "#eff3f5"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Filet",
+        "canonical": "#d5dde3",
+        "tonalRamp": [
+          "#1f272e",
+          "#33424c",
+          "#475c6b",
+          "#5c768a",
+          "#7e97a9",
+          "#a9bac6",
+          "#d1dae0",
+          "#f0f3f5"
+        ]
+      },
+      "ok": {
+        "role": "status",
+        "displayName": "Vert OK",
+        "canonical": "#1d7a46",
+        "tonalRamp": [
+          "#0f3e23",
+          "#18673b",
+          "#229053",
+          "#2cb96a",
+          "#52d68c",
+          "#8ce4b2",
+          "#c1f0d6",
+          "#eafaf1"
+        ]
+      },
+      "warn": {
+        "role": "status",
+        "displayName": "Ambre alerte",
+        "canonical": "#a86a0b",
+        "tonalRamp": [
+          "#482d05",
+          "#784c08",
+          "#a86a0b",
+          "#d7880e",
+          "#f2a836",
+          "#f6c579",
+          "#fae0b7",
+          "#fdf5e7"
+        ]
+      },
+      "danger": {
+        "role": "status",
+        "displayName": "Rouge danger",
+        "canonical": "#c2362c",
+        "tonalRamp": [
+          "#3e110e",
+          "#681d18",
+          "#922821",
+          "#bb342a",
+          "#d75950",
+          "#e5918b",
+          "#f1c4c1",
+          "#faebea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Titre unique du bandeau d'accueil."
+      },
+      "headline": {
+        "displayName": "Titre de section",
+        "purpose": "H2 de section et H1 des pages internes."
+      },
+      "title": {
+        "displayName": "Sous-titre",
+        "purpose": "Sous-sections, états vides."
+      },
+      "label": {
+        "displayName": "Libellé de panneau",
+        "purpose": "Titres de tiroirs et de panneaux."
+      },
+      "code": {
+        "displayName": "Code produit",
+        "purpose": "Références, numéros de commande, SIRET."
+      },
+      "lead": {
+        "displayName": "Chapeau",
+        "purpose": "Introduction sous un titre, 52–58 caractères."
+      },
+      "body": {
+        "displayName": "Texte",
+        "purpose": "Texte courant, 70 caractères au plus."
+      },
+      "small": {
+        "displayName": "Petit texte",
+        "purpose": "Métadonnées, notes, légendes."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sheet",
+        "value": "0 1px 2px rgb(22 35 45 / 0.06), 0 8px 24px -12px rgb(22 35 45 / 0.18)",
+        "purpose": "Panneaux de formulaire posés sur la page."
+      },
+      {
+        "name": "tile",
+        "value": "0 2px 4px rgb(22 35 45 / 0.04), 0 16px 32px -16px rgb(22 35 45 / 0.22)",
+        "purpose": "Survol des cartes (avec élévation de 2 px)."
+      },
+      {
+        "name": "float",
+        "value": "0 24px 48px -20px rgb(12 43 64 / 0.35)",
+        "purpose": "Recherche du bandeau, menus, extraits sur fond bleu."
+      },
+      {
+        "name": "drawer",
+        "value": "-12px 0 40px -16px rgb(22 35 45 / 0.3)",
+        "purpose": "Tiroir du bon de commande."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Toutes les entrées : menus, tiroir, survols."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Transitions symétriques rares."
+      },
+      {
+        "name": "drop",
+        "value": "180ms ease-out, translateY(-6px) + opacité",
+        "purpose": "Méga-menus et liste de résultats."
+      },
+      {
+        "name": "drawer",
+        "value": "220ms ease-out, translateX(100%) → 0, voile en fondu",
+        "purpose": "Entrée et sortie du tiroir."
+      },
+      {
+        "name": "state",
+        "value": "150ms ease-out",
+        "purpose": "Couleurs de survol des boutons et liens."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      },
+      {
+        "name": "xl",
+        "value": "1280px"
+      },
+      {
+        "name": "2xl",
+        "value": "1536px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Bouton action (achat)",
+      "kind": "button",
+      "refersTo": "button-action",
+      "description": "Uniquement pour ajouter, commander, valider.",
+      "html": "<button class=\"ds-btn-action\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\"><path d=\"M12 5v14M5 12h14\"/></svg>Ajouter au bon de commande</button>",
+      "css": ".ds-btn-action{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:1.0625rem;background:#f89746;color:#16232d;border:1px solid #f89746;border-radius:6px;box-shadow:0 1px 0 rgb(22 35 45/.12);transition:background-color 150ms cubic-bezier(.16,1,.3,1),border-color 150ms;cursor:pointer}.ds-btn-action:hover{background:#ec8431;border-color:#ec8431}.ds-btn-action:focus-visible{outline:2px solid #1f6a99;outline-offset:2px;}"
+    },
+    {
+      "name": "Bouton principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Actions structurantes non commerciales.",
+      "html": "<button class=\"ds-btn-primary\">Se connecter</button>",
+      "css": ".ds-btn-primary{display:inline-flex;align-items:center;height:44px;padding:0 20px;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:1.0625rem;background:#1f6a99;color:#fff;border:1px solid #1f6a99;border-radius:6px;transition:background-color 150ms;cursor:pointer}.ds-btn-primary:hover{background:#154d72;border-color:#154d72}.ds-btn-primary:focus-visible{outline:2px solid #1f6a99;outline-offset:2px;}"
+    },
+    {
+      "name": "Bouton secondaire",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Actions secondaires, filet acier.",
+      "html": "<button class=\"ds-btn-outline\">Tout le catalogue</button>",
+      "css": ".ds-btn-outline{display:inline-flex;align-items:center;height:44px;padding:0 20px;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;font-weight:600;font-size:1.0625rem;background:#fff;color:#16232d;border:1px solid #d5dde3;border-radius:6px;transition:border-color 150ms;cursor:pointer}.ds-btn-outline:hover{border-color:#16232d}.ds-btn-outline:focus-visible{outline:2px solid #1f6a99;outline-offset:2px;}"
+    },
+    {
+      "name": "Champ",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Libellé au-dessus, filet acier, focus bleu.",
+      "html": "<label class=\"ds-field\"><span>Référence</span><input placeholder=\"Ex. DG90, KERMEX\"></label>",
+      "css": ".ds-field{display:grid;gap:6px;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;color:#16232d}.ds-field span{font-size:.9375rem;font-weight:600}.ds-field input{height:44px;padding:0 12px;border:1px solid #d5dde3;border-radius:6px;font:inherit;background:#fff}.ds-field input:focus{outline:none;border-color:#1f6a99;box-shadow:0 0 0 3px rgb(31 106 153/.2)}"
+    },
+    {
+      "name": "Recherche du bandeau",
+      "kind": "custom",
+      "refersTo": "search-hero",
+      "description": "Signature : recherche instantanée dans le bandeau bleu.",
+      "html": "<div class=\"ds-hero\"><form class=\"ds-search\"><svg width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"#1f6a99\" stroke-width=\"1.75\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"m20 20-3.5-3.5\"/></svg><input placeholder=\"Ex. graisse cuite\"><button type=\"button\">Rechercher</button></form></div>",
+      "css": ".ds-hero{background:#1f6a99;padding:32px}.ds-search{display:flex;align-items:center;height:64px;padding:0 8px 0 20px;background:#fff;border-radius:8px;box-shadow:0 24px 48px -20px rgb(12 43 64/.35);font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;}.ds-search:focus-within{box-shadow:0 0 0 2px #1f6a99,0 0 0 5px #fff,0 24px 48px -20px rgb(12 43 64/.35)}.ds-search input{flex:1;border:0;outline:0;padding:0 16px;font:inherit;font-size:1.375rem;color:#16232d;background:transparent}.ds-search button{height:48px;padding:0 24px;border:0;border-radius:6px;background:#f89746;color:#16232d;font:inherit;font-weight:600;cursor:pointer}.ds-search button:hover{background:#ec8431}"
+    },
+    {
+      "name": "Carte famille",
+      "kind": "card",
+      "refersTo": "tile",
+      "description": "Plate au repos, ombre et élévation au survol.",
+      "html": "<a class=\"ds-tile\" href=\"#\"><span class=\"ds-plate\"></span><span class=\"ds-tile-body\"><b>Absorbants</b><small>4 produits</small></span></a>",
+      "css": ".ds-tile{display:flex;flex-direction:column;width:280px;border:1px solid #d5dde3;border-radius:12px;overflow:hidden;background:#fff;color:#16232d;text-decoration:none;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;transition:box-shadow 200ms cubic-bezier(.16,1,.3,1),transform 200ms,border-color 200ms}.ds-tile:hover{border-color:#b9c5ce;box-shadow:0 2px 4px rgb(22 35 45/.04),0 16px 32px -16px rgb(22 35 45/.22);transform:translateY(-2px)}.ds-tile:focus-visible{outline:2px solid #1f6a99;outline-offset:2px;}.ds-plate{height:120px;background:radial-gradient(120% 90% at 50% 100%,#e3eaef 0%,#f3f6f8 60%);border-bottom:1px solid #d5dde3}.ds-tile-body{display:flex;justify-content:space-between;align-items:baseline;padding:20px}.ds-tile-body b{font-family:'Barlow Semi Condensed',ui-sans-serif,system-ui,sans-serif;font-size:1.25rem}.ds-tile-body small{font-size:.9375rem;font-weight:600;color:rgb(22 35 45/.7)}"
+    },
+    {
+      "name": "Code produit et badge",
+      "kind": "chip",
+      "refersTo": "badge",
+      "description": "Référence en Barlow SC tabulaire, badge acier 4 px.",
+      "html": "<span class=\"ds-code\">DG90</span> <span class=\"ds-badge\">Biocide</span>",
+      "css": ".ds-code{font-family:'Barlow Semi Condensed',ui-sans-serif,system-ui,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.02em;font-variant-numeric:tabular-nums;color:#1f6a99;font-size:1.375rem}.ds-badge{display:inline-flex;align-items:center;padding:1px 8px;border-radius:4px;background:#e6ecf0;color:#16232d;font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;font-size:.8125rem;font-weight:600;line-height:20px}"
+    },
+    {
+      "name": "En-tête",
+      "kind": "nav",
+      "refersTo": "hero-band",
+      "description": "Barre utilitaire nuit et barre blanche collante de 76 px.",
+      "html": "<header class=\"ds-nav\"><div class=\"ds-util\">04 48 08 45 89 · Commande rapide · Demander un devis</div><nav class=\"ds-main\"><b>MCI</b><a href=\"#\">Catalogue</a><a href=\"#\">Secteurs</a><a href=\"#\">La société</a><a href=\"#\">Contact</a><span class=\"ds-cart\">Bon de commande</span></nav></header>",
+      "css": ".ds-nav{font-family:'Barlow',ui-sans-serif,system-ui,sans-serif;}.ds-util{background:#0c2b40;color:#fff;font-size:.8125rem;padding:8px 24px;text-align:right}.ds-main{display:flex;align-items:center;gap:28px;height:76px;padding:0 24px;background:#fff;border-bottom:1px solid #d5dde3}.ds-main b{font-family:'Barlow Semi Condensed',ui-sans-serif,system-ui,sans-serif;font-size:1.5rem;color:#1f6a99}.ds-main a{color:#16232d;font-weight:600;text-decoration:none}.ds-main a:hover{color:#1f6a99}.ds-main a:focus-visible{outline:2px solid #1f6a99;outline-offset:2px;}.ds-cart{margin-left:auto;background:#f89746;color:#16232d;font-weight:600;padding:10px 16px;border-radius:6px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Le comptoir du fournisseur",
+    "overview": "Le site est le comptoir d'un fournisseur professionnel : on y vient avec un problème de terrain (graisse cuite, tags, mousses, tartre), on repart avec la bonne référence, sa fiche technique et un bon de commande. Le système suit le standard du secteur (Kärcher, Würth, Diversey) à pleine fidélité : un bandeau bleu MCI porte la recherche, les produits sont posés sur des plateaux acier clairs, les tableaux sont denses et nets, et rien ne bouge sans qu'on le demande.\n\nLa densité est celle d'un catalogue professionnel, pas d'une vitrine. Les titres en Barlow Semi Condensed ont la franchise de la signalétique industrielle ; le texte en Barlow reste lisible à longueur de fiche. Le blanc et deux gris acier teintés de bleu forment le fond ; le bleu MCI occupe de grandes zones pleines ; l'orange n'apparaît qu'au moment d'acheter.\n\nRejets confirmés par le client : fonds de section animés, animations au défilement, mise en scène « vitrine », formes en pilule et arrondis marqués de la v2.",
+    "keyCharacteristics": [
+      "Recherche instantanée comme geste principal, dans un bandeau bleu pleine largeur.",
+      "Orange réservé aux gestes d'achat (ajouter, commander, valider, rechercher dans le bandeau).",
+      "Coins francs et modestes (4 à 12 px), filets acier plutôt que cartes flottantes.",
+      "Packshots détourés sur plateau acier clair, pictogrammes au trait de 1,75 px.",
+      "Mouvement limité aux menus, tiroirs et survols, entre 150 et 220 ms."
+    ],
+    "rules": [
+      {
+        "name": "The Purchase-Only Orange Rule",
+        "body": "L'orange signale un geste d'achat et rien d'autre : ni coche, ni décor, ni anneau de focus. Si l'élément n'ajoute pas au bon ou ne le valide pas, il n'est pas orange.",
+        "section": "colors"
+      },
+      {
+        "name": "The Blue Field Rule",
+        "body": "Le bleu MCI s'emploie en aplats larges (bandeau, section entière), jamais en dégradé ni en texte dégradé.",
+        "section": "colors"
+      },
+      {
+        "name": "The Code-Is-Data Rule",
+        "body": "Une référence produit est une donnée, pas un titre : capitales Barlow Semi Condensed grasses, chiffres tabulaires, en bleu MCI dans les listes.",
+        "section": "typography"
+      },
+      {
+        "name": "The French Spacing Rule",
+        "body": "Espace fine insécable (U+202F) avant « : ; ? ! » et à l'intérieur des guillemets « », dans toute la copie publique.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "Au repos, une carte est un fond blanc et un filet de 1 px ; l'ombre n'arrive qu'au survol ou pour ce qui flotte au-dessus du contenu.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** réserver l'orange commande (#f89746) aux boutons ajouter, commander, valider et rechercher.",
+      "**Do** composer les références produit et numéros de commande en Barlow Semi Condensed grasse à chiffres tabulaires.",
+      "**Do** poser chaque packshot sur un plateau acier clair et le légender « Visuel d'illustration » sur la fiche produit tant que ce n'est pas une photo réelle.",
+      "**Do** limiter le mouvement aux menus, tiroirs et survols (150 à 220 ms, ease-out), et le couper en mouvement réduit.",
+      "**Do** passer les tableaux en lignes empilées ou en cartes sous 640 px.",
+      "**Do** mettre l'espace fine insécable avant « : ; ? ! » et dans les guillemets."
+    ],
+    "donts": [
+      "**Don't** placer un petit libellé au-dessus d'un titre (sur-titre) ni un petit libellé au-dessus d'un gros chiffre.",
+      "**Don't** animer un fond de section ni déclencher d'animation au défilement.",
+      "**Don't** utiliser de dégradé de texte, de verre dépoli ou de bordure latérale colorée de plus de 1 px.",
+      "**Don't** arrondir en pilule ni dépasser 12 px de rayon.",
+      "**Don't** afficher de prix, chiffre, avis, certification ou conditionnement inventés côté public ; ce qui reste à valider porte la mention « indicatif »."
+    ]
+  }
+}

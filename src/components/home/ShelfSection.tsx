@@ -16,6 +16,9 @@ export interface ShelfGroup {
 export function ShelfSection({ groups, total }: { groups: ShelfGroup[]; total: number }) {
   const stocked = groups.filter((g) => g.count > 0);
   const onRequest = groups.filter((g) => g.count === 0);
+  // la bande « hors ligne » comble la dernière rangée de la grille (2 colonnes en sm, 3 en lg)
+  const smSpan = ["sm:col-span-2", "sm:col-span-1"][stocked.length % 2];
+  const lgSpan = ["lg:col-span-3", "lg:col-span-2", "lg:col-span-1"][stocked.length % 3];
   return (
     <section aria-labelledby="gamme-title" className="bg-salt py-16 lg:py-24">
       <div className="wrap">
@@ -54,34 +57,35 @@ export function ShelfSection({ groups, total }: { groups: ShelfGroup[]; total: n
               </li>
             );
           })}
-        </ul>
-
-        {onRequest.length ? (
-          <div className="mt-6 flex flex-col gap-5 rounded-[12px] bg-white p-6 ring-1 ring-rule md:flex-row md:items-center md:justify-between lg:mt-8">
-            <div className="flex items-start gap-4">
-              <span className="grid size-12 shrink-0 place-items-center rounded-[8px] bg-sky/60 text-mci">
-                <Icon name="search" size={24} />
-              </span>
-              <p className="max-w-[70ch]">
-                <span className="block font-display text-xl font-bold leading-tight">Un produit qui n&apos;est pas en ligne ?</span>
-                <span className="mt-1 block text-ink/75">
-                  {onRequest.map((g, i) => (
-                    <span key={g.slug}>
-                      {i > 0 ? (i === onRequest.length - 1 ? " et " : ", ") : null}
-                      <Link href={`/catalogue/${g.slug}`} className="link-u">
-                        {g.name}
-                      </Link>
+          {onRequest.length ? (
+            <li className={`min-w-0 ${smSpan} ${lgSpan}`}>
+              <div className="flex h-full flex-col justify-between gap-5 rounded-[12px] border border-rule bg-white p-6">
+                <div className="flex items-start gap-4">
+                  <span className="grid size-12 shrink-0 place-items-center rounded-[8px] bg-sky/60 text-mci">
+                    <Icon name="search" size={24} />
+                  </span>
+                  <p className="max-w-[70ch]">
+                    <span className="block font-display text-xl font-bold leading-tight">Un produit qui n&apos;est pas en ligne ?</span>
+                    <span className="mt-1 block text-ink/75">
+                      {onRequest.map((g, i) => (
+                        <span key={g.slug}>
+                          {i > 0 ? (i === onRequest.length - 1 ? " et " : ", ") : null}
+                          <Link href={`/catalogue/${g.slug}`} className="link-u">
+                            {g.name}
+                          </Link>
+                        </span>
+                      ))}
+                      {onRequest.length > 1 ? " sont proposés" : " est proposé"} sur demande. Plus largement, MCI cherche avec vous le produit adapté à votre surface.
                     </span>
-                  ))}
-                  {onRequest.length > 1 ? " sont proposés" : " est proposé"} sur demande. Plus largement, MCI cherche avec vous le produit adapté à votre surface.
-                </span>
-              </p>
-            </div>
-            <Link href="/contact?objet=conseil" className="inline-flex h-11 shrink-0 items-center gap-2 self-start rounded-[6px] bg-mci px-5 font-semibold text-white transition-colors duration-150 hover:bg-deep md:self-auto">
-              Décrire mon besoin <Icon name="arrow" size={18} />
-            </Link>
-          </div>
-        ) : null}
+                  </p>
+                </div>
+                <Link href="/contact?objet=conseil" className="inline-flex h-11 shrink-0 items-center gap-2 self-start rounded-[6px] bg-mci px-5 font-semibold text-white transition-colors duration-150 hover:bg-deep">
+                  Décrire mon besoin <Icon name="arrow" size={18} />
+                </Link>
+              </div>
+            </li>
+          ) : null}
+        </ul>
       </div>
     </section>
   );
