@@ -43,8 +43,23 @@ export function DocumentsSection({ sheets, withSheet, references }: { sheets: Mi
 
         <div className="lg:col-span-7 lg:col-start-6">
           <div className="overflow-hidden rounded-[12px] border border-rule bg-white">
-            <div className="relative overflow-x-auto">
-              <table className="w-full min-w-[520px] text-left text-sm">
+            {/* Mobile : lignes empilées, sans défilement horizontal */}
+            <ul className="divide-y divide-rule sm:hidden" aria-label="Exemples de fiches techniques disponibles">
+              {sheets.map((p) => (
+                <li key={p.id} className="flex items-center gap-3 px-4 py-3 text-sm">
+                  <Link href={`/produit/${p.slug}`} className="group min-w-0 flex-1">
+                    <span className="t-code block text-base text-mci group-hover:underline">{p.code}</span>
+                    <span className="block text-ink/80">{p.short}</span>
+                  </Link>
+                  <a href={p.technicalSheetUrl} target="_blank" rel="noopener noreferrer" className="inline-flex shrink-0 items-center gap-1.5 rounded-[6px] border border-rule px-3 py-2 font-semibold transition-colors duration-150 hover:border-mci hover:text-mci">
+                    <Icon name="download" size={16} /> PDF
+                    <span className="sr-only">— fiche technique {p.code}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <div className="hidden sm:block">
+              <table className="w-full text-left text-sm">
                 <caption className="sr-only">Exemples de fiches techniques disponibles</caption>
                 <thead className="border-b border-rule bg-steel/60 text-xs font-semibold text-ink/70">
                   <tr>

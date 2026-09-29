@@ -9,7 +9,7 @@ import { families } from "@/data/families";
 export const metadata = pageMeta({
   title: "Catalogue produits d'entretien et nettoyants techniques",
   description:
-    "Toutes les références MCI Sète : aérosols, décapants, détartrants, désinfectants, biocides, absorbants, produits bio. Recherche par usage, filtres, fiches techniques et commande pro.",
+    "Toutes les références MCI Sète : aérosols, décapants, détartrants, désinfectants, biocides, absorbants, produits bio. Recherche par usage, filtres, fiches techniques et commande pro.",
   path: "/catalogue",
 });
 
@@ -29,7 +29,7 @@ export default async function CataloguePage() {
             <div className="min-w-0 lg:col-span-7">
               <h1 className="t-h1 max-w-[20ch]">Le catalogue, référence par référence</h1>
               <p className="t-lead mt-3 max-w-[60ch] text-ink/70">
-                Cherchez par nom, par surface ou par problème (« graffiti », « fosse septique », « gymnase »). Chaque ligne s&apos;ajoute au bon de commande.
+                Cherchez par nom, par surface ou par problème (« graffiti », « fosse septique », « gymnase »). Chaque ligne s&apos;ajoute au bon de commande.
               </p>
             </div>
             <div className="min-w-0 lg:col-span-5 lg:justify-self-end">
@@ -43,7 +43,7 @@ export default async function CataloguePage() {
                 <li className="flex min-w-0 items-baseline text-sm text-ink/70">FDS sur demande</li>
               </ul>
               <Link href="/commande-rapide" className="link-u mt-4 inline-flex items-center gap-1.5 text-sm font-semibold">
-                Vous connaissez vos références ? Commande rapide
+                Vous connaissez vos références ? Commande rapide
                 <Icon name="chevronRight" size={16} />
               </Link>
             </div>

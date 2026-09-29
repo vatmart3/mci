@@ -14,7 +14,7 @@ export default function RootNotFound() {
         <div className="mx-auto max-w-[720px] rounded-[8px] border border-rule bg-white p-6 sm:p-10">
           <h1 className="t-h1">Page introuvable.</h1>
           <p className="t-lead mt-3 max-w-[52ch] text-ink/70">
-            L&apos;adresse a peut-être changé avec le nouveau site. Le produit que vous cherchez est sûrement au catalogue ; sinon, appelez le{" "}
+            L&apos;adresse a peut-être changé avec le nouveau site. Le produit que vous cherchez est sûrement au catalogue ; sinon, appelez le{" "}
             <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline">
               {company.phone}
             </a>

@@ -30,16 +30,18 @@ export function SectorsSection({ counts }: { counts: Record<SectorSlug, number> 
                   .filter((s) => s.group === g)
                   .map((s) => (
                     <li key={s.slug}>
-                      <Link href={`/secteurs/${s.slug}`} className="group -mx-3 flex items-center gap-4 rounded-[6px] px-3 py-4 transition-colors duration-150 hover:bg-salt">
+                      <Link href={`/secteurs/${s.slug}`} className="group -mx-3 flex items-start gap-4 rounded-[6px] px-3 py-4 transition-colors duration-150 hover:bg-salt">
                         <span className="grid size-12 shrink-0 place-items-center rounded-[6px] bg-sky/60 text-mci transition-colors duration-150 group-hover:bg-mci group-hover:text-white">
                           <Icon name={`sec-${s.slug}` as IconName} size={26} />
                         </span>
                         <span className="min-w-0 flex-1">
-                          <span className="block font-display text-xl font-bold leading-tight">{s.name}</span>
-                          <span className="mt-0.5 line-clamp-1 text-sm text-ink/70">{s.buyer}</span>
+                          <span className="flex items-baseline justify-between gap-3">
+                            <span className="font-display text-xl font-bold leading-tight">{s.name}</span>
+                            <span className="shrink-0 text-sm font-semibold text-mci tabular-nums">{counts[s.slug] ?? 0} produits</span>
+                          </span>
+                          <span className="mt-0.5 block text-sm text-ink/70">{s.buyer}</span>
                         </span>
-                        <span className="shrink-0 text-sm font-semibold text-mci tabular-nums">{counts[s.slug] ?? 0} produits</span>
-                        <Icon name="chevronRight" size={18} className="shrink-0 text-ink/40 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-mci" />
+                        <Icon name="chevronRight" size={18} className="mt-1 shrink-0 text-ink/40 transition-transform duration-150 group-hover:translate-x-0.5 group-hover:text-mci" />
                       </Link>
                     </li>
                   ))}

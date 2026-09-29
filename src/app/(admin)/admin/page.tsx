@@ -104,7 +104,7 @@ export default function AdminDashboard() {
                   <span className="h-2 overflow-hidden rounded-[2px] bg-steel" aria-hidden="true">
                     <span className="block h-2 rounded-[2px] bg-mci" style={{ width: `${(n / max) * 100}%` }} />
                   </span>
-                  <span className="t-mono text-right font-semibold" aria-label={`${statusLabels[s]} : ${n}`}>
+                  <span className="t-mono text-right font-semibold" aria-label={`${statusLabels[s]} : ${n}`}>
                     {n}
                   </span>
                 </li>

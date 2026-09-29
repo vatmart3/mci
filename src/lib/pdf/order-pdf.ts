@@ -78,6 +78,13 @@ export async function buildOrderPdf(order: Order, kind: PdfKind, fonts: PdfFonts
     mono: await doc.embedFont(fonts.mono, { subset: true }),
     monoMed: await doc.embedFont(fonts.monoMed, { subset: true }),
   };
+  // la copie du site utilise l'espace fine insécable (U+202F), absente de ces polices : on la remplace par l'espace insécable
+  for (const f of Object.values(F)) {
+    const enc = f.encodeText.bind(f);
+    const width = f.widthOfTextAtSize.bind(f);
+    f.encodeText = (t: string) => enc(t.replace(/\u202F/g, "\u00A0"));
+    f.widthOfTextAtSize = (t: string, size: number) => width(t.replace(/\u202F/g, "\u00A0"), size);
+  }
   const W = 595.28;
   const H = 841.89;
   const M = 42;

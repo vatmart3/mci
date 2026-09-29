@@ -56,7 +56,7 @@ export function SheetButton({ url, code, size = "sm", label = "FT" }: { url?: st
     );
   }
   return (
-    <button type="button" onClick={() => open({ url, title: `Fiche technique ${code}` })} className={buttonClass("outline", size, "gap-1")} aria-label={`FT : fiche technique ${code} (PDF)`}>
+    <button type="button" onClick={() => open({ url, title: `Fiche technique ${code}` })} className={buttonClass("outline", size, "gap-1")} aria-label={`FT : fiche technique ${code} (PDF)`}>
       <Icon name="doc" size={16} />
       {label}
     </button>

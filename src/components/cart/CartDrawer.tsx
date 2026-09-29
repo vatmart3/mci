@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCart, cartCount } from "@/lib/store/cart";
 import { useUI } from "@/lib/store/ui";
 import { useSession } from "@/lib/store/session";
@@ -16,12 +16,14 @@ export function CartDrawer() {
   const clear = useCart((s) => s.clear);
   const priceMode = useSession((s) => s.settings.priceMode);
   const ref = useRef<HTMLDialogElement>(null);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     const d = ref.current;
     if (!d) return;
     if (open && !d.open) d.showModal();
     if (!open && d.open) d.close();
+    if (!open) setConfirming(false);
   }, [open]);
 
   const count = cartCount(lines);
@@ -31,7 +33,7 @@ export function CartDrawer() {
       onClose={close}
       onClick={(e) => e.target === ref.current && close()}
       aria-labelledby="drawer-title"
-      className="fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-full max-w-[480px] bg-white p-0 text-ink shadow-drawer backdrop:bg-night/40 open:flex open:flex-col"
+      className="drawer fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-dvh w-full max-w-[480px] bg-white p-0 text-ink shadow-drawer open:flex open:flex-col"
     >
       <div className="flex items-center justify-between gap-4 border-b border-rule px-5 py-3 sm:px-6">
         <div className="min-w-0">
@@ -81,8 +83,26 @@ export function CartDrawer() {
               Valider le bon de commande
               <Icon name="arrow" />
             </ButtonLink>
-            <div className="mt-3 flex items-center justify-between gap-4 text-sm">
-              <button type="button" className="inline-flex h-9 items-center gap-1.5 -ml-2 rounded-[6px] px-2 font-medium text-ink/70 transition-colors duration-150 hover:bg-danger/10 hover:text-danger" onClick={() => confirm("Vider le bon de commande ?") && clear()}>
+            {confirming ? (
+              <div role="group" aria-label="Confirmer la suppression" className="mt-3 flex flex-wrap items-center gap-2 rounded-[6px] border border-danger/30 bg-white p-2 pl-3 text-sm">
+                <span className="mr-auto font-medium">Retirer les {lines.length} références du bon ?</span>
+                <button type="button" autoFocus onClick={() => setConfirming(false)} className="inline-flex h-9 items-center rounded-[6px] px-3 font-medium text-ink/80 transition-colors duration-150 hover:bg-salt">
+                  Annuler
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    clear();
+                    setConfirming(false);
+                  }}
+                  className="inline-flex h-9 items-center rounded-[6px] bg-danger px-3 font-semibold text-white transition-colors duration-150 hover:bg-[#a42c23]"
+                >
+                  Vider le bon
+                </button>
+              </div>
+            ) : null}
+            <div className={confirming ? "hidden" : "mt-3 flex items-center justify-between gap-4 text-sm"}>
+              <button type="button" className="inline-flex h-9 items-center gap-1.5 -ml-2 rounded-[6px] px-2 font-medium text-ink/70 transition-colors duration-150 hover:bg-danger/10 hover:text-danger" onClick={() => setConfirming(true)}>
                 <Icon name="trash" size={16} />
                 Vider
               </button>

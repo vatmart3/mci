@@ -18,9 +18,9 @@ function ProductCard({ p }: { p: MiniProduct }) {
           <ProductVisual product={p} size={220} sizes="(max-width: 640px) 60vw, 220px" alt={`${p.code} — ${p.short}`} className="h-44 w-auto transition-transform duration-200 ease-out group-hover:scale-[1.03]" />
         </span>
         <span className="flex flex-1 flex-col p-5">
-          <span className="text-xs font-semibold text-ink/70">{familyBySlug.get(p.families[0]!)?.name}</span>
-          <span className="t-code mt-1 text-2xl leading-none text-ink group-hover:text-mci">{p.code}</span>
+          <span className="t-code text-2xl leading-none text-ink group-hover:text-mci">{p.code}</span>
           <span className="mt-1 text-sm text-ink/80">{p.short}</span>
+          <span className="mt-1 text-xs text-ink/65">{familyBySlug.get(p.families[0]!)?.name}</span>
           <PropertyBadges properties={p.properties} className="mt-3" />
         </span>
       </Link>

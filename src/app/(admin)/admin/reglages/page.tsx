@@ -61,7 +61,7 @@ export default function AdminSettings() {
         <div className="clear-both px-4 sm:px-6">
           <Label htmlFor="st-hours">Horaires {s.hours ? null : <ToConfirm />}</Label>
           <Input id="st-hours" value={s.hours} onChange={(e) => setS({ ...s, hours: e.target.value })} placeholder="Du lundi au vendredi, 8 h – 12 h / 14 h – 17 h" />
-          <p className="mt-1.5 text-xs text-ink/70">Vide = masqué côté public (« Appelez-nous »).</p>
+          <p className="mt-1.5 text-xs text-ink/70">Vide = masqué côté public (« Appelez-nous »).</p>
         </div>
         <div className="px-4 sm:px-6">
           <Label htmlFor="st-banner">Bandeau d&apos;information</Label>
@@ -72,7 +72,7 @@ export default function AdminSettings() {
           <Input id="st-lead" value={s.leadTimeDefault} onChange={(e) => setS({ ...s, leadTimeDefault: e.target.value })} placeholder="Ex. 48 à 72 h ouvrées" />
         </div>
         <div className="px-4 sm:px-6">
-          <Label htmlFor="st-socials">Réseaux sociaux (une ligne « Nom | https://… »)</Label>
+          <Label htmlFor="st-socials">Réseaux sociaux (une ligne « Nom | https://… »)</Label>
           <Textarea id="st-socials" rows={3} className="t-mono text-sm" value={socialsText} onChange={(e) => setSocialsText(e.target.value)} placeholder="LinkedIn | https://www.linkedin.com/company/…" />
           <p className="mt-1.5 text-xs text-ink/70">Aucun lien n&apos;est affiché tant que ce champ est vide (les anciens liens pointaient vers les comptes Wix).</p>
         </div>
@@ -103,7 +103,7 @@ export default function AdminSettings() {
               variant="outline"
               size="sm"
               onClick={async () => {
-                if (!confirm("Réinitialiser toute la démo (commandes, comptes, réglages, produits modifiés) ?")) return;
+                if (!confirm("Réinitialiser toute la démo (commandes, comptes, réglages, produits modifiés) ?")) return;
                 await (await getBackend()).resetDemo?.();
                 await refresh();
                 setMsg("Démo réinitialisée.");
@@ -115,7 +115,7 @@ export default function AdminSettings() {
               variant="danger"
               size="sm"
               onClick={async () => {
-                if (!confirm("Supprimer les comptes et commandes DÉMO ? (Les comptes MCI restent.)")) return;
+                if (!confirm("Supprimer les comptes et commandes DÉMO ? (Les comptes MCI restent.)")) return;
                 await (await getBackend()).purgeDemo?.();
                 await refresh();
                 setMsg("Données DÉMO supprimées.");

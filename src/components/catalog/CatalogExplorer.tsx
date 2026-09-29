@@ -210,7 +210,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
           </p>
           <h2 id="resultats" className="order-3 basis-full text-base font-semibold lg:order-2 lg:flex-1 lg:basis-auto" aria-live="polite">
             <span className="tabular-nums">{results.length}</span> référence{results.length > 1 ? "s" : ""}
-            {f.q ? <span className="font-normal text-ink/70"> pour « {f.q} »</span> : null} <span className="sr-only">— {title}</span>
+            {f.q ? <span className="font-normal text-ink/70"> pour « {f.q} »</span> : null} <span className="sr-only">— {title}</span>
           </h2>
           <div className="order-2 ml-auto flex items-center gap-2 lg:order-3">
             <label htmlFor="tri" className="hidden text-sm text-ink/70 sm:block">
@@ -284,7 +284,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                 <span className="grid size-12 place-items-center rounded-full border border-rule bg-white text-ink/70">
                   <Icon name="search" size={22} />
                 </span>
-                <p className="t-h2 mt-5 max-w-[24ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
+                <p className="t-h2 mt-5 max-w-[24ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
                 <p className="mt-3 max-w-[56ch] text-ink/80">
                   Appelez-nous au{" "}
                   <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline hover:underline-offset-4">
@@ -293,7 +293,7 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                   , on a peut-être le produit hors catalogue.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
-                  <Link href={`/contact?objet=produit-specifique${f.q ? `&message=${encodeURIComponent(`Je cherche : ${f.q}`)}` : ""}`} className="link-u font-medium">
+                  <Link href={`/contact?objet=produit-specifique${f.q ? `&message=${encodeURIComponent(`Je cherche : ${f.q}`)}` : ""}`} className="link-u font-medium">
                     Décrire mon besoin par écrit
                   </Link>
                   {active || f.q ? (

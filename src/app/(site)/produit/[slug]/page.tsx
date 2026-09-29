@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!p) return {};
   return pageMeta({
     title: `${p.short} ${p.code}`,
-    description: `${p.code} : ${p.description} Fiche technique, conditionnements et commande pro — MCI Sète, produits d'entretien professionnels.`,
+    description: `${p.code} : ${p.description} Fiche technique, conditionnements et commande pro — MCI Sète, produits d'entretien professionnels.`,
     path: `/produit/${p.slug}`,
   });
 }
@@ -52,6 +52,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const all = await getProducts();
   const related = product.related.map((s) => all.find((p) => p.slug === s)).filter((p): p is NonNullable<typeof p> => !!p);
   const family = familyBySlug.get(product.families[0]!);
+  const familyLinks = product.families.map((f) => familyBySlug.get(f)).filter((f): f is NonNullable<typeof f> => !!f);
   const hasUsages = product.usages.length > 0;
   const hasSectors = product.sectors.length > 0;
   const biocide = product.properties.includes("biocide") || product.families.some((f) => familyBySlug.get(f)?.biocide);
@@ -83,20 +84,23 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             </div>
 
             <div className="lg:col-span-5">
-              <p className="flex flex-wrap gap-x-3 gap-y-1 text-sm font-semibold">
-                {product.families.map((f) => {
-                  const fam = familyBySlug.get(f);
-                  return fam ? (
-                    <Link key={f} href={`/catalogue/${fam.slug}`} className="link-u">
-                      {fam.name}
-                    </Link>
-                  ) : null;
-                })}
-              </p>
-              <h1 className="mt-2">
+              <h1>
                 <span className="t-h1 t-code block break-words">{product.code}</span>
                 <span className="t-label mt-2 block text-ink/80">{product.short}</span>
               </h1>
+              {familyLinks.length ? (
+                <p className="mt-2 text-sm text-ink/70">
+                  {familyLinks.length > 1 ? "Familles" : "Famille"} :{" "}
+                  {familyLinks.map((fam, i) => (
+                    <span key={fam.slug}>
+                      {i ? ", " : null}
+                      <Link href={`/catalogue/${fam.slug}`} className="link-u">
+                        {fam.name}
+                      </Link>
+                    </span>
+                  ))}
+                </p>
+              ) : null}
               <p className="mt-4 text-ink/80">{product.description}</p>
               {product.variants ? <p className="mt-2 text-sm text-ink/70">{product.variants}</p> : null}
               <PropertyBadges properties={product.properties} full className="mt-5" />
@@ -156,7 +160,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
           <InfoSection id="mode-emploi" title="Mode d'emploi">
             <div className="max-w-[70ch]">
-              {product.instructions ? <p className="text-ink/80">{product.instructions}</p> : <p className="text-ink/80">Dosage, dilution et temps de contact : voir la fiche technique, ou demandez conseil à MCI.</p>}
+              {product.instructions ? <p className="text-ink/80">{product.instructions}</p> : <p className="text-ink/80">Dosage, dilution et temps de contact : voir la fiche technique, ou demandez conseil à MCI.</p>}
               {product.dilution ? (
                 <dl className="mt-5 flex flex-wrap gap-x-3 gap-y-1 rounded-[8px] border border-rule bg-salt px-4 py-3 text-sm">
                   <dt className="font-semibold">Dilution</dt>
@@ -175,7 +179,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               ))}
             </ul>
             <p className="mt-4 text-sm text-ink/80">
-              <span className="font-semibold text-ink">Format :</span> {product.formats.map((f) => formatLabels[f]).join(" · ")}
+              <span className="font-semibold text-ink">Format :</span> {product.formats.map((f) => formatLabels[f]).join(" · ")}
             </p>
           </InfoSection>
 
@@ -273,7 +277,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       <section className={cx("wrap", related.length ? "py-12 lg:py-16" : "mt-6 py-12 lg:py-16")} aria-label="Contact">
         <div className="flex flex-col gap-5 rounded-[8px] border border-rule bg-white p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
-          <p className="t-label min-w-0">Une question sur {product.code} avant de commander ?</p>
+          <p className="t-label min-w-0">Une question sur {product.code} avant de commander ?</p>
           <a href={`tel:${company.phoneE164}`} className={buttonClass("primary", "md", "shrink-0 tabular-nums")}>
             <Icon name="phone" size={18} />
             {company.phone}

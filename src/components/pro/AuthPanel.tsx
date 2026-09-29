@@ -18,7 +18,7 @@ import { cx } from "@/lib/cx";
 const loginSchema = z.object({ email: z.string().trim().email("Email invalide"), password: z.string().min(1, "Mot de passe requis") });
 const signupSchema = z.object({
   company: z.string().trim().min(2, "Raison sociale requise"),
-  siret: z.string().refine(isValidSiret, "SIRET : 14 chiffres"),
+  siret: z.string().refine(isValidSiret, "SIRET : 14 chiffres"),
   kind: z.enum(["entreprise", "collectivite", "association"]),
   fullName: z.string().trim().min(2, "Nom requis"),
   email: z.string().trim().email("Email invalide"),
@@ -240,7 +240,7 @@ export function AuthPanel({ staff = false, title }: { staff?: boolean; title?: s
         <p className="mx-auto mt-3 max-w-[46ch] text-ink/70">
           {staff
             ? "Accès réservé aux équipes MCI."
-            : "Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures."}
+            : "Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures."}
         </p>
       </div>
       <div className="mt-8 overflow-hidden rounded-[8px] border border-rule bg-white shadow-sheet">

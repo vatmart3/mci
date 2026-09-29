@@ -23,7 +23,7 @@ export default function ProDashboard() {
       {account?.status === "pending" ? (
         <p className="flex items-start gap-3 rounded-[8px] border border-warn/40 bg-warn/10 px-4 py-3 text-sm text-ink">
           <Icon name="clock" size={20} className="mt-px shrink-0 text-warn" />
-          <span>Votre compte est en cours de validation par MCI. Vous pouvez déjà commander ; les tarifs et documents s&apos;afficheront après validation.</span>
+          <span>Votre compte est en cours de validation par MCI. Vous pouvez déjà commander ; les tarifs et documents s&apos;afficheront après validation.</span>
         </p>
       ) : null}
 
@@ -90,7 +90,7 @@ export default function ProDashboard() {
             ))}
           </ul>
         ) : (
-          <p className="mt-3 rounded-[8px] border border-rule bg-white px-4 py-5 text-sm text-ink/70">Créez une liste (« Stock atelier », « Rentrée scolaire »…) pour recommander vos références habituelles en un clic.</p>
+          <p className="mt-3 rounded-[8px] border border-rule bg-white px-4 py-5 text-sm text-ink/70">Créez une liste (« Stock atelier », « Rentrée scolaire »…) pour recommander vos références habituelles en un clic.</p>
         )}
       </section>
 

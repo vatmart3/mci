@@ -43,7 +43,7 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
           </p>
           <InstantSearch size="hero" autoRotate className="mt-8 max-w-[640px] text-ink" />
           <div className="mt-4 flex max-w-[640px] flex-wrap items-center gap-2 text-sm">
-            <span className="mr-1 text-white/75">Recherches fréquentes :</span>
+            <span className="mr-1 text-white/75">Recherches fréquentes :</span>
             {FREQUENT.map((q) => (
               <Link key={q} href={`/catalogue?q=${encodeURIComponent(q)}`} className="rounded-[4px] bg-white/12 px-2.5 py-1 font-medium text-white transition-colors duration-150 hover:bg-white hover:text-mci">
                 {q}

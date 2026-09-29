@@ -7,7 +7,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "Contact, devis et échantillons",
-  description: `Contactez MCI Sète : question produit, devis, échantillon, fiche de données de sécurité. ${company.phone} · ${company.street}, ${company.postalCode} ${company.city}.`,
+  description: `Contactez MCI Sète : question produit, devis, échantillon, fiche de données de sécurité. ${company.phone} · ${company.street}, ${company.postalCode} ${company.city}.`,
   path: "/contact",
 });
 

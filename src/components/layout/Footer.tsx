@@ -15,7 +15,7 @@ export function Footer() {
       <div className="wrap">
         <div className="flex flex-col gap-6 rounded-[12px] bg-deep p-6 sm:p-8 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="font-display text-2xl font-bold">Une question produit, un devis, une commande ?</p>
+            <p className="font-display text-2xl font-bold">Une question produit, un devis, une commande ?</p>
             <p className="mt-1 text-white/75">Un interlocuteur de MCI vous répond, à Sète.</p>
           </div>
           <div className="flex flex-wrap gap-3">

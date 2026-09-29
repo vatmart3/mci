@@ -20,9 +20,9 @@ export function RequestButton({ subject, product, variant = "link" }: { subject:
     subject === "fds"
       ? `Merci de m'envoyer la FDS de ${product}.`
       : subject === "echantillon"
-        ? `Je souhaite tester ${product}. Usage prévu : `
+        ? `Je souhaite tester ${product}. Usage prévu : `
         : subject === "conseil"
-          ? `Question sur ${product} : `
+          ? `Question sur ${product} : `
           : "";
   return (
     <>

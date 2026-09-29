@@ -13,7 +13,7 @@ export default function Cgv() {
       <h2 className="t-h2">2. Prix</h2>
       <p>Les prix sont exprimés hors taxes. Ils sont ceux de la confirmation de commande ou de la grille tarifaire applicable au compte du client. Les frais de livraison éventuels figurent sur la confirmation.</p>
       <h2 className="t-h2">3. Conditionnements</h2>
-      <p>Les conditionnements affichés sur le site sont indicatifs ; MCI confirme le conditionnement livré lors de la confirmation de commande.</p>
+      <p>Les conditionnements affichés sur le site sont indicatifs ; MCI confirme le conditionnement livré lors de la confirmation de commande.</p>
       <h2 className="t-h2">4. Livraison</h2>
       <p>Les délais sont indiqués sur la confirmation. Le client précise les contraintes d&apos;accès du lieu de livraison. Les réserves en cas de colis endommagé ou manquant sont à porter sur le bon de livraison et à confirmer à MCI.</p>
       <h2 className="t-h2">5. Paiement</h2>

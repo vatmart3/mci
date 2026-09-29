@@ -37,11 +37,26 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
   }, [refresh, load]);
 
   const staff = user && (user.role === "admin" || user.role === "sales");
+  // Marque : jamais tronquée. Le nom peut passer sur deux lignes (coupure entre « MCI · » et « Back-office »)
+  // et le badge démo passe sous le nom quand la place manque (barre latérale de 232 px).
   const brand = (inverted: boolean) => (
     <Link href="/admin" className="flex min-w-0 items-center gap-3">
       <LogoMark size={28} className="shrink-0" />
-      <span className={cx("truncate font-display text-md font-bold", inverted ? "text-white" : "text-ink")}>MCI · Back-office</span>
-      {IS_DEMO ? <Badge tone="warn" className="shrink-0">MODE DÉMO</Badge> : null}
+      <span className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+        <span className={cx("font-display text-md font-bold leading-tight", inverted ? "text-white" : "text-ink")}>
+          <span className="whitespace-nowrap">MCI ·</span> <span className="whitespace-nowrap">Back-office</span>
+        </span>
+        {IS_DEMO ? (
+          inverted ? (
+            // Sur fond night : sable plein + texte night = 10,7:1 (le ton warn/15 ne donnait que 1,8:1).
+            <span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-[4px] bg-[#f5d9a8] px-2 py-px text-xs font-semibold leading-5 text-night">MODE DÉMO</span>
+          ) : (
+            <Badge tone="warn" className="shrink-0">
+              MODE DÉMO
+            </Badge>
+          )
+        ) : null}
+      </span>
     </Link>
   );
   const main = (
@@ -122,13 +137,15 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </Link>
           <button
             type="button"
-            className="inline-flex h-8 min-w-0 max-w-full items-center rounded-[6px] border border-white/25 px-3 font-medium text-white transition-colors duration-150 hover:bg-white/10"
+            title={user.fullName}
+            className="flex min-h-8 min-w-0 max-w-full flex-col items-start rounded-[6px] border border-white/25 px-3 py-1 text-left text-white transition-colors duration-150 hover:bg-white/10"
             onClick={async () => {
               await (await getBackend()).signOut();
               await refresh();
             }}
           >
-            <span className="truncate">Déconnexion ({user.fullName})</span>
+            <span className="whitespace-nowrap font-medium leading-tight">Se déconnecter</span>
+            <span className="block w-full truncate text-xs leading-tight text-white/75">{user.fullName}</span>
           </button>
         </div>
       </aside>

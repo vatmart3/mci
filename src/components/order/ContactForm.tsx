@@ -60,7 +60,7 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
         </span>
         <p className="t-h2 mt-5">Demande envoyée.</p>
         <p className="mt-2 max-w-[48ch] text-ink/80">
-          MCI vous répond par email ou par téléphone. Pour une urgence :{" "}
+          MCI vous répond par email ou par téléphone. Pour une urgence :{" "}
           <a className="whitespace-nowrap font-semibold text-mci hover:underline" href={`tel:${company.phoneE164}`}>
             {company.phone}
           </a>

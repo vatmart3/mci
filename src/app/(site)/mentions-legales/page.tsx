@@ -13,17 +13,17 @@ export default function MentionsLegales() {
         <br />
         {company.street}, {company.postalCode} {company.city}
         <br />
-        Téléphone : {company.phone} · Email : {company.email}
+        Téléphone : {company.phone} · Email : {company.email}
         {company.siret ? (
           <>
             <br />
-            SIRET : {company.siret}
+            SIRET : {company.siret}
           </>
         ) : null}
       </p>
       <p>Les informations d&apos;immatriculation complètes (forme juridique, capital, RCS, n° de TVA, directeur de la publication) sont communiquées sur simple demande à l&apos;adresse ci-dessus.</p>
       <h2 className="t-h2">Hébergement</h2>
-      <p>Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis — vercel.com. Données applicatives (comptes, commandes) : Supabase, hébergement en Union européenne selon la région choisie à la mise en service.</p>
+      <p>Vercel Inc., 440 N Barranca Ave #4133, Covina, CA 91723, États-Unis — vercel.com. Données applicatives (comptes, commandes) : Supabase, hébergement en Union européenne selon la région choisie à la mise en service.</p>
       <h2 className="t-h2">Conception</h2>
       <p>Site conçu par {company.agency}.</p>
       <h2 className="t-h2">Propriété intellectuelle</h2>

@@ -210,17 +210,17 @@ export function QuickOrder() {
         const [code = "", pack, qty] = parts;
         const p = byCompact.get(compact(code)) ?? suggest(code).find((x) => compact(x.code) === compact(code));
         if (!p) {
-          errors.push(`Ligne ${i + 1} : référence « ${code} » inconnue`);
+          errors.push(`Ligne ${i + 1} : référence « ${code} » inconnue`);
           return;
         }
         const k = matchPackaging(p, pack);
         if (!k) {
-          errors.push(`Ligne ${i + 1} : conditionnement « ${pack} » inconnu pour ${p.code} (${p.packagings.map((x) => x.short).join(", ")})`);
+          errors.push(`Ligne ${i + 1} : conditionnement « ${pack} » inconnu pour ${p.code} (${p.packagings.map((x) => x.short).join(", ")})`);
           return;
         }
         const q = qty ? Math.round(Number(qty.replace(",", "."))) : 1;
         if (!Number.isFinite(q) || q < 1) {
-          errors.push(`Ligne ${i + 1} : quantité « ${qty} » invalide`);
+          errors.push(`Ligne ${i + 1} : quantité « ${qty} » invalide`);
           return;
         }
         parsed.push({ key: seq++, query: p.code, productId: p.id, packagingId: k.id, quantity: Math.min(999, q) });
@@ -391,7 +391,7 @@ export function QuickOrder() {
             Coller une liste
           </h2>
           <p className="mt-2 text-sm text-ink/80">
-            Une ligne par référence : <span className="t-mono rounded-[4px] border border-rule bg-white px-1.5 py-0.5 text-xs text-ink [overflow-wrap:anywhere]">CODE;CONDITIONNEMENT;QUANTITÉ</span>. Séparateurs acceptés : point-virgule, tabulation (copier depuis un tableur), virgule.
+            Une ligne par référence : <span className="t-mono rounded-[4px] border border-rule bg-white px-1.5 py-0.5 text-xs text-ink [overflow-wrap:anywhere]">CODE;CONDITIONNEMENT;QUANTITÉ</span>. Séparateurs acceptés : point-virgule, tabulation (copier depuis un tableur), virgule.
           </p>
           <label htmlFor="qo-paste" className="sr-only">
             Liste à importer
@@ -446,7 +446,7 @@ export function QuickOrder() {
               <Link href="/espace-pro?retour=/commande-rapide" className="link-u font-semibold">
                 Connectez-vous
               </Link>{" "}
-              pour retrouver vos listes (« Stock atelier », « Rentrée scolaire »…) et recommander en un clic.
+              pour retrouver vos listes (« Stock atelier », « Rentrée scolaire »…) et recommander en un clic.
             </p>
           )}
         </section>

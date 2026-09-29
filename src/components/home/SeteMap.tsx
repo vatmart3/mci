@@ -9,7 +9,7 @@ export function SeteMap({ className }: { className?: string }) {
     <figure className={className}>
       <svg viewBox="0 0 520 360" className="h-auto w-full" role="img" aria-labelledby="map-title map-desc">
         <title id="map-title">Plan de situation de MCI Sète</title>
-        <desc id="map-desc">Schéma : MCI est au Parc Aquatechnique, à Sète, entre l&apos;étang de Thau et la mer Méditerranée.</desc>
+        <desc id="map-desc">Schéma : MCI est au Parc Aquatechnique, à Sète, entre l&apos;étang de Thau et la mer Méditerranée.</desc>
         {/* quadrillage léger */}
         <g stroke="#D5DDE3" strokeWidth="0.75">
           {[60, 120, 180, 240, 300].map((y) => (

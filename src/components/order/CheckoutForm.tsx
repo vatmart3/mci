@@ -25,7 +25,7 @@ function Fieldset({ n, legend, children, hint }: { n: string; legend: string; ch
         <span aria-hidden="true" className="t-num grid size-7 shrink-0 place-items-center rounded-[4px] bg-mci text-sm text-white">
           {Number(n)}
         </span>
-        <span className="sr-only">Étape {Number(n)} : </span>
+        <span className="sr-only">Étape {Number(n)} : </span>
         <span className="t-label">{legend}</span>
       </legend>
       <div className="clear-both px-4 py-5 sm:px-6 sm:py-6">
@@ -246,14 +246,14 @@ export function CheckoutForm() {
         <div className="min-w-0">
           <h1 className="t-h1">Valider le bon de commande</h1>
           <p className="mt-3 max-w-[64ch] text-ink/70">
-            {settings.priceMode === "on_request" ? "Aucun paiement en ligne. MCI vous renvoie une pro-forma avec les prix et le délai ; vous la validez en un clic." : "Aucun paiement en ligne : virement, facture à échéance ou mandat administratif."}
+            {settings.priceMode === "on_request" ? "Aucun paiement en ligne. MCI vous renvoie une pro-forma avec les prix et le délai ; vous la validez en un clic." : "Aucun paiement en ligne : virement, facture à échéance ou mandat administratif."}
           </p>
         </div>
         {user ? null : (
           <p className="flex items-center gap-2 rounded-[6px] border border-rule bg-salt px-4 py-2.5 text-sm lg:max-w-[360px] lg:shrink-0">
             <Icon name="user" size={18} className="shrink-0 text-mci" />
             <span>
-              Vous avez un compte ?{" "}
+              Vous avez un compte ?{" "}
               <Link href="/espace-pro?retour=/commande" className="link-u font-semibold">
                 Connectez-vous
               </Link>{" "}

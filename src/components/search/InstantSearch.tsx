@@ -7,6 +7,7 @@ import { buildIndex, search } from "@/lib/search";
 import { familyBySlug } from "@/data/families";
 import { ProductVisual } from "@/components/catalog/ProductVisual";
 import { Icon } from "@/components/ui/Icon";
+import { AddToCartButton } from "@/components/cart/AddToCart";
 import { cx } from "@/lib/cx";
 
 const PROMPTS = ["graisse cuite", "tags sur façade", "mousses sur toiture", "tartre sanitaires", "frelons asiatiques", "fuite d'huile", "désinfection cantine", "WC chimiques"];
@@ -70,7 +71,7 @@ export function InstantSearch({ size = "hero", autoRotate = false, className }: 
         }}
         className={cx(
           "flex items-center bg-white transition-shadow duration-150 ease-out",
-          hero ? "h-16 rounded-[8px] pl-5 pr-2 shadow-float focus-within:shadow-[0_0_0_3px_rgb(248_151_70/0.55),0_24px_48px_-20px_rgb(12_43_64/0.35)]" : "h-10 rounded-[6px] border border-rule pl-3 pr-1 focus-within:border-mci",
+          hero ? "h-16 rounded-[8px] pl-5 pr-2 shadow-float focus-within:shadow-[0_0_0_2px_var(--color-mci),0_0_0_5px_var(--color-white),0_24px_48px_-20px_rgb(12_43_64/0.35)]" : "h-10 rounded-[6px] border border-rule pl-3 pr-1 focus-within:border-mci",
         )}
       >
         <Icon name="search" size={hero ? 22 : 18} className="shrink-0 text-mci" />
@@ -105,6 +106,10 @@ export function InstantSearch({ size = "hero", autoRotate = false, className }: 
               setActive((a) => Math.max(-1, a - 1));
             } else if (e.key === "Escape") {
               setOpen(false);
+            } else if (e.key === "Enter" && e.shiftKey && shown[active]) {
+              // Maj + Entrée : ajoute le résultat sélectionné au bon sans quitter la recherche
+              e.preventDefault();
+              box.current?.querySelector<HTMLButtonElement>(`#${CSS.escape(`${id}-opt-${active}`)} button`)?.click();
             }
           }}
           className={cx("min-w-0 flex-1 bg-transparent outline-none placeholder:text-ink/55 [&::-webkit-search-cancel-button]:hidden", hero ? "px-4 text-lg" : "px-2 text-sm")}
@@ -124,13 +129,8 @@ export function InstantSearch({ size = "hero", autoRotate = false, className }: 
               {shown.map((h, i) => {
                 const p = h.product;
                 return (
-                  <li key={p.id} id={`${id}-opt-${i}`} role="option" aria-selected={i === active}>
-                    <Link
-                      href={`/produit/${p.slug}`}
-                      onClick={() => setOpen(false)}
-                      onMouseEnter={() => setActive(i)}
-                      className={cx("flex items-center gap-4 px-3 py-2", i === active && "bg-salt")}
-                    >
+                  <li key={p.id} id={`${id}-opt-${i}`} role="option" aria-selected={i === active} data-product-row onMouseEnter={() => setActive(i)} className={cx("flex items-center gap-2 pr-3", i === active && "bg-salt")}>
+                    <Link href={`/produit/${p.slug}`} onClick={() => setOpen(false)} className="flex min-w-0 flex-1 items-center gap-4 py-2 pl-3">
                       <span className="plate grid size-12 shrink-0 place-items-center rounded-[6px]">
                         <ProductVisual product={p} size={48} alt="" className="h-11 w-auto" />
                       </span>
@@ -138,16 +138,18 @@ export function InstantSearch({ size = "hero", autoRotate = false, className }: 
                         <span className="t-code block text-md leading-tight text-mci">{p.code}</span>
                         <span className="block truncate text-sm">{p.short}</span>
                       </span>
-                      <span className="hidden shrink-0 text-xs text-ink/70 sm:block">{familyBySlug.get(p.families[0]!)?.name}</span>
+                      <span className="hidden shrink-0 text-xs text-ink/70 md:block">{familyBySlug.get(p.families[0]!)?.name}</span>
                     </Link>
+                    {/* ajout direct : conditionnement proposé par défaut, quantité 1 (modifiable dans le bon) */}
+                    <AddToCartButton product={p} packagingId={p.packagings[0]!.id} size="sm" iconOnly={!hero} className="shrink-0" />
                   </li>
                 );
               })}
             </ul>
           ) : (
             <p id={`${id}-list`} className="px-4 py-4 text-sm text-ink/70">
-              Aucun produit pour « {q.trim()} ». Essayez un autre mot, ou{" "}
-              <Link href={`/contact?objet=conseil&message=${encodeURIComponent(`Je cherche un produit pour : ${q.trim()}`)}`} className="link-u">
+              Aucun produit pour « {q.trim()} ». Essayez un autre mot, ou{" "}
+              <Link href={`/contact?objet=conseil&message=${encodeURIComponent(`Je cherche un produit pour : ${q.trim()}`)}`} className="link-u">
                 demandez conseil à MCI
               </Link>
               .

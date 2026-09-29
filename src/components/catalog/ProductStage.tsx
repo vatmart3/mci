@@ -32,25 +32,29 @@ export function ProductViewer({ product }: { product: Product }) {
   const packaging = product.packagings.find((p) => p.id === pack) ?? product.packagings[0]!;
   const [ready, setReady] = useState(false);
   return (
-    <figure className="plate relative aspect-square w-full overflow-hidden rounded-[12px] border border-rule">
-      <div className={cx("absolute inset-0 grid place-items-center transition-opacity duration-200 ease-out", ready ? "opacity-0" : "opacity-100")}>
-        <ProductVisual product={product} size={520} priority sizes="(max-width: 1024px) 90vw, 45vw" className="h-4/5 w-4/5" alt={`${product.code} — ${product.short}, ${packaging.label}`} />
-      </div>
-      {product.imageUrl ? null : <ProductViewer3D product={product} container={packaging.container} onReady={() => setReady(true)} />}
-      <figcaption className="pointer-events-none absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 text-xs sm:inset-x-4 sm:bottom-4">
-        <span className="inline-flex min-w-0 items-center gap-2 rounded-[4px] border border-rule bg-white px-2.5 py-1 text-ink/80">
-          <span className="t-code shrink-0 text-ink">{product.code}</span>
-          <span aria-hidden="true" className="text-ink/40">
-            ·
+    <div>
+      <figure className="plate relative aspect-square w-full overflow-hidden rounded-[12px] border border-rule">
+        <div className={cx("absolute inset-0 grid place-items-center transition-opacity duration-200 ease-out", ready ? "opacity-0" : "opacity-100")}>
+          <ProductVisual product={product} size={520} priority sizes="(max-width: 1024px) 90vw, 45vw" className="h-4/5 w-4/5" alt={`${product.code} — ${product.short}, ${packaging.label}`} />
+        </div>
+        {product.imageUrl ? null : <ProductViewer3D product={product} container={packaging.container} onReady={() => setReady(true)} />}
+        <figcaption className="pointer-events-none absolute inset-x-3 bottom-3 flex items-center justify-between gap-2 text-xs sm:inset-x-4 sm:bottom-4">
+          <span className="inline-flex min-w-0 items-center gap-2 rounded-[4px] border border-rule bg-white px-2.5 py-1 text-ink/80">
+            <span className="t-code shrink-0 text-ink">{product.code}</span>
+            <span aria-hidden="true" className="text-ink/40">
+              ·
+            </span>
+            <span className="truncate">{packaging.short}</span>
           </span>
-          <span className="truncate">{packaging.short}</span>
-        </span>
-        <span aria-hidden="true" className={cx("hidden items-center gap-1.5 rounded-[4px] border border-rule bg-white px-2.5 py-1 text-ink/70 transition-opacity duration-200 ease-out sm:inline-flex", ready ? "opacity-100" : "opacity-0")}>
-          <Icon name="repeat" size={14} />
-          Glisser pour tourner
-        </span>
-      </figcaption>
-    </figure>
+          <span aria-hidden="true" className={cx("hidden items-center gap-1.5 rounded-[4px] border border-rule bg-white px-2.5 py-1 text-ink/70 transition-opacity duration-200 ease-out sm:inline-flex", ready ? "opacity-100" : "opacity-0")}>
+            <Icon name="repeat" size={14} />
+            Glisser pour tourner
+          </span>
+        </figcaption>
+      </figure>
+      {/* Sans photo réelle, le visuel est un rendu 3D à étiquette recomposée */}
+      {product.imageUrl ? null : <p className="mt-2 text-xs text-ink/65">Visuel d&apos;illustration : l&apos;emballage réel peut différer.</p>}
+    </div>
   );
 }
 
@@ -60,6 +64,7 @@ export function OrderPanel({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const price = usePrice(product.id, pack);
   const priceMode = useSession((s) => s.settings.priceMode);
+  const packagingsToConfirm = product.toConfirm.includes("packagings");
   return (
     <div data-product-row className="rounded-[8px] border border-rule bg-white">
       <fieldset className="p-4 sm:p-5">
@@ -84,6 +89,7 @@ export function OrderPanel({ product }: { product: Product }) {
             );
           })}
         </div>
+        {packagingsToConfirm ? <p className="mt-3 text-xs text-ink/65">Conditionnements indicatifs : MCI confirme le format disponible avec votre commande.</p> : null}
       </fieldset>
       <div className="border-t border-rule p-4 sm:p-5">
         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -102,7 +108,10 @@ export function OrderPanel({ product }: { product: Product }) {
           ) : priceMode === "per_account" ? (
             <span>Prix visibles une fois votre compte pro validé. Sinon, MCI confirme le tarif après envoi du bon.</span>
           ) : (
-            <span>Prix et délai confirmés par MCI après envoi du bon. Conditionnements indicatifs, validés à la confirmation.</span>
+            <span>
+              Prix et délai confirmés par MCI après envoi du bon.
+              {packagingsToConfirm ? null : " Conditionnements indicatifs, validés à la confirmation."}
+            </span>
           )}
         </p>
       </div>

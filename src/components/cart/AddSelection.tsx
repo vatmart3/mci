@@ -22,7 +22,7 @@ export function AddSelection({ lines, label = "Ajouter la sélection au bon de c
         addMany(lines);
         if (image && ref.current) fly(ref.current.getBoundingClientRect(), image);
         setDone(true);
-        if (openDrawer) window.setTimeout(open, 600);
+        if (openDrawer) window.setTimeout(open, 220);
       }}
     >
       <Icon name={done ? "check" : "plus"} />

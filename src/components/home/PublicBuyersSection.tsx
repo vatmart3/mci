@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Icon } from "@/components/ui/Icon";
 
 const points = [
-  { t: "N° d'engagement exigé", d: "Le bon de commande le demande pour toute collectivité : pas de commande orpheline." },
+  { t: "N° d'engagement exigé", d: "Le bon de commande le demande pour toute collectivité : pas de commande orpheline." },
   { t: "Facturation Chorus Pro", d: "Code service saisi une fois, repris sur chaque commande et facture." },
   { t: "Validation interne", d: "Un agent prépare, un valideur confirme et transmet à MCI. Réglable par structure." },
   { t: "Paiement administratif", d: "Facture à échéance ou mandat administratif. Aucun paiement en ligne." },
@@ -11,7 +11,7 @@ const points = [
 /** Extrait d'un bon de commande (exemple d'interface, données fictives signalées comme telles). */
 function OrderFormExcerpt() {
   return (
-    <div className="rounded-[12px] bg-white p-5 text-ink shadow-float sm:p-6" aria-label="Exemple : extrait du bon de commande pour une collectivité" role="img">
+    <div className="rounded-[12px] bg-white p-5 text-ink shadow-float sm:p-6" aria-label="Exemple : extrait du bon de commande pour une collectivité" role="img">
       <div className="flex items-center justify-between border-b border-rule pb-3">
         <p className="font-display text-lg font-bold">Facturation et références d&apos;achat</p>
         <span className="rounded-[4px] bg-steel px-2 py-0.5 text-xs font-semibold text-ink/70">Exemple</span>
@@ -45,14 +45,14 @@ export function PublicBuyersSection() {
       <div className="wrap grid grid-cols-1 items-center gap-12 lg:grid-cols-12 lg:gap-8 [&>*]:min-w-0">
         <div className="lg:col-span-6">
           <h2 id="collectivites-title" className="t-h1 max-w-[20ch]">
-            Collectivités : commandez dans les règles
+            Collectivités : commandez dans les règles
           </h2>
-          <p className="t-lead mt-3 max-w-[52ch] text-white/85">Mairies, écoles, établissements publics : le bon de commande reprend vos contraintes d&apos;achat.</p>
+          <p className="t-lead mt-3 max-w-[52ch] text-white/85">Mairies, écoles, établissements publics : le bon de commande reprend vos contraintes d&apos;achat.</p>
           <dl className="mt-8 grid gap-x-8 gap-y-6 sm:grid-cols-2">
             {points.map((p) => (
               <div key={p.t} className="border-t border-white/25 pt-4">
                 <dt className="flex items-center gap-2 font-display text-lg font-bold">
-                  <Icon name="check" size={20} className="shrink-0 text-action" />
+                  <Icon name="check" size={20} className="shrink-0 text-sky" />
                   {p.t}
                 </dt>
                 <dd className="mt-1 text-white/80">{p.d}</dd>

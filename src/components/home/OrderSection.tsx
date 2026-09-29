@@ -45,7 +45,7 @@ function QuickAdd() {
       }}
     >
       <p className="font-display text-xl font-bold">Ajouter par référence</p>
-      <p className="mt-1 text-sm text-ink/70">Vous connaissez le code ? Pas besoin de passer par le catalogue.</p>
+      <p className="mt-1 text-sm text-ink/70">Vous connaissez le code ? Pas besoin de passer par le catalogue.</p>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto]">
         <div>
@@ -102,7 +102,7 @@ function QuickAdd() {
             </select>
           </>
         ) : (
-          <p className="text-sm text-ink/70">{code.trim().length >= 2 ? `Aucune référence ne commence par « ${code.trim().toUpperCase()} ».` : "Le produit correspondant s'affiche ici."}</p>
+          <p className="text-sm text-ink/70">{code.trim().length >= 2 ? `Aucune référence ne commence par « ${code.trim().toUpperCase()} ».` : "Le produit correspondant s'affiche ici."}</p>
         )}
       </div>
 
@@ -113,7 +113,7 @@ function QuickAdd() {
         {done}
       </p>
       <p className="border-t border-rule pt-3 text-sm">
-        Toute une liste à saisir ?{" "}
+        Toute une liste à saisir ?{" "}
         <Link href="/commande-rapide" className="link-u font-semibold">
           Commande rapide, ligne par ligne ou par import
         </Link>
@@ -130,7 +130,7 @@ export function OrderSection() {
           <h2 id="commander-title" className="t-h1 max-w-[20ch]">
             Commander en ligne, comme par téléphone
           </h2>
-          <p className="t-lead mt-3 max-w-[52ch] text-ink/70">Avec ou sans compte. Pas de paiement en ligne : virement, facture à échéance ou mandat administratif.</p>
+          <p className="t-lead mt-3 max-w-[52ch] text-ink/70">Avec ou sans compte. Pas de paiement en ligne : virement, facture à échéance ou mandat administratif.</p>
           <ol className="mt-8 space-y-6">
             {steps.map((s, i) => (
               <li key={s.t} className="flex gap-4">

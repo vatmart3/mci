@@ -239,7 +239,7 @@ export default function AdminClients() {
       ) : (
         <div className="space-y-4">
           <p className="rounded-[8px] border border-rule bg-white px-4 py-3 text-sm text-ink/80">
-            Mode de prix actuel : <strong>{priceModeLabels[priceMode]}</strong>. Les grilles servent en mode « par compte » (grille affectée au compte) et « public » (première grille).
+            Mode de prix actuel : <strong>{priceModeLabels[priceMode]}</strong>. Les grilles servent en mode « par compte » (grille affectée au compte) et « public » (première grille).
           </p>
           {(grids ?? []).map((g) => (
             <GridEditor key={g.id} grid={g} onSaved={reloadGrids} />

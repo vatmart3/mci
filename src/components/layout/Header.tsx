@@ -81,8 +81,8 @@ function CatalogueMenu({ onClose }: { onClose: () => void }) {
       </ul>
       <div className="col-span-3 flex flex-col justify-between rounded-[8px] bg-salt p-6">
         <div>
-          <p className="font-display text-lg font-bold">Vous connaissez vos références ?</p>
-          <p className="mt-2 text-sm text-ink/70">Saisissez-les ligne par ligne ou collez une liste : le bon se remplit tout seul.</p>
+          <p className="font-display text-lg font-bold">Vous connaissez vos références ?</p>
+          <p className="mt-2 text-sm text-ink/70">Saisissez-les ligne par ligne ou collez une liste : le bon se remplit tout seul.</p>
         </div>
         <div className="mt-6 flex flex-col gap-2">
           <Link href="/commande-rapide" onClick={onClose} className="inline-flex h-11 items-center justify-center rounded-[6px] bg-mci px-4 font-semibold text-white hover:bg-deep">

@@ -27,7 +27,7 @@ export function ProShell({ children }: { children: React.ReactNode }) {
         <div className="wrap min-h-[640px] py-12 lg:py-16" aria-busy="true">
           <div className="mx-auto max-w-[480px] text-center">
             <h1 className="t-h2">Espace pro</h1>
-            <p className="mx-auto mt-3 max-w-[46ch] text-ink/70">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
+            <p className="mx-auto mt-3 max-w-[46ch] text-ink/70">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
             <p className="mt-8 inline-flex items-center gap-2 rounded-[6px] border border-rule bg-white px-4 py-2 text-sm text-ink/70">
               <Icon name="clock" size={16} className="shrink-0 text-mci" />
               Chargement de votre session…

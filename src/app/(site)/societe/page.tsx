@@ -14,7 +14,7 @@ import { pageMeta } from "@/lib/seo";
 
 export const metadata = pageMeta({
   title: "La société — MCI, Parc Aquatechnique, Sète",
-  description: "MCI Sète, créée en 2015 : traitements industriels et nettoyants techniques de maintenance, d'entretien et d'hygiène pour professionnels et collectivités. Agrément préfectoral, fiches techniques, commande pro.",
+  description: "MCI Sète, créée en 2015 : traitements industriels et nettoyants techniques de maintenance, d'entretien et d'hygiène pour professionnels et collectivités. Agrément préfectoral, fiches techniques, commande pro.",
   path: "/societe",
 });
 
@@ -25,24 +25,6 @@ export default async function SocietePage() {
   const building = local(company.photos.building.local) ? company.photos.building.local : company.photos.building.remote;
   const team = local(company.photos.team.local) ? company.photos.team.local : company.photos.team.remote;
   const groups = Object.keys(sectorGroups) as (keyof typeof sectorGroups)[];
-  const facts: { k: string; v: React.ReactNode; d?: React.ReactNode }[] = [
-    { k: "Création", v: <span className="t-num text-[2.5rem]">{company.founded}</span>, d: `${company.city}, ${company.department}` },
-    { k: "Catalogue", v: <span className="t-num text-[2.5rem]">{stats.references}</span>, d: `références, ${stats.families} familles` },
-    { k: "Fiches techniques", v: <span className="t-num text-[2.5rem]">{stats.withSheet}</span>, d: "en ligne" },
-    {
-      k: "Contact",
-      v: (
-        <a href={`tel:${company.phoneE164}`} className="t-label whitespace-nowrap transition-colors duration-150 hover:text-mci">
-          {company.phone}
-        </a>
-      ),
-      d: (
-        <a href={`mailto:${company.email}`} className="link-u break-words">
-          {company.email}
-        </a>
-      ),
-    },
-  ];
   return (
     <div className="pb-20 lg:pb-24">
       <div className="wrap pt-6 lg:pt-10">
@@ -50,25 +32,38 @@ export default async function SocietePage() {
         <header className="mt-6 grid grid-cols-1 gap-6 lg:mt-8 lg:grid-cols-12 lg:items-end lg:gap-8">
           <h1 className="t-display max-w-[14ch] lg:col-span-7">MCI, à Sète, depuis {company.founded}.</h1>
           <p className="t-lead max-w-[52ch] text-ink/80 lg:col-span-5">
-            Traitements industriels et nettoyants techniques de maintenance, d&apos;entretien et d&apos;hygiène, pour les professionnels et les collectivités. Uniquement en B2B : TPE, PME, artisans, industrie, administrations, loisirs.
+            Traitements industriels et nettoyants techniques de maintenance, d&apos;entretien et d&apos;hygiène, pour les professionnels et les collectivités. Uniquement en B2B : TPE, PME, artisans, industrie, administrations, loisirs.
           </p>
         </header>
 
         <BrandPhoto className="mt-8 lg:mt-12 lg:[&>div]:aspect-[21/9]" sizes="(max-width: 1400px) 100vw, 1320px" src={building} alt="Les locaux de MCI au Parc Aquatechnique de Sète" caption="Parc Aquatechnique, Sète" />
 
-        {/* Repères : une fiche d'identité, pas des tuiles */}
-        <section className="mt-12 lg:mt-16" aria-labelledby="reperes">
+        {/* Repères : dits en une phrase, à taille de texte */}
+        <section className="mt-12 grid grid-cols-1 gap-4 border-y border-rule py-6 lg:mt-16 lg:grid-cols-12 lg:items-baseline lg:gap-8" aria-labelledby="reperes">
           <h2 id="reperes" className="sr-only">
             Repères
           </h2>
-          <dl className="grid grid-cols-1 gap-px border-y border-rule bg-rule sm:grid-cols-2 lg:grid-cols-4">
-            {facts.map((f) => (
-              <div key={f.k} className="min-w-0 bg-white py-5 sm:px-6 sm:py-6">
-                <dt className="text-sm font-semibold text-ink/70">{f.k}</dt>
-                <dd className="mt-2">{f.v}</dd>
-                {f.d ? <dd className="mt-1 text-sm text-ink/80">{f.d}</dd> : null}
-              </div>
-            ))}
+          <p className="max-w-[60ch] text-md text-ink/80 lg:col-span-7">
+            Créée en <span className="font-semibold tabular-nums text-ink">{company.founded}</span> à {company.city} ({company.department}), MCI propose <span className="font-semibold tabular-nums text-ink">{stats.references}</span>{" "}
+            références réparties en {stats.families} familles, dont <span className="font-semibold tabular-nums text-ink">{stats.withSheet}</span> avec fiche technique en ligne.
+          </p>
+          <dl className="flex min-w-0 flex-wrap gap-x-6 gap-y-2 text-sm lg:col-span-5 lg:justify-end">
+            <div className="flex min-w-0 gap-2">
+              <dt className="font-semibold text-ink/70">Téléphone</dt>
+              <dd>
+                <a href={`tel:${company.phoneE164}`} className="link-u whitespace-nowrap font-semibold tabular-nums">
+                  {company.phone}
+                </a>
+              </dd>
+            </div>
+            <div className="flex min-w-0 gap-2">
+              <dt className="font-semibold text-ink/70">E-mail</dt>
+              <dd className="min-w-0">
+                <a href={`mailto:${company.email}`} className="link-u break-words">
+                  {company.email}
+                </a>
+              </dd>
+            </div>
           </dl>
         </section>
       </div>
@@ -106,9 +101,9 @@ export default async function SocietePage() {
               Un catalogue, une fiche par produit, un interlocuteur.
             </h2>
             <div className="prose-mci mt-6 text-md text-ink/80">
-              <p>Chaque référence a sa fiche produit : usages, conditionnements, fiche technique téléchargeable quand elle existe, fiche de données de sécurité sur demande. Les produits biocides portent la mention réglementaire.</p>
-              <p>Vous commandez en ligne, avec ou sans compte : MCI confirme la disponibilité, le délai et le prix avant préparation. Les collectivités indiquent leur numéro d&apos;engagement et peuvent être facturées via Chorus Pro.</p>
-              <p>Pour un besoin hors catalogue, décrivez la surface, la salissure ou le nuisible : on cherche le produit avec vous.</p>
+              <p>Chaque référence a sa fiche produit : usages, conditionnements, fiche technique téléchargeable quand elle existe, fiche de données de sécurité sur demande. Les produits biocides portent la mention réglementaire.</p>
+              <p>Vous commandez en ligne, avec ou sans compte : MCI confirme la disponibilité, le délai et le prix avant préparation. Les collectivités indiquent leur numéro d&apos;engagement et peuvent être facturées via Chorus Pro.</p>
+              <p>Pour un besoin hors catalogue, décrivez la surface, la salissure ou le nuisible : on cherche le produit avec vous.</p>
             </div>
           </div>
           <div className="min-w-0 lg:col-span-6">

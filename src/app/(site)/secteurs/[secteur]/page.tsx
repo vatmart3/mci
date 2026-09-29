@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ secteur: 
   const s = getSector((await params).secteur);
   if (!s) return {};
   return pageMeta({
-    title: `${s.name} : produits d'entretien et de maintenance`,
+    title: `${s.name} : produits d'entretien et de maintenance`,
     description: `${s.problem.slice(0, 120).replace(/\s+\S*$/, "")}… La sélection MCI Sète pour ${s.name.toLowerCase()}, fiches techniques et commande pro.`,
     path: `/secteurs/${s.slug}`,
   });
@@ -77,20 +77,20 @@ export default async function SectorPage({ params }: { params: Promise<{ secteur
         </div>
         {hasBiocide ? <BiocideNotice className="mb-6 max-w-[760px]" /> : null}
         <ProductList products={list} />
-        <p className="mt-3 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
+        <p className="mt-3 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
       </section>
 
       <section className="wrap py-16 lg:py-20" aria-labelledby="seo-secteur">
         <div className="max-w-[70ch]">
           <h2 id="seo-secteur" className="t-h2">
-            {sector.name} : comment on travaille
+            {sector.name} : comment on travaille
           </h2>
           <div className="prose-mci mt-5 text-ink/80">
             {sector.seo.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
             <p>
-              Un doute sur un produit ? <Link href={`/contact?objet=conseil&secteur=${encodeURIComponent(sector.name)}`}>Demandez conseil</Link> ou appelez le{" "}
+              Un doute sur un produit ? <Link href={`/contact?objet=conseil&secteur=${encodeURIComponent(sector.name)}`}>Demandez conseil</Link> ou appelez le{" "}
               <a href={`tel:${company.phoneE164}`}>{company.phone}</a>.
             </p>
           </div>

@@ -13,7 +13,7 @@ export function ContactFromQuery() {
     setInit({
       subject: o && o in contactSubjects ? o : "contact",
       product: p.get("produit") ?? undefined,
-      message: p.get("message") ?? (secteur ? `Secteur : ${secteur}. ` : undefined),
+      message: p.get("message") ?? (secteur ? `Secteur : ${secteur}. ` : undefined),
     });
   }, []);
   if (!init) return <div className="h-96 rounded-[6px] bg-salt" aria-busy="true" />;

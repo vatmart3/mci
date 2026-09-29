@@ -27,7 +27,7 @@ export function OrderLinesTable({ order }: { order: Order }) {
               <td className={`${td} t-code whitespace-nowrap text-base text-mci`}>{l.code}</td>
               <td className={td}>
                 <span className="font-medium">{l.name}</span>
-                {l.note ? <span className="mt-1 block text-xs text-ink/70">Note : {l.note}</span> : null}
+                {l.note ? <span className="mt-1 block text-xs text-ink/70">Note : {l.note}</span> : null}
               </td>
               <td className={`${td} text-ink/80`}>{l.packagingLabel}</td>
               <td className={`${td} text-right font-semibold tabular-nums`}>{l.quantity}</td>

@@ -58,7 +58,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
       const b = await getBackend();
       const o: Order = await b.updateOrderStatus(order.id, { status, note: note || undefined, leadTime, mciNote, prices: parsed });
       setNote("");
-      setMsg(o.status !== order.status ? `Statut : ${statusLabels[o.status]} — email envoyé au client.` : "Enregistré.");
+      setMsg(o.status !== order.status ? `Statut : ${statusLabels[o.status]} — email envoyé au client.` : "Enregistré.");
       reload();
     } catch (e) {
       setMsg(e instanceof Error ? e.message : "Erreur");
@@ -107,7 +107,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                       <td className="t-code py-2 pl-3 pr-2 text-mci">{l.code}</td>
                       <td className="py-2 pr-2">
                         {l.name}
-                        {l.note ? <span className="block text-xs text-ink/70">Note : {l.note}</span> : null}
+                        {l.note ? <span className="block text-xs text-ink/70">Note : {l.note}</span> : null}
                       </td>
                       <td className="py-2 pr-2">{l.packagingLabel}</td>
                       <td className="t-mono py-2 pr-2 text-right">{l.quantity}</td>
@@ -160,7 +160,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                 <div className="mt-3 flex flex-wrap gap-2">
                   {next.map((s) =>
                     s === "cancelled" ? (
-                      <Button key={s} variant="danger" size="sm" disabled={busy} onClick={() => confirm("Annuler cette commande ?") && apply(s)}>
+                      <Button key={s} variant="danger" size="sm" disabled={busy} onClick={() => confirm("Annuler cette commande ?") && apply(s)}>
                         Annuler la commande
                       </Button>
                     ) : (
@@ -170,7 +170,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                     ),
                   )}
                 </div>
-                {needsPricing && parsed.some((p) => p == null) ? <p className="mt-2 text-sm text-ink/70">Mode « sur demande » : renseignez tous les prix avant de confirmer.</p> : null}
+                {needsPricing && parsed.some((p) => p == null) ? <p className="mt-2 text-sm text-ink/70">Mode « sur demande » : renseignez tous les prix avant de confirmer.</p> : null}
               </>
             ) : (
               <p className="text-sm text-ink/70">Commande clôturée.</p>
@@ -209,7 +209,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
               <a className="link-u" href={`tel:${order.customer.phone}`}>{order.customer.phone}</a> ·{" "}
               <a className="link-u break-all" href={`mailto:${order.customer.email}`}>{order.customer.email}</a>
             </p>
-            <p className="mt-2 text-sm text-ink/70">Type : {order.customer.kind}</p>
+            <p className="mt-2 text-sm text-ink/70">Type : {order.customer.kind}</p>
             {order.poNumber ? (
               <p className="mt-3 text-sm">
                 <span className="text-xs font-semibold text-ink/70">Engagement · </span>
@@ -229,15 +229,15 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
               <br />
               {order.delivery.postalCode} {order.delivery.city}
             </p>
-            {order.delivery.accessNotes ? <p className="mt-2 text-sm">Accès : {order.delivery.accessNotes}</p> : null}
-            {order.deliverySlots ? <p className="mt-1 text-sm">Créneaux : {order.deliverySlots}</p> : null}
+            {order.delivery.accessNotes ? <p className="mt-2 text-sm">Accès : {order.delivery.accessNotes}</p> : null}
+            {order.deliverySlots ? <p className="mt-1 text-sm">Créneaux : {order.deliverySlots}</p> : null}
             {order.billing ? (
               <p className="mt-3 text-sm">
                 <span className="text-xs font-semibold text-ink/70">Facturation · </span>
                 {order.billing.company}, {order.billing.line1}, {order.billing.postalCode} {order.billing.city}
               </p>
             ) : null}
-            {order.comment ? <p className="mt-4 rounded-[6px] border border-rule bg-salt px-4 py-3 text-sm">« {order.comment} »</p> : null}
+            {order.comment ? <p className="mt-4 rounded-[6px] border border-rule bg-salt px-4 py-3 text-sm">« {order.comment} »</p> : null}
           </Block>
           {order.accountId ? (
             <Block title="Déposer un document (espace pro du client)">

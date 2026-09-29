@@ -73,7 +73,7 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
           type="button"
           className="link-u ml-auto text-sm text-danger"
           onClick={async () => {
-            if (!confirm(`Supprimer la liste « ${list.name} » ?`)) return;
+            if (!confirm(`Supprimer la liste « ${list.name} » ?`)) return;
             await (await getBackend()).deleteFavorite(list.id);
             onSaved();
           }}

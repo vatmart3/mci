@@ -7,7 +7,7 @@ export function FooterLive() {
   return (
     <>
       <p className="mb-1 mt-6 text-sm font-semibold text-white">Horaires</p>
-      <p className="text-sm text-white/75">{settings.hours || "Appelez-nous : on vous répond aux heures de bureau."}</p>
+      <p className="text-sm text-white/75">{settings.hours || "Appelez-nous : on vous répond aux heures de bureau."}</p>
       {settings.socials.length ? (
         <ul className="mt-6 space-y-1 text-sm">
           {settings.socials.map((s) => (

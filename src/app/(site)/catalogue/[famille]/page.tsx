@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ famille: 
   if (!f) return {};
   return pageMeta({
     title: `${f.name} — produits professionnels`,
-    description: `${f.intro} Gamme ${f.name.toLowerCase()} MCI Sète : fiches techniques, conditionnements, commande pro en ligne.`,
+    description: `${f.intro} Gamme ${f.name.toLowerCase()} MCI Sète : fiches techniques, conditionnements, commande pro en ligne.`,
     path: `/catalogue/${f.slug}`,
   });
 }
@@ -78,7 +78,7 @@ export default async function FamilyPage({ params }: { params: Promise<{ famille
               </a>
             </div>
             <div className="rounded-[8px] border border-rule bg-white p-6 sm:p-8 lg:col-span-7">
-              <ContactForm subject="gamme" message={`Gamme ${family.name} : `} compact />
+              <ContactForm subject="gamme" message={`Gamme ${family.name} : `} compact />
             </div>
           </div>
         )}
@@ -87,14 +87,14 @@ export default async function FamilyPage({ params }: { params: Promise<{ famille
       <section className="wrap py-16 lg:py-20" aria-labelledby="seo-famille">
         <div className="max-w-[70ch]">
           <h2 id="seo-famille" className="t-h2">
-            Bien choisir : {family.name.toLowerCase()}
+            Bien choisir : {family.name.toLowerCase()}
           </h2>
           <div className="prose-mci mt-5 text-ink/80">
             {family.seo.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
             <p>
-              <Link href="/contact">Une question sur un produit ? Écrivez-nous</Link> ou appelez le {company.phone}.
+              <Link href="/contact">Une question sur un produit ? Écrivez-nous</Link> ou appelez le {company.phone}.
             </p>
           </div>
         </div>

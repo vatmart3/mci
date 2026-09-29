@@ -96,7 +96,7 @@ export function Confirmation({ numero }: { numero: string }) {
             <p className="mt-6 text-sm font-semibold text-ink/70">Numéro de commande</p>
             <p className="t-h1 t-mono mt-1 max-w-full text-mci [overflow-wrap:anywhere]">{order.number}</p>
             <p className="mt-4 max-w-[64ch] text-ink/80">
-              Passée le {formatDateTime(order.createdAt)} par {order.customer.contactName} ({order.customer.company}). Statut : {statusLabels[order.status]}.
+              Passée le {formatDateTime(order.createdAt)} par {order.customer.contactName} ({order.customer.company}). Statut : {statusLabels[order.status]}.
             </p>
           </div>
           <div className="flex flex-col gap-3 border-t border-rule pt-6 lg:border-l lg:border-t-0 lg:pl-10 lg:pt-0">
@@ -149,7 +149,7 @@ export function Confirmation({ numero }: { numero: string }) {
             <Icon name="mail" size={18} className="mt-px shrink-0 text-mci" />
             <span className="min-w-0 [overflow-wrap:anywhere]">
               Un récapitulatif part à {order.customer.email}
-              {IS_DEMO ? " (mode démo : l'email est journalisé, pas envoyé)" : ""}.
+              {IS_DEMO ? " (mode démo : l'email est journalisé, pas envoyé)" : ""}.
             </span>
           </p>
         </section>
@@ -166,7 +166,7 @@ export function Confirmation({ numero }: { numero: string }) {
               <h2 id="compte" className="t-label">
                 Gagnez du temps la prochaine fois
               </h2>
-              <p className="mt-2 text-sm text-white/80">Créez votre compte pro : vos informations sont déjà remplies. Vous pourrez suivre cette commande et recommander en un clic.</p>
+              <p className="mt-2 text-sm text-white/80">Créez votre compte pro : vos informations sont déjà remplies. Vous pourrez suivre cette commande et recommander en un clic.</p>
               <ButtonLink href="/espace-pro?creer=1" variant="inverse" className="mt-5">
                 Créer mon compte pro
               </ButtonLink>

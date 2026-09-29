@@ -19,8 +19,7 @@ export const barlowSC = Barlow_Semi_Condensed({
 /** Données uniquement : numéros de commande, SIRET. */
 export const geistMono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "600"],
   variable: "--font-geist-mono",
   display: "swap",
-  preload: false,
 });

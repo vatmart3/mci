@@ -151,7 +151,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
     }
     const slug = p.slug || slugify(p.code);
     if ((all ?? []).some((x) => x.slug === slug && x.id !== p.id)) {
-      setMsg(`Le slug « ${slug} » est déjà utilisé.`);
+      setMsg(`Le slug « ${slug} » est déjà utilisé.`);
       return;
     }
     const product: Product = {
@@ -191,7 +191,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
           </Link>
         ) : null}
       </div>
-      {p.adminNote ? <p className="rounded-[8px] border border-warn/40 bg-warn/10 px-4 py-3 text-sm">Note interne : {p.adminNote}</p> : null}
+      {p.adminNote ? <p className="rounded-[8px] border border-warn/40 bg-warn/10 px-4 py-3 text-sm">Note interne : {p.adminNote}</p> : null}
 
       <Section title="Identité">
         <div>
@@ -296,7 +296,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
             size="sm"
             className="ml-auto"
             onClick={async () => {
-              if (!confirm(`Supprimer définitivement ${p.code} ? (Pour le masquer, décochez plutôt « Actif ».)`)) return;
+              if (!confirm(`Supprimer définitivement ${p.code} ? (Pour le masquer, décochez plutôt « Actif ».)`)) return;
               await (await getBackend()).deleteProduct(p.id);
               void loadCatalog();
               router.push("/admin/produits");

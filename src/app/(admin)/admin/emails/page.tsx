@@ -14,7 +14,7 @@ export default function AdminEmails() {
         <Icon name="info" size={18} className="mt-px shrink-0 text-mci" />
         <span>
           {IS_DEMO
-            ? "Mode démo : les emails ne partent pas. Ils sont journalisés ici (et dans la console du serveur) pour montrer ce que reçoivent le client et MCI."
+            ? "Mode démo : les emails ne partent pas. Ils sont journalisés ici (et dans la console du serveur) pour montrer ce que reçoivent le client et MCI."
             : "Journal des emails transactionnels (Resend, ou console si RESEND_API_KEY est absente)."}
         </span>
       </p>

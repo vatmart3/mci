@@ -117,7 +117,7 @@ export function buildDemoUsers(): (User & { password: string })[] {
 
 function line(slug: string, packId: string, quantity: number, price?: number): OrderLine {
   const p = products.find((x) => x.slug === slug);
-  if (!p) throw new Error(`démo : produit ${slug}`);
+  if (!p) throw new Error(`démo : produit ${slug}`);
   const pack = p.packagings.find((k) => k.id === packId) ?? p.packagings[0]!;
   return { productId: p.id, code: p.code, name: p.short, packagingId: pack.id, packagingLabel: pack.label, quantity, unitPriceHt: price ?? null };
 }

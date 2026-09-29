@@ -8,7 +8,7 @@ import { Input, Select } from "@/components/ui/Field";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { statusLabels, orderTotal, unitCount } from "@/lib/orders";
-import { formatDateTime, norm } from "@/lib/format";
+import { formatDateTime, formatEur, norm, plural } from "@/lib/format";
 
 function toCsv(orders: Order[]): string {
   const esc = (v: unknown) => `"${String(v ?? "").replace(/"/g, '""')}"`;
@@ -75,7 +75,45 @@ export default function AdminOrders() {
         </div>
       </div>
       <div className="overflow-hidden rounded-[8px] border border-rule bg-white">
-        <div className="relative overflow-x-auto">
+        {/* < sm : une carte par commande (le tableau à 6 colonnes ne tient pas à 390 px) */}
+        <ul className="divide-y divide-rule sm:hidden">
+          {loading && !orders ? (
+            <li className="px-4 py-10 text-center text-sm text-ink/70">Chargement…</li>
+          ) : list.length ? (
+            list.map((o) => {
+              const total = orderTotal(o);
+              return (
+                <li key={o.id}>
+                  <Link href={`/admin/commandes/${o.id}`} className="group block px-4 py-3 transition-colors duration-150 hover:bg-salt">
+                    <span className="flex items-start justify-between gap-3">
+                      <span className="t-code whitespace-nowrap text-mci group-hover:underline">{o.number}</span>
+                      <span className="shrink-0">
+                        <StatusBadge status={o.status} />
+                      </span>
+                    </span>
+                    <span className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-semibold text-ink">
+                      {o.customer.company} {o.isDemo ? <DemoBadge /> : null}
+                    </span>
+                    <span className="block text-xs text-ink/70">
+                      {o.accountId ? "Compte pro" : "Invité"} · {o.customer.contactName}
+                    </span>
+                    <span className="mt-1.5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-0.5 text-xs text-ink/70 tabular-nums">
+                      <span className="whitespace-nowrap">{formatDateTime(o.createdAt)}</span>
+                      <span className="whitespace-nowrap">
+                        {plural(o.lines.length, "ligne", "lignes")} · {unitCount(o)} u.
+                        {total != null ? <span className="font-semibold text-ink"> · {formatEur(total)} HT</span> : null}
+                      </span>
+                    </span>
+                    {o.poNumber ? <span className="mt-0.5 block break-words text-xs text-ink/70 tabular-nums">Engagement {o.poNumber}</span> : null}
+                  </Link>
+                </li>
+              );
+            })
+          ) : (
+            <li className="px-4 py-10 text-center text-sm text-ink/70">Aucune commande.</li>
+          )}
+        </ul>
+        <div className="relative hidden overflow-x-auto sm:block">
           <table className="w-full min-w-[860px] text-left text-sm">
             <thead className="border-b border-rule bg-steel/60 text-xs font-semibold text-ink/70">
               <tr>
@@ -98,19 +136,19 @@ export default function AdminOrders() {
                 list.map((o) => (
                   <tr key={o.id} className="transition-colors duration-150 hover:bg-salt">
                     <td className="py-2.5 pl-4 pr-3">
-                      <Link href={`/admin/commandes/${o.id}`} className="t-mono font-semibold text-mci hover:underline">
+                      <Link href={`/admin/commandes/${o.id}`} className="t-code whitespace-nowrap text-mci hover:underline">
                         {o.number}
                       </Link>
                     </td>
-                    <td className="t-mono whitespace-nowrap px-3 py-2.5 text-xs text-ink/70">{formatDateTime(o.createdAt)}</td>
+                    <td className="whitespace-nowrap px-3 py-2.5 text-xs text-ink/70 tabular-nums">{formatDateTime(o.createdAt)}</td>
                     <td className="px-3 py-2.5">
                       <span className="flex items-center gap-2 font-semibold">
                         {o.customer.company} {o.isDemo ? <DemoBadge /> : null}
                       </span>
                       <span className="block text-xs text-ink/70">{o.accountId ? "Compte pro" : "Invité"} · {o.customer.contactName}</span>
                     </td>
-                    <td className="t-mono px-3 py-2.5 text-xs text-ink/70">{o.poNumber ?? "—"}</td>
-                    <td className="t-mono px-3 py-2.5 text-right">
+                    <td className="px-3 py-2.5 text-xs text-ink/70 tabular-nums">{o.poNumber ?? "—"}</td>
+                    <td className="whitespace-nowrap px-3 py-2.5 text-right tabular-nums">
                       {o.lines.length} / {unitCount(o)}
                     </td>
                     <td className="py-2.5 pl-3 pr-4">
