@@ -41,7 +41,7 @@ export function ShelfSection({ groups, total }: { groups: ShelfGroup[]; total: n
                 <Link href={`/catalogue/${g.slug}`} className="tile tile-hover group flex h-full flex-col">
                   <span className="plate relative flex h-44 items-end justify-center overflow-hidden border-b border-rule px-6 pt-6">
                     {g.products.slice(0, 3).map((p, k) => (
-                        <span key={p.slug} className="relative -mx-3 w-[34%] transition-transform duration-200 ease-out group-hover:-translate-y-1" style={{ zIndex: k === 1 ? 2 : 1, marginBottom: k === 1 ? 10 : 0 }}>
+                        <span key={p.slug} className="relative -mx-4 w-[40%] transition-transform duration-200 ease-out group-hover:-translate-y-1" style={{ zIndex: k === 1 ? 2 : 1, marginBottom: k === 1 ? 10 : 0 }}>
                           <ProductVisual product={p} size={180} sizes="(max-width: 640px) 30vw, 140px" alt="" className="h-auto w-full drop-shadow-[0_12px_12px_rgb(22_35_45/0.18)]" />
                         </span>
                     ))}
