@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Génère les packshots statiques (WebP 512 px, fond transparent) de chaque produit
+ * Génère les packshots statiques (WebP 768 px, rendus en 1024 puis réduits, fond transparent) de chaque produit
  * à partir du système de packaging 3D procédural.
  *
  *   npm run render:packshots                 → lance un serveur Next temporaire
@@ -53,13 +53,13 @@ try {
     executablePath,
     args: ["--use-gl=angle", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist"],
   });
-  const page = await browser.newPage({ viewport: { width: 512, height: 512 }, deviceScaleFactor: 1 });
+  const page = await browser.newPage({ viewport: { width: 512, height: 512 }, deviceScaleFactor: 2 });
   await mkdir(out, { recursive: true });
   for (const [i, slug] of list.entries()) {
     await page.goto(`${base}/packshot/${slug}`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => window.__PACKSHOT_READY === true, null, { timeout: 60000 });
     const png = await page.screenshot({ omitBackground: true });
-    await sharp(png).webp({ quality: 84, alphaQuality: 90, effort: 5 }).toFile(path.join(out, `${slug}.webp`));
+    await sharp(png).resize(768, 768).webp({ quality: 84, alphaQuality: 90, effort: 5 }).toFile(path.join(out, `${slug}.webp`));
     process.stdout.write(`\r${i + 1}/${list.length} ${slug.padEnd(40)}`);
   }
   await browser.close();

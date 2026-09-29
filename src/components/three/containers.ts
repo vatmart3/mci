@@ -4,6 +4,7 @@
  * Matières : PEHD blanc cassé, bouchons bleu MCI, aérosol en métal brossé.
  */
 import * as THREE from "three";
+import { toCreasedNormals } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 import type { ContainerKind } from "@/lib/types";
 import { makeLabelTexture, type LabelInput } from "./label";
 
@@ -31,8 +32,8 @@ let shared: Mats | null = null;
 function mats(): Mats {
   if (shared) return shared;
   shared = {
-    // PEHD blanc cassé, légèrement satiné
-    plastic: new THREE.MeshPhysicalMaterial({ color: "#F4F2EE", roughness: 0.34, metalness: 0, clearcoat: 0.55, clearcoatRoughness: 0.28, sheen: 0.4, sheenRoughness: 0.5, sheenColor: new THREE.Color("#ffffff") }),
+    // PEHD blanc cassé, satiné mat (pas de « sheen » : il dessinait un liseré blanc autour des silhouettes)
+    plastic: new THREE.MeshPhysicalMaterial({ color: "#F3F2EE", roughness: 0.46, metalness: 0, clearcoat: 0.18, clearcoatRoughness: 0.4 }),
     cap: new THREE.MeshPhysicalMaterial({ color: "#1F6A99", roughness: 0.22, metalness: 0.05, clearcoat: 0.8, clearcoatRoughness: 0.12 }),
     // métal brossé, reflets nets
     metal: new THREE.MeshPhysicalMaterial({ color: "#DDE2E6", roughness: 0.22, metalness: 1, clearcoat: 0.4, clearcoatRoughness: 0.2 }),
@@ -46,7 +47,7 @@ function labelMaterial(spec: LabelSpec | null, aspect: number, wrap: boolean) {
   if (!spec) return new THREE.MeshStandardMaterial({ color: "#FFFFFF", roughness: 0.6 });
   const map = makeLabelTexture({ ...spec, aspect, wrap });
   // étiquette pelliculée : léger vernis
-  return new THREE.MeshPhysicalMaterial({ map, roughness: 0.4, metalness: 0, clearcoat: 0.6, clearcoatRoughness: 0.25 });
+  return new THREE.MeshPhysicalMaterial({ map, roughness: 0.45, metalness: 0, clearcoat: 0.35, clearcoatRoughness: 0.3 });
 }
 
 function lathe(points: [number, number][], segments: number) {
@@ -72,8 +73,8 @@ function roundedRect(w: number, d: number, r: number) {
   return s;
 }
 
-function box(w: number, h: number, d: number, bevel: number, radius: number, segments = 4) {
-  const g = new THREE.ExtrudeGeometry(roundedRect(w, d, radius), {
+function box(w: number, h: number, d: number, bevel: number, radius: number, segments = 8) {
+  const raw = new THREE.ExtrudeGeometry(roundedRect(w, d, radius), {
     depth: h - bevel * 2,
     bevelEnabled: true,
     bevelThickness: bevel,
@@ -81,6 +82,9 @@ function box(w: number, h: number, d: number, bevel: number, radius: number, seg
     bevelSegments: segments,
     curveSegments: segments * 2,
   });
+  // normales lissées sur les arrondis (sinon les chanfreins se lisent en facettes), arêtes vives conservées
+  const g = toCreasedNormals(raw, Math.PI / 3);
+  raw.dispose();
   g.rotateX(-Math.PI / 2);
   g.translate(0, bevel, 0);
   return g;

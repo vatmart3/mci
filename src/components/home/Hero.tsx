@@ -65,13 +65,11 @@ export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: s
 
         <div className="relative lg:col-span-5" aria-hidden="true">
           <div className="relative mx-auto aspect-[4/3] w-full max-w-[620px]">
-            <div className="absolute inset-x-[6%] bottom-[4%] h-[22%] rounded-[50%] bg-night/40 blur-2xl" />
-            <div className="absolute inset-x-[2%] bottom-[8%] h-[26%] rounded-[50%] bg-white/10" />
             {products.slice(0, 5).map(({ p }, i) => {
               const s = place[i]!;
               return (
                 <div key={p.slug} className="absolute" style={{ left: s.l, bottom: s.b, width: s.w, zIndex: s.z }}>
-                  <ProductVisual product={p} size={360} sizes="(max-width: 1024px) 45vw, 300px" alt="" priority={i === 2} className="h-auto w-full drop-shadow-[0_18px_22px_rgb(8_30_45/0.45)]" />
+                  <ProductVisual product={p} size={360} sizes="(max-width: 1024px) 45vw, 300px" alt="" priority={i === 2} className="h-auto w-full drop-shadow-[0_6px_10px_rgb(8_30_45/0.25)]" />
                 </div>
               );
             })}

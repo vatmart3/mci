@@ -7,6 +7,8 @@ import { Container, labelFor, useFontsReady } from "./Container";
 import * as THREE from "three";
 import { StageLights } from "./Stage";
 
+const FLOOR = -1;
+
 /** orientation 3/4 pour les volumes anguleux, face avant pour les étiquettes cylindriques */
 export const packshotYaw: Record<ContainerKind, number> = { aerosol: 0, spray: 0, cartridge: 0, bucket: 0, can5: -0.42, jerrican20: -0.42 };
 
@@ -32,18 +34,23 @@ export function PackshotStudio({ product, packId }: { product: Product; packId?:
   return (
     <Canvas
       gl={{ alpha: true, antialias: true, preserveDrawingBuffer: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: 1.05 }}
-      dpr={1}
-      camera={{ position: [0, 0.35, 5.2], fov: 26 }}
-      onCreated={({ gl }) => gl.setClearColor(0x000000, 0)}
+      dpr={2}
+      camera={{ position: [0, 0.3, 5.4], fov: 26 }}
+      onCreated={({ gl, camera }) => {
+        gl.setClearColor(0x000000, 0);
+        // cadrage : le sol et le haut des aérosols restent dans l'image, avec de l'air autour
+        camera.lookAt(0, -0.05, 0);
+      }}
       frameloop="demand"
     >
       <StageLights mood="light" shadow={false} />
       {fonts ? (
         <>
-          <group rotation={[0, packshotYaw[kind], 0]} position={[0, 0.05, 0]}>
-            <Container kind={kind} label={labelFor(product, pack.short)} />
+          {/* posé au sol : l'ombre de contact touche le pied du contenant (plus d'effet « flottant ») */}
+          <group rotation={[0, packshotYaw[kind], 0]} position={[0, FLOOR, 0]}>
+            <Container kind={kind} label={labelFor(product, pack.short)} center={false} />
           </group>
-          <ContactShadows position={[0, -1.02, 0]} opacity={0.32} scale={4} blur={2.4} far={1.6} resolution={256} color="#0A2233" frames={1} />
+          <ContactShadows position={[0, FLOOR + 0.002, 0]} opacity={0.5} scale={3.4} blur={1.8} far={1} resolution={512} color="#0A2233" frames={1} />
           <Ready />
         </>
       ) : null}

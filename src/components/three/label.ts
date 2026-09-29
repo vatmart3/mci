@@ -72,8 +72,8 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
   const hit = cache.get(key);
   if (hit) return hit;
 
-  const H = 512;
-  const W = Math.round(Math.min(2048, Math.max(384, H * input.aspect)));
+  const H = 1024;
+  const W = Math.round(Math.min(4096, Math.max(768, H * input.aspect)));
   const canvas = document.createElement("canvas");
   canvas.width = W;
   canvas.height = H;
@@ -173,7 +173,7 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.anisotropy = 8;
   tex.needsUpdate = true;
   cache.set(key, tex);
   return tex;
