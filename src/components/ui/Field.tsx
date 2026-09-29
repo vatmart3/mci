@@ -2,8 +2,8 @@ import type { ComponentProps, ReactNode } from "react";
 import { cx } from "@/lib/cx";
 
 export const inputClass =
-  "w-full bg-white border border-rule rounded-tech text-base text-ink placeholder:text-ink/50 " +
-  "transition-[border-color,box-shadow] duration-200 ease-out hover:border-ink/30 focus:border-mci focus:outline-none focus:shadow-[0_0_0_4px_rgb(31_106_153/0.18)] " +
+  "w-full bg-white border border-rule rounded-[6px] text-base text-ink placeholder:text-ink/55 " +
+  "transition-[border-color,box-shadow] duration-200 ease-out hover:border-ink/30 focus:border-mci focus:outline-none focus:shadow-[0_0_0_3px_rgb(31_106_153/0.2)] " +
   "aria-[invalid=true]:border-danger";
 
 export function Label({ children, htmlFor, required, className }: { children: ReactNode; htmlFor?: string; required?: boolean; className?: string }) {
@@ -17,7 +17,7 @@ export function Label({ children, htmlFor, required, className }: { children: Re
 }
 
 export type FieldSize = "sm" | "md";
-export const fieldSize: Record<FieldSize, string> = { sm: "h-9 px-3 text-sm", md: "h-12 px-4 text-base" };
+export const fieldSize: Record<FieldSize, string> = { sm: "h-9 px-3 text-sm", md: "h-11 px-3 text-base" };
 
 export function Input({ className, fieldSize: fs = "md", ...rest }: ComponentProps<"input"> & { fieldSize?: FieldSize }) {
   return <input className={cx(inputClass, fieldSize[fs], className)} {...rest} />;
@@ -63,7 +63,7 @@ export function Checkbox({ label, className, id, ...rest }: ComponentProps<"inpu
       <input
         id={id}
         type="checkbox"
-        className="mt-1 size-5 shrink-0 appearance-none border border-ink/40 rounded-[6px] bg-white checked:bg-mci checked:border-mci cursor-pointer bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%3E%3Cpath%20d=%22M3.5%208.5l3%203%206-7%22%20fill=%22none%22%20stroke=%22white%22%20stroke-width=%222%22/%3E%3C/svg%3E')]"
+        className="mt-1 size-5 shrink-0 appearance-none border border-ink/40 rounded-[4px] bg-white checked:bg-mci checked:border-mci cursor-pointer bg-center bg-no-repeat checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%3E%3Cpath%20d=%22M3.5%208.5l3%203%206-7%22%20fill=%22none%22%20stroke=%22white%22%20stroke-width=%222%22/%3E%3C/svg%3E')]"
         {...rest}
       />
       <span>{label}</span>

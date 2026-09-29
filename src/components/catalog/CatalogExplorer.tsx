@@ -7,7 +7,7 @@ import { families } from "@/data/families";
 import { sectors } from "@/data/sectors";
 import { formatLabels, formatOrder, propertyLabels, propertyOrder } from "@/data/properties";
 import { company } from "@/data/company";
-import { ProductCard, ProductRow } from "./ProductRow";
+import { ProductCard, ProductTable } from "./ProductRow";
 import { PdfViewerProvider } from "./PdfViewer";
 import { Icon } from "@/components/ui/Icon";
 import { Select } from "@/components/ui/Field";
@@ -52,6 +52,9 @@ function writeUrl(f: Filters) {
   window.history.replaceState(window.history.state, "", `${window.location.pathname}${qs ? `?${qs}` : ""}`);
 }
 
+const checkClass =
+  "size-[18px] shrink-0 cursor-pointer appearance-none rounded-[4px] border border-ink/40 bg-white bg-center bg-no-repeat transition-colors duration-150 ease-out checked:border-mci checked:bg-mci checked:bg-[url('data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2016%2016%22%3E%3Cpath%20d=%22M3.5%208.5l3%203%206-7%22%20fill=%22none%22%20stroke=%22white%22%20stroke-width=%222%22/%3E%3C/svg%3E')]";
+
 function FilterGroup<T extends string>({
   legend,
   options,
@@ -66,27 +69,26 @@ function FilterGroup<T extends string>({
   counts: Map<string, number>;
 }) {
   return (
-    <fieldset className="min-w-0 py-4 first:pt-0">
+    <fieldset className="min-w-0 border-t border-rule py-3 first:border-t-0">
       <legend className="sr-only">{legend}</legend>
-      <p aria-hidden="true" className="mb-3 text-sm font-semibold text-ink">
+      <p aria-hidden="true" className="px-4 pb-1 pt-1 font-display text-base font-bold text-ink">
         {legend}
       </p>
-      <ul className="flex flex-wrap gap-2">
+      <ul>
         {options.map((o) => {
           const n = counts.get(o.value) ?? 0;
           const on = selected.includes(o.value);
           return (
-            <li key={o.value} className="min-w-0 max-w-full">
+            <li key={o.value} className="min-w-0">
               <label
                 className={cx(
-                  "flex max-w-full cursor-pointer items-center gap-2 rounded-full py-1.5 pl-3.5 pr-2 text-sm transition-[background-color,color,opacity,box-shadow] duration-300 ease-out has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mci",
-                  on ? "bg-ink text-white shadow-sheet" : "bg-salt text-ink hover:bg-ink/10",
-                  !n && !on && "opacity-40",
+                  "flex min-w-0 cursor-pointer items-center gap-3 px-4 py-1.5 text-sm transition-colors duration-150 ease-out hover:bg-salt",
+                  on ? "font-semibold text-ink" : n ? "text-ink" : "text-ink/70",
                 )}
               >
-                <input type="checkbox" checked={on} onChange={() => onToggle(o.value)} className="sr-only" />
-                <span className="min-w-0 leading-snug">{o.label}</span>
-                <span className={cx("grid h-5 min-w-5 shrink-0 place-items-center rounded-full px-1.5 text-[11px] font-semibold tabular-nums", on ? "bg-white/20 text-white" : "bg-white text-ink/70")}>{n}</span>
+                <input type="checkbox" checked={on} onChange={() => onToggle(o.value)} className={checkClass} />
+                <span className="min-w-0 flex-1 leading-snug">{o.label}</span>
+                <span className="shrink-0 text-xs font-medium tabular-nums text-ink/70">{n}</span>
               </label>
             </li>
           );
@@ -171,49 +173,57 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
     <PdfViewerProvider>
       <div className="wrap">
         {/* Recherche */}
-        <div className="flex flex-col gap-3 pb-8 lg:flex-row lg:items-center lg:gap-4">
-          <div className="min-w-0 flex-1">
-            <label htmlFor="catalogue-q" className="sr-only">
-              Rechercher un produit, un usage, une surface
+        <div className="relative">
+          <label htmlFor="catalogue-q" className="sr-only">
+            Rechercher un produit, un usage, une surface
+          </label>
+          <Icon name="search" size={22} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink/70" />
+          <input
+            ref={inputRef}
+            id="catalogue-q"
+            type="search"
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="Graisse cuite, inox, graffiti, guêpes, DG90…"
+            value={f.q}
+            onChange={(e) => setF((s) => ({ ...s, q: e.target.value }))}
+            className="h-14 w-full min-w-0 rounded-[8px] border border-rule bg-white pl-12 pr-4 text-md text-ink transition-[border-color,box-shadow] duration-150 ease-out placeholder:text-ink/55 hover:border-ink/40 focus:border-mci focus:shadow-[0_0_0_3px_rgb(31_106_153/0.2)] focus:outline-none"
+          />
+        </div>
+
+        {/* Barre d'outils : filtres (mobile), nombre de résultats, tri, affichage */}
+        <div className="mt-6 flex flex-wrap items-center gap-x-[var(--gutter)] gap-y-3 border-b border-rule pb-3">
+          <button
+            type="button"
+            className="order-1 inline-flex h-10 items-center gap-2 rounded-[6px] border border-rule bg-white px-3 text-sm font-semibold transition-colors duration-150 ease-out hover:border-ink lg:hidden"
+            onClick={() => setPanel((v) => !v)}
+            aria-expanded={panel}
+            aria-controls="filtres"
+          >
+            <Icon name="menu" size={18} />
+            Filtres
+            {active ? <span className="grid h-5 min-w-5 place-items-center rounded-[4px] bg-mci px-1 text-xs font-semibold text-white tabular-nums">{active}</span> : null}
+            <Icon name="chevronDown" size={16} className={cx("transition-transform duration-150 ease-out", panel && "rotate-180")} />
+          </button>
+          <p aria-hidden="true" className="hidden font-display text-lg font-bold lg:order-1 lg:block lg:w-[calc(25%_-_var(--gutter)_*_0.75)]">
+            Filtres
+          </p>
+          <h2 id="resultats" className="order-3 basis-full text-base font-semibold lg:order-2 lg:flex-1 lg:basis-auto" aria-live="polite">
+            <span className="tabular-nums">{results.length}</span> référence{results.length > 1 ? "s" : ""}
+            {f.q ? <span className="font-normal text-ink/70"> pour « {f.q} »</span> : null} <span className="sr-only">— {title}</span>
+          </h2>
+          <div className="order-2 ml-auto flex items-center gap-2 lg:order-3">
+            <label htmlFor="tri" className="hidden text-sm text-ink/70 sm:block">
+              Trier par
             </label>
-            <div className="relative">
-              <Icon name="search" size={22} className="pointer-events-none absolute left-5 top-1/2 -translate-y-1/2 text-ink/70" />
-              <input
-                ref={inputRef}
-                id="catalogue-q"
-                type="search"
-                autoComplete="off"
-                spellCheck={false}
-                placeholder="Graisse cuite, inox, graffiti, guêpes, DG90…"
-                value={f.q}
-                onChange={(e) => setF((s) => ({ ...s, q: e.target.value }))}
-                className="h-14 w-full min-w-0 rounded-full bg-salt pl-14 pr-6 text-md text-ink transition-[background-color,box-shadow] duration-300 ease-out placeholder:text-ink/40 hover:bg-ink/[0.06] focus:bg-white focus:shadow-[0_0_0_4px_rgb(31_106_153/0.18)] focus:outline-none sm:h-16 sm:text-lg"
-              />
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <button
-              type="button"
-              className="inline-flex h-11 items-center gap-2 rounded-full bg-salt px-5 text-sm font-medium transition-colors duration-300 ease-out hover:bg-ink/10 lg:hidden"
-              onClick={() => setPanel((v) => !v)}
-              aria-expanded={panel}
-              aria-controls="filtres"
-            >
-              Filtres
-              {active ? <span className="grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1.5 text-[11px] font-semibold text-white">{active}</span> : null}
-              <Icon name="chevronDown" size={16} className={cx("transition-transform duration-300 ease-out", panel && "rotate-180")} />
-            </button>
-            <div className="w-40">
-              <label htmlFor="tri" className="sr-only">
-                Trier
-              </label>
-              <Select id="tri" value={f.tri} onChange={(e) => setF((s) => ({ ...s, tri: e.target.value as Sort }))} className="h-11! rounded-full! border-transparent! bg-salt! pl-5! text-sm! hover:border-transparent!">
+            <div className="w-36 sm:w-40">
+              <Select id="tri" value={f.tri} onChange={(e) => setF((s) => ({ ...s, tri: e.target.value as Sort }))} fieldSize="sm" className="h-10!">
                 <option value="pertinence">Pertinence</option>
                 <option value="az">A → Z</option>
                 <option value="famille">Par famille</option>
               </Select>
             </div>
-            <div className="ml-auto flex rounded-full bg-salt p-1 lg:ml-0" role="group" aria-label="Affichage">
+            <div className="flex overflow-hidden rounded-[6px] border border-rule" role="group" aria-label="Affichage">
               {(["liste", "grille"] as const).map((v) => (
                 <button
                   key={v}
@@ -221,8 +231,8 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                   onClick={() => setF((s) => ({ ...s, vue: v }))}
                   aria-pressed={f.vue === v}
                   className={cx(
-                    "grid h-9 w-11 place-items-center rounded-full transition-[background-color,color,box-shadow] duration-300 ease-out",
-                    f.vue === v ? "bg-white text-ink shadow-sheet" : "text-ink/70 hover:text-ink",
+                    "grid size-10 place-items-center border-l border-rule transition-colors duration-150 ease-out first:border-l-0",
+                    f.vue === v ? "bg-mci text-white" : "bg-white text-ink/70 hover:bg-salt hover:text-ink",
                   )}
                   aria-label={v === "liste" ? "Liste dense" : "Grille visuelle"}
                 >
@@ -233,10 +243,10 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
           </div>
         </div>
 
-        <div className="grid-12 gap-y-8">
+        <div className="grid-12 mt-6 gap-y-6">
           {/* Filtres */}
           <aside id="filtres" className={cx("col-span-12 lg:col-span-3 lg:block", panel ? "block" : "hidden")} aria-label="Filtres">
-            <div className="rounded-tile bg-white p-5 ring-1 ring-black/5 lg:sticky lg:top-20 lg:max-h-[calc(100vh-96px)] lg:overflow-y-auto lg:p-0 lg:pr-2 lg:ring-0">
+            <div className="rounded-[8px] border border-rule bg-white py-1 lg:sticky lg:top-24 lg:max-h-[calc(100vh-112px)] lg:overflow-y-auto">
               <FilterGroup legend="Famille" options={families.map((x) => ({ value: x.slug, label: x.name }))} selected={f.famille} onToggle={(v) => toggle("famille", v)} counts={counts.famille} />
               <FilterGroup legend="Secteur" options={sectors.map((x) => ({ value: x.slug, label: x.name }))} selected={f.secteur} onToggle={(v) => toggle("secteur", v)} counts={counts.secteur} />
               <FilterGroup legend="Propriétés" options={propertyOrder.map((x) => ({ value: x, label: propertyLabels[x].label }))} selected={f.prop} onToggle={(v) => toggle("prop", v)} counts={counts.prop} />
@@ -246,49 +256,43 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
 
           {/* Résultats */}
           <section className="col-span-12 lg:col-span-9" aria-labelledby="resultats">
-            <div className="flex flex-wrap items-center justify-between gap-3 pb-4">
-              <h2 id="resultats" className="t-label" aria-live="polite">
-                {results.length} référence{results.length > 1 ? "s" : ""}
-                {f.q ? <span className="text-ink/70"> pour « {f.q} »</span> : null} <span className="sr-only">— {title}</span>
-              </h2>
-              {chips.length ? (
-                <ul className="flex min-w-0 flex-wrap items-center gap-2">
-                  {chips.map((c) => (
-                    <li key={`${c.k}-${c.v}`} className="min-w-0 max-w-full">
-                      <button
-                        type="button"
-                        onClick={() => toggle(c.k, c.v as never)}
-                        className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-ink py-1.5 pl-3.5 pr-2.5 text-sm text-white transition-colors duration-300 ease-out hover:bg-ink/80"
-                        aria-label={`Retirer le filtre ${c.label}`}
-                      >
-                        <span className="truncate">{c.label}</span>
-                        <Icon name="close" size={14} className="shrink-0" />
-                      </button>
-                    </li>
-                  ))}
-                  <li>
-                    <button type="button" className="link-u px-2 py-1 text-sm" onClick={() => setF((s) => ({ ...empty, q: s.q, tri: s.tri, vue: s.vue }))}>
-                      Tout effacer
+            {chips.length ? (
+              <ul className="mb-4 flex min-w-0 flex-wrap items-center gap-2">
+                {chips.map((c) => (
+                  <li key={`${c.k}-${c.v}`} className="min-w-0 max-w-full">
+                    <button
+                      type="button"
+                      onClick={() => toggle(c.k, c.v as never)}
+                      className="inline-flex h-8 max-w-full items-center gap-1.5 rounded-[6px] border border-mci/25 bg-sky/60 pl-2.5 pr-2 text-sm font-medium text-night transition-colors duration-150 ease-out hover:border-mci/50 hover:bg-sky"
+                      aria-label={`Retirer le filtre ${c.label}`}
+                    >
+                      <span className="truncate">{c.label}</span>
+                      <Icon name="close" size={14} className="shrink-0" />
                     </button>
                   </li>
-                </ul>
-              ) : null}
-            </div>
+                ))}
+                <li>
+                  <button type="button" className="link-u px-1 py-1 text-sm font-medium" onClick={() => setF((s) => ({ ...empty, q: s.q, tri: s.tri, vue: s.vue }))}>
+                    Tout effacer
+                  </button>
+                </li>
+              </ul>
+            ) : null}
 
             {results.length === 0 ? (
-              <div className="rounded-tile bg-salt px-6 py-12 sm:px-12 sm:py-16">
-                <span className="grid size-12 place-items-center rounded-full bg-white text-ink/70 shadow-sheet">
+              <div className="rounded-[8px] border border-rule bg-salt px-6 py-10 sm:px-10 sm:py-12">
+                <span className="grid size-12 place-items-center rounded-full border border-rule bg-white text-ink/70">
                   <Icon name="search" size={22} />
                 </span>
-                <p className="t-h2 mt-6 max-w-[22ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
-                <p className="t-lead mt-4 max-w-[52ch] text-ink/70">
+                <p className="t-h2 mt-5 max-w-[24ch]">Aucun résultat{f.q ? ` pour « ${f.q} »` : ""}.</p>
+                <p className="mt-3 max-w-[56ch] text-ink/80">
                   Appelez-nous au{" "}
                   <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline hover:underline-offset-4">
                     {company.phone}
                   </a>
                   , on a peut-être le produit hors catalogue.
                 </p>
-                <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3">
+                <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
                   <Link href={`/contact?objet=produit-specifique${f.q ? `&message=${encodeURIComponent(`Je cherche : ${f.q}`)}` : ""}`} className="link-u font-medium">
                     Décrire mon besoin par écrit
                   </Link>
@@ -300,13 +304,9 @@ export function CatalogExplorer({ products, title = "Catalogue" }: { products: P
                 </div>
               </div>
             ) : f.vue === "liste" ? (
-              <ul className="rounded-tile bg-white p-1.5 ring-1 ring-black/5 sm:p-2.5">
-                {results.map((p, i) => (
-                  <ProductRow key={p.id} product={p} priority={i < 4} />
-                ))}
-              </ul>
+              <ProductTable products={results} priorityCount={4} />
             ) : (
-              <ul className="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2 sm:gap-4 md:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid grid-cols-1 gap-4 min-[440px]:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4">
                 {results.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}

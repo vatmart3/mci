@@ -13,15 +13,15 @@ export function MobileBar() {
   useEffect(() => setOk(true), []);
   const n = ok ? cartCount(lines) : 0;
   return (
-    <div data-no-print className="glass fixed inset-x-3 bottom-[max(12px,env(safe-area-inset-bottom))] z-40 grid grid-cols-2 gap-1 rounded-full p-1 shadow-float ring-1 ring-black/5 lg:hidden">
-      <a href={`tel:${company.phoneE164}`} className="flex h-12 items-center justify-center gap-2 rounded-full font-medium text-ink">
+    <div data-no-print className="fixed inset-x-0 bottom-0 z-40 grid grid-cols-2 gap-2 border-t border-rule bg-white p-2 pb-[max(8px,env(safe-area-inset-bottom))] lg:hidden">
+      <a href={`tel:${company.phoneE164}`} className="flex h-12 items-center justify-center gap-2 rounded-[6px] border border-rule font-semibold text-ink">
         <Icon name="phone" size={18} />
         Appeler
       </a>
-      <button type="button" onClick={open} data-cart-target className="flex h-12 items-center justify-center gap-2 rounded-full bg-action font-medium text-ink">
+      <button type="button" onClick={open} data-cart-target className="flex h-12 items-center justify-center gap-2 rounded-[6px] bg-action font-semibold text-ink">
         <Icon name="order" size={18} />
         Commande
-        <span className="inline-grid h-6 min-w-6 place-items-center rounded-full bg-ink px-2 text-xs font-semibold text-white">{n}</span>
+        <span className="inline-grid h-6 min-w-6 place-items-center rounded-[4px] bg-ink px-1.5 text-xs font-bold text-white">{n}</span>
       </button>
     </div>
   );

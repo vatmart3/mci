@@ -22,7 +22,7 @@ export function PdfViewerProvider({ children }: { children: React.ReactNode }) {
       <Dialog open={!!doc} onClose={() => setDoc(null)} title={doc?.title ?? "Document"} wide>
         {doc ? (
           <div className="flex flex-col gap-4">
-            <div className="relative h-[70vh] overflow-hidden rounded-box bg-salt ring-1 ring-black/5">
+            <div className="relative h-[70vh] overflow-hidden rounded-[8px] border border-rule bg-salt">
               <object data={`${doc.url}#view=FitH`} type="application/pdf" className="absolute inset-0 h-full w-full" aria-label={doc.title}>
                 <div className="grid h-full place-items-center p-8 text-center">
                   <p className="max-w-sm text-ink/70">Votre navigateur n&apos;affiche pas les PDF intégrés. Ouvrez-le dans un nouvel onglet ou téléchargez-le.</p>
@@ -50,7 +50,7 @@ export function SheetButton({ url, code, size = "sm", label = "FT" }: { url?: st
   const open = useOpenPdf();
   if (!url) {
     return (
-      <span className="inline-flex h-8 items-center whitespace-nowrap rounded-full bg-ink/5 px-3 text-xs font-medium text-ink/70" title="Fiche technique sur demande">
+      <span className="inline-flex h-9 items-center whitespace-nowrap rounded-[6px] border border-dashed border-rule bg-white px-2.5 text-xs font-medium text-ink/70" title="Fiche technique sur demande">
         FT sur demande
       </span>
     );

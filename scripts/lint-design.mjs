@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Contrôle automatique des interdits de charte (v2, refonte arrondie).
+ * Contrôle automatique des interdits de charte (v3).
  * Échoue (code 1) si un motif interdit apparaît dans src/ ou dans les styles.
  */
 import { readdirSync, readFileSync, statSync } from "node:fs";
@@ -16,7 +16,7 @@ const files = [];
   }
 })(path.join(root, "src"));
 
-// Charte v2 (refonte « Apple ») : arrondis, dégradés, flous et ombres douces autorisés.
+// Charte v3 (standard fournisseur professionnel, voir DESIGN.md).
 // Restent interdits : polices génériques, bibliothèques d'icônes, emojis, curseur perso, mode sombre auto.
 const rules = [
   { name: "police interdite", re: /\b(Inter|Roboto|Poppins)\b(?!\w)/ },
@@ -25,6 +25,11 @@ const rules = [
   { name: "mode sombre automatique", re: /\bdark:(?=\S)|prefers-color-scheme:\s*dark/ },
   { name: "emoji", re: /\p{Extended_Pictographic}/u },
   { name: "Lorem ipsum", re: /lorem ipsum/i },
+  // v3 « fournisseur pro » : pas de sur-titre, de texte dégradé, de verre décoratif ni d'apparition au défilement
+  { name: "sur-titre au-dessus d'un titre", re: /className="[^"]*\bt-eyebrow\b/ },
+  { name: "texte en dégradé", re: /\bt-sheen\b|bg-clip-text/ },
+  { name: "flou décoratif", re: /\bbackdrop-blur/ },
+  { name: "apparition au défilement", re: /data-reveal/ },
 ];
 
 const issues = [];

@@ -13,60 +13,68 @@ export const metadata = pageMeta({
 
 export default function ContactPage() {
   return (
-    <div className="wrap pb-24 pt-8 lg:pt-12">
+    <div className="wrap pb-20 pt-6 lg:pb-24 lg:pt-10">
       <Breadcrumb items={[{ name: "Accueil", path: "/" }, { name: "Contact", path: "/contact" }]} />
-      <header className="mt-10 max-w-[820px] lg:mt-14">
-        <p className="t-eyebrow">Contact</p>
-        <h1 className="t-h1 mt-3">Une question, un devis, un échantillon.</h1>
-        <p className="t-lead mt-6 max-w-[48ch] text-ink/70">Le plus rapide reste le téléphone. Pour une demande écrite, le formulaire arrive directement chez MCI.</p>
+      <header className="mt-6 max-w-[820px] lg:mt-8">
+        <h1 className="t-h1">Une question, un devis, un échantillon.</h1>
+        <p className="t-lead mt-3 max-w-[52ch] text-ink/70">Le plus rapide reste le téléphone. Pour une demande écrite, le formulaire arrive directement chez MCI.</p>
       </header>
 
-      <div className="grid-12 mt-12 gap-y-6 lg:mt-16">
-        <div className="col-span-12 flex flex-col gap-4 lg:col-span-5">
-          <a
-            href={`tel:${company.phoneE164}`}
-            className="tile tile-hover group block bg-salt p-6 sm:p-8"
-          >
-            <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
-              <Icon name="phone" size={16} className="text-mci" /> Téléphone
-            </span>
-            <span className="t-h2 mt-3 block whitespace-nowrap text-ink transition-colors duration-300 group-hover:text-mci">{company.phone}</span>
-          </a>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-            <a href={`mailto:${company.email}`} className="tile tile-hover group block min-w-0 bg-salt p-6">
-              <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
-                <Icon name="mail" size={16} className="text-mci" /> Email
-              </span>
-              <span className="mt-2 block break-words font-semibold text-ink transition-colors duration-300 group-hover:text-mci">{company.email}</span>
-            </a>
-            <div className="tile min-w-0 bg-salt p-6">
-              <span className="flex items-center gap-2 text-sm font-medium text-ink/70">
-                <Icon name="pin" size={16} className="text-mci" /> Adresse
-              </span>
-              <address className="mt-2 not-italic font-semibold leading-snug">
-                {company.name}
-                <br />
-                <span className="font-normal text-ink/70">
-                  {company.street}
-                  <br />
-                  {company.postalCode} {company.city}
-                </span>
-              </address>
-              <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className="link-u mt-3 inline-flex items-center gap-1 text-sm">
-                Itinéraire ›
-              </a>
-            </div>
-          </div>
-          <div className="tile hidden bg-salt p-6 lg:block">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:mt-10 lg:grid-cols-12 lg:gap-8">
+        <div className="flex min-w-0 flex-col gap-6 lg:col-span-5">
+          <section aria-labelledby="coordonnees" className="rounded-[8px] bg-night p-5 text-white sm:p-8">
+            <h2 id="coordonnees" className="t-label">
+              {company.name}
+            </h2>
+            <dl className="mt-5 divide-y divide-white/15 border-y border-white/15">
+              <div className="py-4">
+                <dt className="flex items-center gap-2 text-sm text-white/80">
+                  <Icon name="phone" size={16} className="shrink-0" /> Téléphone
+                </dt>
+                <dd className="mt-1">
+                  <a href={`tel:${company.phoneE164}`} className="t-h2 whitespace-nowrap text-white underline decoration-white/0 underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-white/70">
+                    {company.phone}
+                  </a>
+                </dd>
+              </div>
+              <div className="py-4">
+                <dt className="flex items-center gap-2 text-sm text-white/80">
+                  <Icon name="mail" size={16} className="shrink-0" /> Email
+                </dt>
+                <dd className="mt-1">
+                  <a href={`mailto:${company.email}`} className="break-words text-md font-semibold text-white underline decoration-white/40 underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-white">
+                    {company.email}
+                  </a>
+                </dd>
+              </div>
+              <div className="py-4">
+                <dt className="flex items-center gap-2 text-sm text-white/80">
+                  <Icon name="pin" size={16} className="shrink-0" /> Adresse
+                </dt>
+                <dd className="mt-1">
+                  <address className="not-italic leading-snug">
+                    {company.street}
+                    <br />
+                    {company.postalCode} {company.city}
+                  </address>
+                  <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-white underline decoration-white/40 underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-white">
+                    Itinéraire <Icon name="external" size={14} />
+                  </a>
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <div className="hidden rounded-[8px] border border-rule bg-salt p-4 lg:block">
             <SeteMap />
           </div>
         </div>
-        <div className="col-span-12 lg:col-span-7">
-          <div className="rounded-tile bg-salt p-5 sm:p-8 lg:p-10">
-            <h2 className="t-label mb-6">Écrire à MCI</h2>
-            <ContactFromQuery />
-          </div>
-        </div>
+        <section aria-labelledby="ecrire" className="min-w-0 rounded-[8px] border border-rule bg-white p-5 sm:p-8 lg:col-span-7">
+          <h2 id="ecrire" className="t-h2">
+            Écrire à MCI
+          </h2>
+          <p className="mb-6 mt-2 text-sm text-ink/70">Les champs marqués d&apos;un astérisque sont obligatoires.</p>
+          <ContactFromQuery />
+        </section>
       </div>
     </div>
   );

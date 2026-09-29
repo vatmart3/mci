@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import { useUI } from "@/lib/store/ui";
 
 /**
- * Le seul effet systématique du site : le packshot vole en arc jusqu'au compteur
- * du bon de commande, qui rebondit à l'arrivée. Web Animations API, ~550 ms.
+ * Retour visuel d'ajout : le packshot file en arc court jusqu'au compteur
+ * du bon de commande. Web Animations API, ~450 ms, désactivé si mouvement réduit.
  */
 export function FlyLayer() {
   const flights = useUI((s) => s.flights);
@@ -28,18 +28,18 @@ export function FlyLayer() {
       const y0 = f.from.top + f.from.height / 2 - size / 2;
       const x1 = t.left + t.width / 2 - size / 2;
       const y1 = t.top + t.height / 2 - size / 2;
-      const lift = Math.min(160, Math.abs(y1 - y0) * 0.5 + 60);
+      const lift = Math.min(120, Math.abs(y1 - y0) * 0.35 + 40);
       const frames: Keyframe[] = [];
       for (let i = 0; i <= 12; i++) {
         const k = i / 12;
         const x = x0 + (x1 - x0) * k;
         const y = y0 + (y1 - y0) * k - Math.sin(Math.PI * k) * lift;
         const s = 1 - 0.75 * k;
-        frames.push({ transform: `translate(${x}px, ${y}px) scale(${s}) rotate(${-12 * k}deg)`, opacity: k > 0.9 ? 0 : 1 });
+        frames.push({ transform: `translate(${x}px, ${y}px) scale(${s})`, opacity: k > 0.9 ? 0 : 1 });
       }
       node.style.width = `${size}px`;
       node.style.height = `${size}px`;
-      const anim = node.animate(frames, { duration: 560, easing: "cubic-bezier(0.22, 1, 0.36, 1)", fill: "forwards" });
+      const anim = node.animate(frames, { duration: 450, easing: "cubic-bezier(0.16, 1, 0.3, 1)", fill: "forwards" });
       anim.onfinish = () => land(f.id);
     }
   }, [flights, land]);
@@ -48,7 +48,7 @@ export function FlyLayer() {
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[80]">
       {flights.map((f) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={f.id} id={`flight-${f.id}`} src={f.image} alt="" className="absolute left-0 top-0 object-contain drop-shadow-[0_16px_24px_rgb(0_0_0/0.22)] will-change-transform" style={{ width: 0, height: 0 }} />
+        <img key={f.id} id={`flight-${f.id}`} src={f.image} alt="" className="absolute left-0 top-0 object-contain drop-shadow-[0_8px_16px_rgb(22_35_45/0.2)] will-change-transform" style={{ width: 0, height: 0 }} />
       ))}
     </div>
   );

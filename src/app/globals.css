@@ -1,59 +1,64 @@
 @import "tailwindcss";
 
 /* ─────────────────────────────────────────────────────────────
-   Design tokens MCI — le thème Tailwind par défaut est remis à zéro :
-   seules les valeurs ci-dessous existent (voir DESIGN_NOTES.md).
+   Système v3 — « fournisseur professionnel » (voir DESIGN.md).
+   Le thème Tailwind est remis à zéro : seules ces valeurs existent.
    ───────────────────────────────────────────────────────────── */
 @theme {
   --color-*: initial;
+  /* marque */
   --color-mci: #1f6a99;
+  --color-deep: #154d72;
+  --color-night: #0c2b40;
+  --color-sky: #cfe3f1;
+  /* action : uniquement ajouter / commander / envoyer */
   --color-action: #f89746;
-  --color-ink: #1d1d1f;
-  --color-deep: #0a2233;
-  --color-night: #05121c;
+  --color-action-hover: #ec8431;
+  /* neutres acier (teintés bleu) */
+  --color-ink: #16232d;
   --color-white: #ffffff;
-  --color-salt: #f5f5f7;
-  --color-rule: #d2d2d7;
-  --color-sky: #6fb6e4;
-  --color-ok: #1f8a4c;
-  --color-warn: #b7791f;
-  --color-danger: #d1352b;
+  --color-salt: #f3f6f8;
+  --color-steel: #e6ecf0;
+  --color-rule: #d5dde3;
   --color-black: #000000;
+  /* états */
+  --color-ok: #1d7a46;
+  --color-warn: #a86a0b;
+  --color-danger: #c2362c;
 
   --font-*: initial;
-  --font-display: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-body: var(--font-geist), "Geist", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), "Geist Mono", ui-monospace, monospace;
+  --font-display: var(--font-barlow-sc), "Barlow Semi Condensed", ui-sans-serif, system-ui, sans-serif;
+  --font-body: var(--font-barlow), "Barlow", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 
   --spacing: 4px;
 
   --radius-*: initial;
-  --radius-tech: 12px;
-  --radius-box: 22px;
-  --radius-tile: 32px;
+  --radius-tech: 4px;
+  --radius-box: 8px;
+  --radius-tile: 12px;
 
   --shadow-*: initial;
-  --shadow-sheet: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 32px -12px rgb(0 0 0 / 0.14);
-  --shadow-drawer: 0 0 0 1px rgb(0 0 0 / 0.04), -24px 0 64px -24px rgb(0 0 0 / 0.25);
-  --shadow-tile: 0 2px 4px rgb(0 0 0 / 0.03), 0 24px 48px -24px rgb(0 0 0 / 0.18);
-  --shadow-float: 0 32px 64px -24px rgb(10 34 51 / 0.35);
+  --shadow-sheet: 0 1px 2px rgb(22 35 45 / 0.06), 0 8px 24px -12px rgb(22 35 45 / 0.18);
+  --shadow-drawer: -12px 0 40px -16px rgb(22 35 45 / 0.3);
+  --shadow-tile: 0 2px 4px rgb(22 35 45 / 0.04), 0 16px 32px -16px rgb(22 35 45 / 0.22);
+  --shadow-float: 0 24px 48px -20px rgb(12 43 64 / 0.35);
 
   --text-*: initial;
-  --text-xs: 0.75rem;
-  --text-xs--line-height: 1.4;
-  --text-sm: 0.875rem;
+  --text-xs: 0.8125rem;
+  --text-xs--line-height: 1.35;
+  --text-sm: 0.9375rem;
   --text-sm--line-height: 1.45;
   --text-base: 1.0625rem;
-  --text-base--line-height: 1.47;
+  --text-base--line-height: 1.55;
   --text-md: 1.1875rem;
-  --text-md--line-height: 1.42;
-  --text-lg: 1.3125rem;
-  --text-lg--line-height: 1.38;
+  --text-md--line-height: 1.45;
+  --text-lg: 1.375rem;
+  --text-lg--line-height: 1.35;
 
   --ease-*: initial;
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 
   --breakpoint-*: initial;
   --breakpoint-sm: 40rem;
@@ -63,22 +68,16 @@
   --breakpoint-2xl: 96rem;
 
   --animate-*: initial;
-  --animate-drift: drift 18s ease-in-out infinite alternate;
-  --animate-rise: rise 900ms var(--ease-out) both;
-  --animate-shimmer: shimmer 8s linear infinite;
+  --animate-drop: drop 180ms var(--ease-out) both;
+  --animate-fade: fade 160ms var(--ease-out) both;
 
-  @keyframes drift {
-    0% { transform: translate3d(-6%, -4%, 0) scale(1); }
-    50% { transform: translate3d(5%, 6%, 0) scale(1.12); }
-    100% { transform: translate3d(-3%, 8%, 0) scale(0.96); }
-  }
-  @keyframes rise {
-    from { opacity: 0; transform: translate3d(0, 32px, 0); }
+  @keyframes drop {
+    from { opacity: 0; transform: translate3d(0, -6px, 0); }
     to { opacity: 1; transform: none; }
   }
-  @keyframes shimmer {
-    from { background-position: 0% 50%; }
-    to { background-position: 200% 50%; }
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
 
@@ -86,9 +85,10 @@
 @layer base {
   :root {
     --gutter: 24px;
-    --margin: clamp(16px, 4vw, 64px);
-    --header-h: 52px;
+    --margin: clamp(16px, 4vw, 48px);
+    --header-h: 76px;
     color-scheme: light;
+    accent-color: var(--color-mci);
   }
   @media (max-width: 639px) {
     :root {
@@ -98,32 +98,26 @@
   html {
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    scroll-padding-top: 64px;
-  }
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
+    scroll-padding-top: 96px;
+    scrollbar-color: #b9c5ce var(--color-salt);
   }
   body {
     background: var(--color-white);
     color: var(--color-ink);
     font-family: var(--font-body);
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: var(--text-base);
+    line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "ss01" 1;
-    letter-spacing: -0.011em;
+    font-variant-numeric: lining-nums;
     overflow-x: clip;
   }
   ::selection {
-    background: rgb(31 106 153 / 0.2);
+    background: #bcd8ec;
+    color: var(--color-ink);
   }
   :focus-visible {
-    outline: 3px solid rgb(31 106 153 / 0.5);
+    outline: 2px solid var(--color-mci);
     outline-offset: 2px;
   }
   a {
@@ -143,6 +137,10 @@
     font: inherit;
     color: inherit;
   }
+  input,
+  textarea {
+    caret-color: var(--color-mci);
+  }
   img,
   svg,
   canvas {
@@ -159,91 +157,71 @@
   p {
     text-wrap: pretty;
   }
+  table {
+    font-variant-numeric: tabular-nums;
+  }
   [hidden] {
     display: none !important;
   }
 }
 
-/* ─────────────── Typographie (Geist, graisses et approches façon Apple) ─────────────── */
+/* ─────────────── Typographie ─────────────── */
 @layer components {
   .t-display {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(3rem, 1.1rem + 7.2vw, 8.5rem);
-    line-height: 0.98;
-    letter-spacing: -0.045em;
+    font-size: clamp(2.5rem, 1.6rem + 3.4vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.012em;
   }
   .t-h1 {
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: clamp(2.25rem, 1.3rem + 3.6vw, 4.75rem);
-    line-height: 1.02;
-    letter-spacing: -0.035em;
+    font-size: clamp(2rem, 1.45rem + 2vw, 3.25rem);
+    line-height: 1.06;
+    letter-spacing: -0.01em;
   }
   .t-h2 {
     font-family: var(--font-display);
-    font-weight: 650;
-    font-size: clamp(1.75rem, 1.2rem + 1.9vw, 3rem);
-    line-height: 1.06;
-    letter-spacing: -0.03em;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 1.2rem + 1.1vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.005em;
   }
   .t-label {
     font-family: var(--font-display);
     font-weight: 600;
-    font-size: 1.1875rem;
+    font-size: 1.25rem;
     line-height: 1.2;
-    letter-spacing: -0.015em;
   }
+  /* ancien sur-titre : neutralisé (plus de label au-dessus des titres) */
   .t-eyebrow {
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: clamp(1rem, 0.9rem + 0.4vw, 1.3125rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
-    /* orange brûlé (contraste AA sur blanc et gris clair) ; l'orange vif reste réservé aux actions */
-    color: #b64400;
+    display: none;
   }
   .t-mono {
     font-family: var(--font-mono);
     font-feature-settings: "tnum" 1;
-    letter-spacing: 0;
   }
+  /* code produit : c'est une donnée, composée dans la police de titrage */
   .t-code {
-    font-family: var(--font-mono);
-    font-weight: 500;
+    font-family: var(--font-display);
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.02em;
-    font-feature-settings: "tnum" 1;
+    font-variant-numeric: tabular-nums;
   }
   .t-lead {
-    font-size: clamp(1.1875rem, 1.05rem + 0.55vw, 1.5rem);
-    line-height: 1.4;
-    letter-spacing: -0.012em;
-    font-weight: 500;
+    font-size: clamp(1.125rem, 1.05rem + 0.3vw, 1.3125rem);
+    line-height: 1.5;
   }
   .t-num {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.05em;
-    font-feature-settings: "tnum" 1;
-    line-height: 0.9;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
   }
-  /* Texte dégradé : réservé aux grands titres d'accueil */
-  .t-sheen {
-    background: linear-gradient(100deg, #1f6a99 0%, #3d9bd6 30%, #f89746 60%, #1f6a99 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-shimmer);
-  }
-  .t-sheen-night {
-    background: linear-gradient(100deg, #ffffff 0%, #9fd3f5 35%, #ffd2ad 65%, #ffffff 100%);
-    background-size: 200% 100%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: var(--animate-shimmer);
+  .prose-mci {
+    max-width: 70ch;
   }
   .prose-mci p + p {
     margin-top: 16px;
@@ -253,8 +231,8 @@
   }
   .prose-mci h3 {
     margin: 32px 0 12px;
-    font-weight: 600;
-    font-size: 1.1875rem;
+    font-weight: 700;
+    font-size: 1.25rem;
   }
   .prose-mci ul {
     margin: 12px 0;
@@ -270,13 +248,13 @@
   /* ─────────────── Grille ─────────────── */
   .wrap {
     width: 100%;
-    max-width: calc(1280px + 2 * var(--margin));
+    max-width: calc(1320px + 2 * var(--margin));
     margin-inline: auto;
     padding-inline: var(--margin);
   }
   .wrap-narrow {
     width: 100%;
-    max-width: calc(980px + 2 * var(--margin));
+    max-width: calc(920px + 2 * var(--margin));
     margin-inline: auto;
     padding-inline: var(--margin);
   }
@@ -289,74 +267,57 @@
     min-width: 0;
   }
 
-  /* Lien texte (actions secondaires) : bleu, flèche, soulignement au survol */
+  /* Lien texte : bleu MCI, souligné discret, plein au survol */
   .link-u {
     color: var(--color-mci);
     text-decoration: underline;
     text-decoration-thickness: 1px;
-    text-decoration-color: rgb(31 106 153 / 0.35);
-    text-underline-offset: 4px;
-    transition: text-decoration-color 200ms var(--ease-out);
+    text-decoration-color: rgb(31 106 153 / 0.4);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 160ms var(--ease-out), color 160ms var(--ease-out);
   }
   .link-u:hover {
+    color: var(--color-deep);
     text-decoration-color: currentColor;
   }
 
-  /* Ancien repère de coupe : neutralisé (carte arrondie) */
   .crop {
     position: relative;
   }
-
-  /* Fond pointillé discret */
   .tech-grid,
   .tech-grid-lg {
-    background-image: radial-gradient(rgb(0 0 0 / 0.07) 1px, transparent 1px);
-    background-size: 20px 20px;
+    background-color: var(--color-salt);
   }
   .dotted-line {
-    background-image: linear-gradient(90deg, rgb(0 0 0 / 0.18) 50%, transparent 50%);
+    background-image: linear-gradient(90deg, var(--color-rule) 50%, transparent 50%);
     background-size: 6px 1px;
     background-repeat: repeat-x;
     background-position: left bottom;
   }
 
-  /* Tuile arrondie façon « bento » */
+  /* Carte : fond blanc, filet acier, survol = ombre portée */
   .tile {
     position: relative;
     overflow: hidden;
     isolation: isolate;
     border-radius: var(--radius-tile);
     background: var(--color-white);
-    transition: transform 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+    border: 1px solid var(--color-rule);
+    transition: box-shadow 200ms var(--ease-out), border-color 200ms var(--ease-out), transform 200ms var(--ease-out);
   }
-  .tile-hover:hover,
-  .tile-hover.is-in:hover {
-    transform: translateY(-4px) scale(1.005);
+  .tile-hover:hover {
+    border-color: #b9c5ce;
     box-shadow: var(--shadow-tile);
+    transform: translateY(-2px);
   }
-
-  /* Verre dépoli (barre de navigation, pastilles) */
-  .glass {
-    background: rgb(255 255 255 / 0.72);
-    -webkit-backdrop-filter: saturate(180%) blur(20px);
-    backdrop-filter: saturate(180%) blur(20px);
-  }
+  .glass,
   .glass-night {
-    background: rgb(10 20 30 / 0.55);
-    -webkit-backdrop-filter: saturate(160%) blur(20px);
-    backdrop-filter: saturate(160%) blur(20px);
+    background: var(--color-white);
   }
 
-  /* Apparition au défilement (pilotée par [data-reveal] + IntersectionObserver) */
-  [data-reveal] {
-    opacity: 0;
-    transform: translate3d(0, 40px, 0);
-    transition: opacity 1000ms var(--ease-out) var(--reveal-delay, 0ms), transform 1000ms var(--ease-out) var(--reveal-delay, 0ms), box-shadow 500ms var(--ease-out);
-  }
-  [data-reveal].is-in,
-  html:not(.js) [data-reveal] {
-    opacity: 1;
-    transform: none;
+  /* Plateau produit : le packshot posé sur un fond acier */
+  .plate {
+    background: radial-gradient(120% 90% at 50% 100%, #e3eaef 0%, var(--color-salt) 60%);
   }
 
   .sr-only-focusable:not(:focus):not(:focus-within) {
@@ -368,17 +329,13 @@
     white-space: nowrap;
   }
 
-  /* Scroll horizontal natif */
   .snap-row {
     position: relative;
     display: flex;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-  .snap-row::-webkit-scrollbar {
-    display: none;
+    scrollbar-width: thin;
   }
   .snap-row > * {
     scroll-snap-align: start;
@@ -397,10 +354,6 @@ html[data-cookies="1"] [data-cookie-banner] {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
-  }
-  [data-reveal] {
-    opacity: 1 !important;
-    transform: none !important;
   }
 }
 

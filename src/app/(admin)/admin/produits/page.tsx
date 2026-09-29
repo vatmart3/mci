@@ -41,12 +41,12 @@ export default function AdminProducts() {
           <Icon name="plus" size={16} /> Nouveau produit
         </ButtonLink>
       </div>
-      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+      <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
         <div className="w-full sm:w-72">
-          <Input fieldSize="sm" className="rounded-full! pl-4!" aria-label="Rechercher" placeholder="Code, nom…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <Input fieldSize="sm" aria-label="Rechercher" placeholder="Code, nom…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
         <div className="w-full sm:w-64">
-          <Select fieldSize="sm" className="rounded-full! pl-4!" aria-label="Famille" value={fam} onChange={(e) => setFam(e.target.value)}>
+          <Select fieldSize="sm" aria-label="Famille" value={fam} onChange={(e) => setFam(e.target.value)}>
             <option value="">Toutes les familles</option>
             {families.map((f) => (
               <option key={f.slug} value={f.slug}>
@@ -55,29 +55,29 @@ export default function AdminProducts() {
             ))}
           </Select>
         </div>
-        <label className="flex cursor-pointer items-center gap-2 rounded-box bg-white px-4 py-2 text-sm ring-1 ring-black/5 sm:rounded-full">
+        <label className="flex min-h-9 cursor-pointer items-center gap-2 rounded-[6px] border border-rule bg-white px-3 py-1.5 text-sm transition-colors duration-150 hover:border-ink/30">
           <input type="checkbox" className="size-4 shrink-0 accent-mci" checked={onlyTodo} onChange={(e) => setOnlyTodo(e.target.checked)} /> Seulement les fiches avec des champs à confirmer
         </label>
       </div>
-      <div className="overflow-hidden rounded-box bg-white ring-1 ring-black/5">
+      <div className="overflow-hidden rounded-[8px] border border-rule bg-white">
         <div className="relative overflow-x-auto">
-          <table className="w-full min-w-[900px] text-sm">
-            <thead className="text-left text-xs text-ink/70">
+          <table className="w-full min-w-[900px] text-left text-sm">
+            <thead className="border-b border-rule bg-steel/60 text-xs font-semibold text-ink/70">
               <tr>
-                <th className="py-3 pl-5 pr-3 font-medium">Produit</th>
-                <th className="px-3 py-3 font-medium">Famille(s)</th>
-                <th className="px-3 py-3 font-medium">FT</th>
-                <th className="px-3 py-3 font-medium">À confirmer</th>
-                <th className="px-3 py-3 font-medium">Actif</th>
-                <th className="py-3 pl-3 pr-5 font-medium">En avant</th>
+                <th scope="col" className="py-2.5 pl-4 pr-3">Produit</th>
+                <th scope="col" className="px-3 py-2.5">Famille(s)</th>
+                <th scope="col" className="px-3 py-2.5">FT</th>
+                <th scope="col" className="px-3 py-2.5">À confirmer</th>
+                <th scope="col" className="px-3 py-2.5">Actif</th>
+                <th scope="col" className="py-2.5 pl-3 pr-4">En avant</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-rule">
               {list.map((p) => (
-                <tr key={p.id} className="border-t border-black/5 transition-colors duration-200 hover:bg-salt">
-                  <td className="py-2.5 pl-5 pr-3">
+                <tr key={p.id} className="transition-colors duration-150 hover:bg-salt">
+                  <td className="py-2 pl-4 pr-3">
                     <Link href={`/admin/produits/${p.id}`} className="group flex items-center gap-3">
-                      <span className="shrink-0 overflow-hidden rounded-tech bg-salt">
+                      <span className="shrink-0 overflow-hidden rounded-[4px] border border-rule bg-salt">
                         <ProductVisual product={p} size={40} alt="" />
                       </span>
                       <span className="min-w-0">
@@ -86,13 +86,13 @@ export default function AdminProducts() {
                       </span>
                     </Link>
                   </td>
-                  <td className="px-3 py-2.5 text-xs text-ink/70">{p.families.map((f) => familyBySlug.get(f)?.name).join(", ")}</td>
-                  <td className="px-3 py-2.5">{p.technicalSheetUrl ? <Badge tone="ok">OUI</Badge> : <Badge tone="warn">NON</Badge>}</td>
-                  <td className="px-3 py-2.5">{p.toConfirm.length ? <ToConfirm>{p.toConfirm.length} CHAMPS</ToConfirm> : <Badge tone="ok">OK</Badge>}</td>
-                  <td className="px-3 py-2.5">
+                  <td className="px-3 py-2 text-xs text-ink/80">{p.families.map((f) => familyBySlug.get(f)?.name).join(", ")}</td>
+                  <td className="px-3 py-2">{p.technicalSheetUrl ? <Badge tone="ok">OUI</Badge> : <Badge tone="warn">NON</Badge>}</td>
+                  <td className="px-3 py-2">{p.toConfirm.length ? <ToConfirm>{p.toConfirm.length} CHAMPS</ToConfirm> : <Badge tone="ok">OK</Badge>}</td>
+                  <td className="px-3 py-2">
                     <input type="checkbox" className="size-4 cursor-pointer accent-mci" aria-label={`Actif ${p.code}`} checked={p.active} onChange={() => toggle(p.id, "active")} />
                   </td>
-                  <td className="py-2.5 pl-3 pr-5">
+                  <td className="py-2 pl-3 pr-4">
                     <input type="checkbox" className="size-4 cursor-pointer accent-mci" aria-label={`Mis en avant ${p.code}`} checked={p.featured} onChange={() => toggle(p.id, "featured")} />
                   </td>
                 </tr>

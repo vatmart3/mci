@@ -1,130 +1,150 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useRef } from "react";
-import { ButtonLink } from "@/components/ui/Button";
+import { useId, useMemo, useRef, useState } from "react";
+import { useCatalog } from "@/lib/store/catalog";
+import { useAddToCart } from "@/components/cart/AddToCart";
+import { ProductVisual } from "@/components/catalog/ProductVisual";
+import { Stepper } from "@/components/ui/Stepper";
 import { Icon } from "@/components/ui/Icon";
-import { LogoMark } from "@/components/brand/Logo";
-
-const lines = [
-  { ref: "DG90", text: "Dégraissant graisses cuites", qty: "2 × 5 L" },
-  { ref: "KERMEX", text: "Anti-mousses et algues", qty: "1 × 20 L" },
-  { ref: "SANIKEL R.", text: "Détartrant sanitaires", qty: "4 × 5 L" },
-];
+import { norm } from "@/lib/format";
 
 const steps = [
-  { t: "Choisissez", d: "Vos produits et leurs conditionnements, depuis le catalogue ou par référence." },
-  { t: "Précisez", d: "Votre n° de bon de commande interne, ou d'engagement pour les collectivités." },
-  { t: "MCI confirme", d: "Disponibilité, prix et délai, avant toute préparation." },
-  { t: "Retrouvez tout", d: "Bons de livraison et factures dans votre espace pro." },
+  { t: "Composez votre bon", d: "Depuis le catalogue, par référence, ou en rechargeant une commande passée." },
+  { t: "Indiquez vos références d'achat", d: "N° de bon de commande interne, n° d'engagement et code service Chorus Pro pour les collectivités." },
+  { t: "MCI confirme", d: "Disponibilité, prix et délai vous sont confirmés avant toute préparation." },
+  { t: "Livraison et facture", d: "Bon de livraison et facture sont rangés dans votre espace pro." },
 ];
 
-/**
- * Commander, concrètement : les étapes s'allument une à une pendant que le bon de commande
- * (carte arrondie) se remplit au défilement, jusqu'à la pastille « Confirmée ». Mouvement réduit : bon déjà rempli.
- */
-export function OrderSection() {
-  const root = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!root.current) return;
-    if (reduce) return;
-    let ctx: { revert: () => void } | null = null;
-    let cancelled = false;
-    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (cancelled || !root.current) return;
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        const tl = gsap.timeline({ scrollTrigger: { trigger: "[data-sheet]", start: "top 80%", end: "bottom 50%", scrub: 0.6 } });
-        const stepsEl = gsap.utils.toArray<HTMLElement>("[data-step] [data-dot]");
-        const on = { backgroundColor: "#1f6a99", color: "#ffffff", scale: 1.08, duration: 0.2 };
-        tl.to(stepsEl[0]!, on);
-        gsap.utils.toArray<HTMLElement>("[data-line]").forEach((el, i) => {
-          tl.fromTo(el, { opacity: 0, y: 16, filter: "blur(6px)" }, { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.5, ease: "power2.out" });
-          if (i === 1) tl.to(stepsEl[1]!, on, "<");
-        });
-        tl.to(stepsEl[2]!, on);
-        tl.fromTo("[data-stamp]", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, ease: "back.out(2.2)", duration: 0.5 }, "<");
-        tl.to(stepsEl[3]!, on);
-      }, root);
-    });
-    return () => {
-      cancelled = true;
-      ctx?.revert();
-    };
-  }, []);
+/** Ajout par référence : on tape le code, on choisit le conditionnement et la quantité, c'est dans le bon. */
+function QuickAdd() {
+  const products = useCatalog((s) => s.products);
+  const add = useAddToCart();
+  const id = useId();
+  const btn = useRef<HTMLButtonElement>(null);
+  const [code, setCode] = useState("");
+  const [qty, setQty] = useState(1);
+  const [pack, setPack] = useState("");
+  const [done, setDone] = useState<string | null>(null);
+  const product = useMemo(() => {
+    const c = norm(code).replace(/\s+/g, "");
+    if (c.length < 2) return undefined;
+    return products.find((p) => p.active && norm(p.code).replace(/\s+/g, "") === c) ?? products.find((p) => p.active && norm(p.code).replace(/\s+/g, "").startsWith(c));
+  }, [code, products]);
+  const packId = product?.packagings.some((k) => k.id === pack) ? pack : (product?.packagings[0]?.id ?? "");
 
   return (
-    <section ref={root} aria-labelledby="commander-title" className="bg-salt py-24 lg:py-32">
-      <div className="wrap grid grid-cols-1 items-center gap-16 lg:grid-cols-2 [&>*]:min-w-0">
+    <form
+      className="rounded-[12px] border border-rule bg-white p-5 shadow-sheet sm:p-6"
+      onSubmit={(e) => {
+        e.preventDefault();
+        if (!product) return;
+        add(product, packId, qty, btn.current);
+        setDone(`${qty} × ${product.code} ajouté${qty > 1 ? "s" : ""} au bon de commande.`);
+        setCode("");
+        setQty(1);
+      }}
+    >
+      <p className="font-display text-xl font-bold">Ajouter par référence</p>
+      <p className="mt-1 text-sm text-ink/70">Vous connaissez le code ? Pas besoin de passer par le catalogue.</p>
+
+      <div className="mt-5 grid gap-3 sm:grid-cols-[1fr_auto]">
         <div>
-          <div data-reveal>
-            <p className="t-eyebrow">Commander</p>
-            <h2 id="commander-title" className="t-h1 mt-3 max-w-[14ch]">
-              Commander, concrètement.
-            </h2>
-          </div>
-          <ol className="mt-10 space-y-6">
+          <label htmlFor={`${id}-code`} className="mb-1.5 block text-sm font-semibold">
+            Référence
+          </label>
+          <input
+            id={`${id}-code`}
+            list={`${id}-codes`}
+            value={code}
+            onChange={(e) => {
+              setCode(e.target.value);
+              setDone(null);
+            }}
+            placeholder="Ex. DG90, KERMEX, CST"
+            autoComplete="off"
+            className="h-11 w-full rounded-[6px] border border-rule px-3 font-display text-lg font-bold uppercase tracking-wide placeholder:font-body placeholder:text-base placeholder:font-normal placeholder:normal-case placeholder:tracking-normal placeholder:text-ink/55 focus:border-mci focus:shadow-[0_0_0_3px_rgb(31_106_153/0.2)] focus:outline-none"
+          />
+          <datalist id={`${id}-codes`}>
+            {products
+              .filter((p) => p.active)
+              .map((p) => (
+                <option key={p.id} value={p.code}>
+                  {p.short}
+                </option>
+              ))}
+          </datalist>
+        </div>
+        <div>
+          <span className="mb-1.5 block text-sm font-semibold">Quantité</span>
+          <Stepper value={qty} onChange={setQty} label="Quantité" />
+        </div>
+      </div>
+
+      <div className="mt-4 flex min-h-[72px] items-center gap-4 rounded-[8px] bg-salt p-3">
+        {product ? (
+          <>
+            <span className="plate grid size-14 shrink-0 place-items-center rounded-[6px]">
+              <ProductVisual product={product} size={56} alt="" className="h-12 w-auto" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="t-code block text-lg leading-tight text-mci">{product.code}</span>
+              <span className="block truncate text-sm">{product.short}</span>
+            </span>
+            <label className="sr-only" htmlFor={`${id}-pack`}>
+              Conditionnement
+            </label>
+            <select id={`${id}-pack`} value={packId} onChange={(e) => setPack(e.target.value)} className="h-9 max-w-[42%] cursor-pointer rounded-[6px] border border-rule bg-white px-2 text-sm">
+              {product.packagings.map((k) => (
+                <option key={k.id} value={k.id}>
+                  {k.label}
+                </option>
+              ))}
+            </select>
+          </>
+        ) : (
+          <p className="text-sm text-ink/70">{code.trim().length >= 2 ? `Aucune référence ne commence par « ${code.trim().toUpperCase()} ».` : "Le produit correspondant s'affiche ici."}</p>
+        )}
+      </div>
+
+      <button ref={btn} type="submit" disabled={!product} className="mt-4 inline-flex h-12 w-full items-center justify-center gap-2 rounded-[6px] bg-action font-semibold text-ink transition-colors duration-150 hover:bg-action-hover disabled:opacity-50">
+        <Icon name="plus" size={18} /> Ajouter au bon de commande
+      </button>
+      <p role="status" className="mt-3 min-h-5 text-sm font-medium text-ok">
+        {done}
+      </p>
+      <p className="border-t border-rule pt-3 text-sm">
+        Toute une liste à saisir ?{" "}
+        <Link href="/commande-rapide" className="link-u font-semibold">
+          Commande rapide, ligne par ligne ou par import
+        </Link>
+      </p>
+    </form>
+  );
+}
+
+export function OrderSection() {
+  return (
+    <section aria-labelledby="commander-title" className="py-16 lg:py-24">
+      <div className="wrap grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8 [&>*]:min-w-0">
+        <div className="lg:col-span-6">
+          <h2 id="commander-title" className="t-h1 max-w-[20ch]">
+            Commander en ligne, comme par téléphone
+          </h2>
+          <p className="t-lead mt-3 max-w-[52ch] text-ink/70">Avec ou sans compte. Pas de paiement en ligne : virement, facture à échéance ou mandat administratif.</p>
+          <ol className="mt-8 space-y-6">
             {steps.map((s, i) => (
-              <li key={s.t} data-step className="flex gap-5">
-                <span data-dot className="t-num grid size-12 shrink-0 place-items-center rounded-full bg-white text-lg text-mci shadow-sheet">{i + 1}</span>
-                <span>
-                  <span className="t-label block">{s.t}</span>
+              <li key={s.t} className="flex gap-4">
+                <span className="t-num grid size-10 shrink-0 place-items-center rounded-[6px] bg-mci text-lg text-white">{i + 1}</span>
+                <span className="pt-1">
+                  <span className="block font-display text-xl font-bold leading-tight">{s.t}</span>
                   <span className="mt-1 block text-ink/70">{s.d}</span>
                 </span>
               </li>
             ))}
           </ol>
-          <p className="mt-8 max-w-[48ch] text-sm text-ink/70">Pas de paiement en ligne : virement, facture à échéance ou mandat administratif. Facturation Chorus Pro pour les entités publiques.</p>
-          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-4">
-            <ButtonLink href="/espace-pro?creer=1" variant="primary" size="lg">
-              Créer mon compte pro
-            </ButtonLink>
-            <Link href="/catalogue" className="text-md font-medium text-mci hover:underline">
-              Commander sans compte ›
-            </Link>
-          </div>
         </div>
-
-        <div data-sheet className="relative">
-          <span aria-hidden="true" className="absolute inset-x-8 -bottom-6 top-8 -z-10 rounded-tile bg-mci/10 blur-2xl" />
-          <div className="mx-auto max-w-[560px] rounded-tile bg-white p-6 shadow-float ring-1 ring-black/5 sm:p-10" aria-label="Exemple de bon de commande rempli" role="img">
-            <div className="flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <LogoMark size={36} />
-                <div>
-                  <p className="font-semibold leading-none">Bon de commande</p>
-                  <p className="mt-1 text-xs text-ink/70">MCI Sète · exemple</p>
-                </div>
-              </div>
-              <p className="t-mono rounded-full bg-salt px-3 py-1 text-xs text-ink/70">MCI-2026-00042</p>
-            </div>
-            <div className="mt-6 grid grid-cols-2 gap-3 text-sm">
-              <div className="rounded-tech bg-salt px-4 py-3">
-                <p className="text-xs text-ink/70">Établissement</p>
-                <p className="mt-1 truncate font-medium">Services techniques</p>
-              </div>
-              <div className="rounded-tech bg-salt px-4 py-3">
-                <p className="text-xs text-ink/70">N° d&apos;engagement</p>
-                <p className="t-mono mt-1 truncate font-medium">ENG-2026-0412</p>
-              </div>
-            </div>
-            <ul className="mt-6 space-y-2">
-              {lines.map((l) => (
-                <li key={l.ref} data-line className="flex items-center gap-4 rounded-tech px-2 py-3 ring-1 ring-black/5">
-                  <span className="t-code w-24 shrink-0 text-sm text-mci">{l.ref}</span>
-                  <span className="min-w-0 flex-1 truncate text-sm">{l.text}</span>
-                  <span className="t-mono shrink-0 text-sm text-ink/70">{l.qty}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-xs text-ink/70">Prix et délai confirmés par MCI</p>
-              <span data-stamp className="inline-flex items-center gap-2 rounded-full bg-ok/12 px-4 py-2 text-sm font-semibold text-ok">
-                <Icon name="check" size={18} /> Commande confirmée
-              </span>
-            </div>
-          </div>
+        <div className="lg:col-span-5 lg:col-start-8">
+          <QuickAdd />
         </div>
       </div>
     </section>

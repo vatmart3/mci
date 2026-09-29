@@ -74,7 +74,7 @@ function CodeCell({
         placeholder="Code (ex. DG90)"
         autoComplete="off"
         spellCheck={false}
-        className={cx(inputClass, "t-code h-10 px-3 text-sm", product && "border-ok/60 bg-ok/5")}
+        className={cx(inputClass, "t-code h-10 px-3 text-base", product && "border-ok/60 bg-ok/5")}
         onChange={(e) => {
           onQuery(e.target.value);
           setOpen(true);
@@ -99,7 +99,7 @@ function CodeCell({
         }}
       />
       {open && list.length ? (
-        <ul id={listId} role="listbox" className="absolute left-0 top-full z-30 mt-2 max-h-72 w-[min(420px,80vw)] overflow-auto rounded-box bg-white p-1.5 shadow-float ring-1 ring-black/5">
+        <ul id={listId} role="listbox" className="absolute left-0 top-full z-30 mt-1 max-h-72 w-[min(420px,80vw)] animate-drop overflow-auto rounded-[6px] border border-rule bg-white p-1 shadow-sheet">
           {list.map((p, i) => (
             <li
               key={p.id}
@@ -112,10 +112,10 @@ function CodeCell({
                 setOpen(false);
               }}
               onMouseEnter={() => setHi(i)}
-              className={cx("flex cursor-pointer items-baseline gap-3 rounded-tech px-3 py-2.5 text-sm transition-colors duration-150", i === hi && "bg-salt")}
+              className={cx("flex cursor-pointer items-baseline gap-3 rounded-[4px] px-3 py-2 text-sm transition-colors duration-150", i === hi && "bg-sky/50")}
             >
-              <span className="t-code w-36 shrink-0 truncate text-mci">{p.code}</span>
-              <span className="truncate text-ink/70">{p.short}</span>
+              <span className="t-code w-32 shrink-0 truncate text-base text-mci">{p.code}</span>
+              <span className="truncate text-ink/80">{p.short}</span>
             </li>
           ))}
         </ul>
@@ -245,154 +245,169 @@ export function QuickOrder() {
     if (go) router.push("/commande");
   };
 
+  const th = "border-b border-rule bg-salt px-2 py-2.5 text-xs font-semibold text-ink/70";
+  const td = "border-b border-rule px-2 py-2";
+
   return (
-    <div className="grid-12 gap-y-6">
-      <section className="col-span-12 lg:col-span-8" aria-labelledby="grille">
+    <div className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-6 xl:gap-8">
+      <section className="min-w-0 lg:col-span-8" aria-labelledby="grille">
         <h2 id="grille" className="sr-only">
           Grille de saisie
         </h2>
-        <div className="relative overflow-x-auto overscroll-x-contain rounded-tile bg-salt p-2 sm:p-3">
-          <table className="w-full min-w-[640px] border-separate border-spacing-y-1.5 text-sm">
-            <thead className="text-left text-xs text-ink/70">
-              <tr>
-                <th className="w-12 px-3 pb-1 pt-2 font-medium">#</th>
-                <th className="w-[34%] px-2 pb-1 pt-2 font-medium">Référence</th>
-                <th className="px-2 pb-1 pt-2 font-medium">Désignation</th>
-                <th className="w-44 px-2 pb-1 pt-2 font-medium">Conditionnement</th>
-                <th className="w-24 px-2 pb-1 pt-2 font-medium">Qté</th>
-                <th className="w-12 px-2 pb-1 pt-2 font-medium">
-                  <span className="sr-only">Supprimer</span>
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((r, i) => {
-                const p = r.productId ? products.get(r.productId) : undefined;
-                const unknown = !p && r.query.trim().length >= 2 && !suggest(r.query).length;
-                return (
-                  <tr key={r.key} className="align-middle [&>td]:bg-white [&>td:first-child]:rounded-l-box [&>td:last-child]:rounded-r-box">
-                    <td className="px-3 text-xs font-medium tabular-nums text-ink/70">{String(i + 1).padStart(2, "0")}</td>
-                    <td className="px-2 py-2">
-                      <CodeCell
-                        row={r}
-                        products={products}
-                        suggest={suggest}
-                        onPick={(prod) => pick(r.key, prod)}
-                        onQuery={(q) => {
-                          const exact = byCompact.get(compact(q));
-                          update(r.key, { query: q, productId: exact?.id ?? null, packagingId: exact?.packagings[0]?.id ?? "" });
-                        }}
-                        inputRef={(el) => (el ? codeRefs.current.set(r.key, el) : codeRefs.current.delete(r.key))}
-                        onEnterWhenResolved={() => qtyRefs.current.get(r.key)?.focus()}
-                      />
-                    </td>
-                    <td className="px-2 py-2">
-                      {p ? (
-                        <span className="line-clamp-1 font-medium">{p.short}</span>
-                      ) : unknown ? (
-                        <span className="inline-flex items-center gap-1.5 text-danger">
-                          <Icon name="warning" size={16} className="shrink-0" />
-                          Référence inconnue
-                        </span>
-                      ) : (
-                        <span className="text-ink/30">—</span>
-                      )}
-                    </td>
-                    <td className="px-2 py-2">
-                      <label htmlFor={`qo-pack-${r.key}`} className="sr-only">
-                        Conditionnement ligne {i + 1}
-                      </label>
-                      <select id={`qo-pack-${r.key}`} disabled={!p} value={r.packagingId} onChange={(e) => update(r.key, { packagingId: e.target.value })} className={cx(inputClass, "h-10 cursor-pointer px-3 text-sm disabled:cursor-not-allowed disabled:border-transparent disabled:bg-salt")}>
-                        {p ? p.packagings.map((k) => <option key={k.id} value={k.id}>{k.label}</option>) : <option value="">—</option>}
-                      </select>
-                    </td>
-                    <td className="px-2 py-2">
-                      <input
-                        ref={(el) => {
-                          if (el) qtyRefs.current.set(r.key, el);
-                          else qtyRefs.current.delete(r.key);
-                        }}
-                        type="number"
-                        min={1}
-                        max={999}
-                        inputMode="numeric"
-                        aria-label={`Quantité ligne ${i + 1}`}
-                        value={r.quantity}
-                        onChange={(e) => update(r.key, { quantity: Math.max(1, Math.min(999, Math.round(Number(e.target.value) || 1))) })}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            e.preventDefault();
-                            nextRow(r.key);
-                          }
-                        }}
-                        className={cx(inputClass, "h-10 px-3 text-sm font-semibold tabular-nums")}
-                      />
-                    </td>
-                    <td className="px-2">
-                      <button type="button" className="grid size-9 place-items-center rounded-full text-ink/70 transition-colors duration-200 hover:bg-danger/10 hover:text-danger" aria-label={`Supprimer la ligne ${i + 1}`} onClick={() => setRows((rs) => (rs.length > 1 ? rs.filter((x) => x.key !== r.key) : [emptyRow()]))}>
-                        <Icon name="close" size={16} />
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <div className="mt-4 flex flex-wrap items-center justify-between gap-3 px-1">
-          <button type="button" className="inline-flex h-9 items-center gap-1.5 rounded-full bg-salt px-4 text-sm font-medium text-mci transition-colors duration-200 hover:bg-rule" onClick={() => setRows((rs) => [...rs, emptyRow()])}>
-            <Icon name="plus" size={16} /> Ajouter une ligne
-          </button>
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/70">
-            <span className="inline-flex items-center gap-1.5">
-              <kbd className="rounded-[6px] bg-salt px-1.5 py-0.5 font-body font-medium text-ink/70 ring-1 ring-black/10">Entrée</kbd> ligne suivante
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <kbd className="rounded-[6px] bg-salt px-1.5 py-0.5 font-body font-medium text-ink/70 ring-1 ring-black/10">↑↓</kbd> suggestions
-            </span>
-          </p>
+        <div className="rounded-[8px] border border-rule bg-white">
+          <div className="relative overflow-x-auto overscroll-x-contain xl:overflow-visible">
+            <table className="w-full min-w-[640px] border-separate border-spacing-0 text-sm">
+              <thead className="text-left">
+                <tr>
+                  <th scope="col" className={cx(th, "w-12 rounded-tl-[7px] border-r pl-3 text-center")}>
+                    #
+                  </th>
+                  <th scope="col" className={cx(th, "w-[32%] pl-3")}>
+                    Référence
+                  </th>
+                  <th scope="col" className={th}>
+                    Désignation
+                  </th>
+                  <th scope="col" className={cx(th, "w-44")}>
+                    Conditionnement
+                  </th>
+                  <th scope="col" className={cx(th, "w-24")}>
+                    Qté
+                  </th>
+                  <th scope="col" className={cx(th, "w-12 rounded-tr-[7px]")}>
+                    <span className="sr-only">Supprimer</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r, i) => {
+                  const p = r.productId ? products.get(r.productId) : undefined;
+                  const unknown = !p && r.query.trim().length >= 2 && !suggest(r.query).length;
+                  return (
+                    <tr key={r.key} className="align-middle transition-colors duration-150 focus-within:bg-sky/20">
+                      <td className={cx(td, "border-r bg-salt/60 px-3 text-center text-xs font-semibold tabular-nums text-ink/70")}>{String(i + 1).padStart(2, "0")}</td>
+                      <td className={cx(td, "pl-3")}>
+                        <CodeCell
+                          row={r}
+                          products={products}
+                          suggest={suggest}
+                          onPick={(prod) => pick(r.key, prod)}
+                          onQuery={(q) => {
+                            const exact = byCompact.get(compact(q));
+                            update(r.key, { query: q, productId: exact?.id ?? null, packagingId: exact?.packagings[0]?.id ?? "" });
+                          }}
+                          inputRef={(el) => (el ? codeRefs.current.set(r.key, el) : codeRefs.current.delete(r.key))}
+                          onEnterWhenResolved={() => qtyRefs.current.get(r.key)?.focus()}
+                        />
+                      </td>
+                      <td className={td}>
+                        {p ? (
+                          <span className="line-clamp-1 font-medium">{p.short}</span>
+                        ) : unknown ? (
+                          <span className="inline-flex items-center gap-1.5 font-medium text-danger">
+                            <Icon name="warning" size={16} className="shrink-0" />
+                            Référence inconnue
+                          </span>
+                        ) : (
+                          <span className="text-ink/50">—</span>
+                        )}
+                      </td>
+                      <td className={td}>
+                        <label htmlFor={`qo-pack-${r.key}`} className="sr-only">
+                          Conditionnement ligne {i + 1}
+                        </label>
+                        <select id={`qo-pack-${r.key}`} disabled={!p} value={r.packagingId} onChange={(e) => update(r.key, { packagingId: e.target.value })} className={cx(inputClass, "h-10 cursor-pointer px-2.5 text-sm disabled:cursor-not-allowed disabled:border-rule disabled:bg-salt disabled:text-ink/50")}>
+                          {p ? p.packagings.map((k) => <option key={k.id} value={k.id}>{k.label}</option>) : <option value="">—</option>}
+                        </select>
+                      </td>
+                      <td className={td}>
+                        <input
+                          ref={(el) => {
+                            if (el) qtyRefs.current.set(r.key, el);
+                            else qtyRefs.current.delete(r.key);
+                          }}
+                          type="number"
+                          min={1}
+                          max={999}
+                          inputMode="numeric"
+                          aria-label={`Quantité ligne ${i + 1}`}
+                          value={r.quantity}
+                          onChange={(e) => update(r.key, { quantity: Math.max(1, Math.min(999, Math.round(Number(e.target.value) || 1))) })}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              nextRow(r.key);
+                            }
+                          }}
+                          className={cx(inputClass, "h-10 px-2.5 text-right text-sm font-semibold tabular-nums")}
+                        />
+                      </td>
+                      <td className={cx(td, "pr-2")}>
+                        <button type="button" className="grid size-9 place-items-center rounded-[6px] text-ink/70 transition-colors duration-150 hover:bg-danger/10 hover:text-danger" aria-label={`Supprimer la ligne ${i + 1}`} onClick={() => setRows((rs) => (rs.length > 1 ? rs.filter((x) => x.key !== r.key) : [emptyRow()]))}>
+                          <Icon name="close" size={16} />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div className="flex flex-wrap items-center justify-between gap-3 px-3 py-3">
+            <Button variant="outline" size="sm" onClick={() => setRows((rs) => [...rs, emptyRow()])}>
+              <Icon name="plus" size={16} /> Ajouter une ligne
+            </Button>
+            <p className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-ink/70">
+              <span className="inline-flex items-center gap-1.5">
+                <kbd className="rounded-[4px] border border-rule bg-salt px-1.5 py-0.5 font-body font-semibold text-ink/80">Entrée</kbd> ligne suivante
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <kbd className="rounded-[4px] border border-rule bg-salt px-1.5 py-0.5 font-body font-semibold text-ink/80">↑↓</kbd> suggestions
+              </span>
+            </p>
+          </div>
         </div>
 
-        <div className="mt-8 flex flex-col gap-4 rounded-box bg-white p-5 shadow-sheet ring-1 ring-black/5 sm:flex-row sm:flex-wrap sm:items-center sm:p-6">
-          <Button variant="action" size="lg" disabled={!valid.length} onClick={() => submit(true)} className="w-full !px-5 !whitespace-normal text-center leading-tight sm:w-auto sm:!px-8">
+        <div className="mt-4 flex flex-col gap-3 rounded-[8px] border border-rule bg-salt p-4 sm:flex-row sm:flex-wrap sm:items-center sm:p-5">
+          <Button variant="action" size="lg" disabled={!valid.length} onClick={() => submit(true)} className="w-full !px-5 !whitespace-normal text-center leading-tight sm:w-auto sm:!px-6">
             Ajouter {valid.length || ""} ligne{valid.length > 1 ? "s" : ""} et valider
-            <Icon name="arrow" />
+            <Icon name="arrow" className="shrink-0" />
           </Button>
-          <Button variant="outline" size="lg" disabled={!valid.length} onClick={() => submit(false)} className="w-full !px-5 !whitespace-normal text-center leading-tight sm:w-auto sm:!px-8">
+          <Button variant="outline" size="lg" disabled={!valid.length} onClick={() => submit(false)} className="w-full !px-5 !whitespace-normal text-center leading-tight sm:w-auto sm:!px-6">
             Ajouter au bon, continuer
           </Button>
           {done != null ? (
-            <p role="status" className="inline-flex items-center gap-1.5 text-sm font-medium text-ok">
-              <Icon name="check" size={16} />
+            <p role="status" className="inline-flex items-center gap-1.5 text-sm font-semibold text-ok">
+              <Icon name="check" size={16} className="shrink-0" />
               {done} ligne{done > 1 ? "s" : ""} ajoutée{done > 1 ? "s" : ""} au bon de commande.
             </p>
           ) : null}
         </div>
       </section>
 
-      <aside className="col-span-12 space-y-6 lg:col-span-4">
-        <section aria-labelledby="import-title" className="rounded-box bg-salt p-6">
+      <aside className="min-w-0 space-y-6 lg:col-span-4">
+        <section aria-labelledby="import-title" className="rounded-[8px] border border-rule bg-salt p-5">
           <h2 id="import-title" className="t-label">
             Coller une liste
           </h2>
-          <p className="mt-2 text-sm text-ink/70">
-            Une ligne par référence : <span className="t-mono whitespace-nowrap rounded-[6px] bg-white px-1.5 py-0.5 text-xs text-ink ring-1 ring-black/5">CODE;CONDITIONNEMENT;QUANTITÉ</span>. Séparateurs acceptés : point-virgule, tabulation (copier depuis un tableur), virgule.
+          <p className="mt-2 text-sm text-ink/80">
+            Une ligne par référence : <span className="t-mono rounded-[4px] border border-rule bg-white px-1.5 py-0.5 text-xs text-ink [overflow-wrap:anywhere]">CODE;CONDITIONNEMENT;QUANTITÉ</span>. Séparateurs acceptés : point-virgule, tabulation (copier depuis un tableur), virgule.
           </p>
           <label htmlFor="qo-paste" className="sr-only">
             Liste à importer
           </label>
-          <Textarea id="qo-paste" rows={6} value={paste} onChange={(e) => setPaste(e.target.value)} className="t-mono mt-4 text-sm" placeholder={"DG90;5L;2\nKERMEX;20L;1\nOXYCHOC;CARTON-12;1"} />
-          <Button variant="primary" size="sm" className="mt-4" disabled={!paste.trim()} onClick={importText}>
+          <Textarea id="qo-paste" rows={6} value={paste} onChange={(e) => setPaste(e.target.value)} className="t-mono mt-4 !px-3 text-sm" placeholder={"DG90;5L;2\nKERMEX;20L;1\nOXYCHOC;CARTON-12;1"} />
+          <Button variant="primary" size="sm" className="mt-3" disabled={!paste.trim()} onClick={importText}>
             Importer dans la grille
           </Button>
           {report ? (
             <div role="status" className="mt-4 text-sm">
-              <p className={cx("inline-flex items-center gap-1.5 font-medium", report.ok ? "text-ok" : "text-ink/70")}>
+              <p className={cx("inline-flex items-center gap-1.5 font-semibold", report.ok ? "text-ok" : "text-ink/70")}>
                 {report.ok ? <Icon name="check" size={16} /> : null}
                 {report.ok} ligne{report.ok > 1 ? "s" : ""} importée{report.ok > 1 ? "s" : ""}.
               </p>
               {report.errors.length ? (
-                <ul className="mt-3 space-y-1.5 rounded-tech bg-danger/10 p-3 text-danger">
+                <ul className="mt-3 space-y-1.5 rounded-[6px] border border-danger/30 bg-danger/10 p-3 text-danger">
                   {report.errors.map((e) => (
                     <li key={e}>{e}</li>
                   ))}
@@ -402,33 +417,33 @@ export function QuickOrder() {
           ) : null}
         </section>
 
-        <section aria-labelledby="fav-title" className="rounded-box bg-salt p-6">
+        <section aria-labelledby="fav-title" className="rounded-[8px] border border-rule bg-white p-5">
           <h2 id="fav-title" className="t-label">
             Listes favorites
           </h2>
           {user ? (
             favorites.length ? (
-              <ul className="mt-4 space-y-2">
+              <ul className="mt-3 divide-y divide-rule border-y border-rule">
                 {favorites.map((f) => (
-                  <li key={f.id} className="flex items-center justify-between gap-3 rounded-tech bg-white px-4 py-3">
+                  <li key={f.id} className="flex items-center justify-between gap-3 py-3">
                     <span className="min-w-0">
-                      <span className="block truncate font-medium">{f.name}</span>
-                      <span className="text-xs text-ink/70">{f.lines.length} réf.</span>
+                      <span className="block truncate font-semibold">{f.name}</span>
+                      <span className="text-sm text-ink/70">{f.lines.length} réf.</span>
                     </span>
-                    <button type="button" className="h-8 shrink-0 rounded-full bg-salt px-4 text-sm font-medium text-mci transition-colors duration-200 hover:bg-rule" onClick={() => loadLines(f.lines)}>
+                    <Button variant="outline" size="sm" className="shrink-0" onClick={() => loadLines(f.lines)}>
                       Charger
-                    </button>
+                    </Button>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 text-sm text-ink/70">
+              <p className="mt-2 text-sm text-ink/80">
                 Aucune liste pour l&apos;instant. Créez-en depuis <Link href="/espace-pro/favoris" className="link-u">votre espace pro</Link>.
               </p>
             )
           ) : (
-            <p className="mt-2 text-sm text-ink/70">
-              <Link href="/espace-pro?retour=/commande-rapide" className="link-u">
+            <p className="mt-2 text-sm text-ink/80">
+              <Link href="/espace-pro?retour=/commande-rapide" className="link-u font-semibold">
                 Connectez-vous
               </Link>{" "}
               pour retrouver vos listes (« Stock atelier », « Rentrée scolaire »…) et recommander en un clic.

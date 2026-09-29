@@ -35,24 +35,24 @@ export function Dialog({
       }}
       aria-label={title}
       className={cx(
-        "m-auto max-h-[92dvh] w-[calc(100vw-24px)] overflow-y-auto overscroll-contain rounded-tile bg-white p-0 text-ink shadow-float ring-1 ring-black/5",
-        "backdrop:bg-black/30 backdrop:backdrop-blur-sm open:animate-rise open:[animation-duration:500ms]",
+        "m-auto max-h-[92dvh] w-[calc(100vw-24px)] overflow-y-auto overscroll-contain rounded-[8px] border border-rule bg-white p-0 text-ink shadow-float",
+        "backdrop:bg-night/40 open:animate-drop",
         wide ? "max-w-[1100px]" : "max-w-[560px]",
         className,
       )}
     >
-      <div className="sticky top-0 z-10 flex items-center justify-between gap-4 bg-white/85 px-6 pb-3 pt-5 backdrop-blur-xl sm:px-8 sm:pt-6">
+      <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-rule bg-white px-5 py-3 sm:px-6">
         <h2 className="t-label min-w-0">{title}</h2>
         <button
           type="button"
           onClick={onClose}
-          className="grid size-9 shrink-0 place-items-center rounded-full bg-salt text-ink/70 transition-colors duration-200 hover:bg-rule hover:text-ink"
+          className="-mr-2 grid size-10 shrink-0 place-items-center rounded-[6px] text-ink/70 transition-colors duration-150 hover:bg-salt hover:text-ink"
           aria-label="Fermer"
         >
           <Icon name="close" size={18} />
         </button>
       </div>
-      <div className="px-6 pb-6 pt-3 sm:px-8 sm:pb-8">{children}</div>
+      <div className="px-5 py-5 sm:px-6 sm:py-6">{children}</div>
     </dialog>
   );
 }

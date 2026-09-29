@@ -54,14 +54,14 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
 
   if (sent) {
     return (
-      <div role="status" className="flex flex-col items-start py-4">
-        <span className="grid size-14 place-items-center rounded-full bg-ok/10 text-ok">
-          <Icon name="check" size={28} />
+      <div role="status" className="flex flex-col items-start py-2">
+        <span className="grid size-12 place-items-center rounded-full bg-ok text-white">
+          <Icon name="check" size={24} />
         </span>
-        <p className="t-h2 mt-6">Demande envoyée.</p>
-        <p className="mt-3 max-w-[48ch] text-ink/70">
+        <p className="t-h2 mt-5">Demande envoyée.</p>
+        <p className="mt-2 max-w-[48ch] text-ink/80">
           MCI vous répond par email ou par téléphone. Pour une urgence :{" "}
-          <a className="font-semibold text-mci hover:underline" href={`tel:${company.phoneE164}`}>
+          <a className="whitespace-nowrap font-semibold text-mci hover:underline" href={`tel:${company.phoneE164}`}>
             {company.phone}
           </a>
           .
@@ -75,7 +75,7 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
   return (
     <form onSubmit={onSubmit} noValidate className="grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">
       <fieldset className="min-w-0 sm:col-span-2">
-        <legend className="mb-3 block text-sm font-semibold text-ink">
+        <legend className="mb-2 block text-sm font-semibold text-ink">
           Objet
           <span className="text-danger" aria-hidden="true">
             {" "}
@@ -83,19 +83,21 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
           </span>
           <span className="sr-only"> (obligatoire)</span>
         </legend>
-        <div id="cf-subject" className="flex flex-wrap gap-2">
+        <div id="cf-subject" className="grid grid-cols-1 gap-2 min-[420px]:grid-cols-2">
           {(Object.keys(contactSubjects) as ContactSubject[]).map((k) => (
-            <label key={k} className="relative cursor-pointer">
+            <label
+              key={k}
+              className={
+                "group relative flex min-h-11 min-w-0 cursor-pointer items-center gap-2.5 rounded-[6px] border border-rule bg-white px-3 py-2 text-sm font-medium text-ink transition-[border-color,background-color,box-shadow] duration-150 ease-out " +
+                "hover:border-ink/40 has-[:checked]:border-mci has-[:checked]:bg-sky/30 has-[:checked]:ring-1 has-[:checked]:ring-mci " +
+                "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mci"
+              }
+            >
               <input type="radio" value={k} {...register("subject")} className="peer sr-only" />
-              <span
-                className={
-                  "inline-flex h-10 items-center rounded-full bg-white px-4 text-sm font-medium text-ink/80 ring-1 ring-black/10 transition-[background-color,color,box-shadow,transform] duration-200 ease-out " +
-                  "hover:ring-black/25 active:scale-[0.97] peer-checked:bg-mci peer-checked:text-white peer-checked:ring-mci " +
-                  "peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-mci"
-                }
-              >
-                {contactSubjects[k]}
+              <span aria-hidden="true" className="grid size-4 shrink-0 place-items-center rounded-full border border-ink/40 bg-white transition-colors duration-150 peer-checked:border-mci">
+                <span className="size-2 rounded-full bg-mci opacity-0 transition-opacity duration-150 group-has-[:checked]:opacity-100" />
               </span>
+              <span className="min-w-0 leading-snug">{contactSubjects[k]}</span>
             </label>
           ))}
         </div>
@@ -169,8 +171,8 @@ export function ContactForm({ subject = "contact", product, message, onDone, com
         <FieldError>{errors.consent?.message}</FieldError>
       </div>
       {error ? (
-        <p role="alert" className="flex items-start gap-3 rounded-box bg-danger/10 p-4 text-danger sm:col-span-2">
-          <Icon name="warning" size={20} className="mt-0.5 shrink-0" />
+        <p role="alert" className="flex items-start gap-2 rounded-[6px] border border-danger/40 bg-danger/10 p-3 text-sm text-danger sm:col-span-2">
+          <Icon name="warning" size={18} className="mt-px shrink-0" />
           <span>{error}</span>
         </p>
       ) : null}

@@ -1,65 +1,53 @@
 "use client";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { company } from "@/data/company";
-import { buttonClass } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { SeteMap } from "./SeteMap";
 
-/** L'équipe, à Sète : grande photo arrondie qui s'agrandit jusqu'à pleine largeur au défilement. */
+/** MCI à Sète : l'équipe (photo du site actuel), l'adresse, le plan de situation, le téléphone. */
 export function TeamSection({ photo }: { photo: string }) {
-  const frame = useRef<HTMLDivElement>(null);
   const [failed, setFailed] = useState(false);
-
-  useEffect(() => {
-    const el = frame.current;
-    if (!el || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    let ctx: { revert: () => void } | null = null;
-    let cancelled = false;
-    void Promise.all([import("gsap"), import("gsap/ScrollTrigger")]).then(([{ gsap }, { ScrollTrigger }]) => {
-      if (cancelled) return;
-      gsap.registerPlugin(ScrollTrigger);
-      ctx = gsap.context(() => {
-        gsap.fromTo(el, { scale: 0.86, borderRadius: 48 }, { scale: 1, borderRadius: 32, ease: "none", scrollTrigger: { trigger: el, start: "top 95%", end: "top 25%", scrub: 0.5 } });
-        const img = el.querySelector("img");
-        if (img) gsap.fromTo(img, { scale: 1.15 }, { scale: 1, ease: "none", scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: 0.5 } });
-      });
-    });
-    return () => {
-      cancelled = true;
-      ctx?.revert();
-    };
-  }, []);
-
   return (
-    <section aria-labelledby="equipe-title" className="py-24 lg:py-32">
-      <div className="wrap">
-        <div data-reveal className="flex flex-col items-center text-center">
-          <p className="t-eyebrow">L&apos;équipe, à Sète</p>
-          <h2 id="equipe-title" className="t-h1 mt-3 max-w-[18ch]">
-            Des interlocuteurs qui connaissent les produits.
+    <section aria-labelledby="equipe-title" className="py-16 lg:py-24">
+      <div className="wrap grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-8 [&>*]:min-w-0">
+        <div className="lg:col-span-7">
+          <div className="relative aspect-[3/2] overflow-hidden rounded-[12px] bg-salt">
+            {failed ? (
+              <div className="absolute inset-0 grid place-items-center p-8 text-center text-sm text-ink/70">Photo de l&apos;équipe MCI, à {company.city}</div>
+            ) : (
+              <Image src={photo} alt="L'équipe MCI dans ses locaux du Parc Aquatechnique, à Sète" fill sizes="(max-width: 1024px) 100vw, 760px" className="object-cover" onError={() => setFailed(true)} />
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col lg:col-span-5">
+          <h2 id="equipe-title" className="t-h1">
+            À Sète, depuis {company.founded}
           </h2>
-        </div>
-        <div ref={frame} className={`relative mt-12 w-full overflow-hidden rounded-tile bg-salt will-change-transform ${failed ? "aspect-[16/6]" : "aspect-[4/3] sm:aspect-[16/8]"}`}>
-          {failed ? (
-            <div className="absolute inset-0 grid place-items-center p-8 text-center">
-              <p className="text-sm text-ink/70">Photo de l&apos;équipe MCI — {company.city}</p>
-            </div>
-          ) : (
-            <Image src={photo} alt="L'équipe MCI dans ses locaux du Parc Aquatechnique, à Sète" fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-cover" onError={() => setFailed(true)} />
-          )}
-        </div>
-        <div className="mt-12 grid gap-8 lg:grid-cols-2 lg:items-end">
-          <p data-reveal className="t-lead text-ink/70">
-            MCI a été créée à Sète en {company.founded}. Au téléphone, vous avez un interlocuteur sur place, qui connaît le catalogue et vous oriente vers le produit adapté à votre surface.
+          <p className="t-lead mt-4 text-ink/80">
+            Au téléphone, vous avez un interlocuteur sur place, qui connaît le catalogue et vous oriente vers le produit adapté à votre surface. Pour un conseil, un échantillon ou un devis, appelez ou écrivez.
           </p>
-          <div data-reveal className="flex flex-wrap gap-3 lg:justify-end">
-            <a href={`tel:${company.phoneE164}`} className={buttonClass("primary", "lg")}>
-              <Icon name="phone" size={18} /> {company.phone}
+          <address className="mt-6 flex gap-3 not-italic">
+            <Icon name="pin" size={22} className="mt-0.5 shrink-0 text-mci" />
+            <span>
+              {company.street}
+              <br />
+              {company.postalCode} {company.city}
+              <br />
+              <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className="link-u text-sm font-semibold">
+                Itinéraire
+              </a>
+            </span>
+          </address>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href={`tel:${company.phoneE164}`} className="inline-flex h-12 items-center gap-2 rounded-[6px] bg-mci px-5 font-display text-lg font-bold text-white transition-colors duration-150 hover:bg-deep">
+              <Icon name="phone" size={20} /> {company.phone}
             </a>
-            <a href={company.mapsUrl} target="_blank" rel="noopener noreferrer" className={buttonClass("outline", "lg")}>
-              <Icon name="pin" size={18} /> Itinéraire
+            <a href="/contact" className="inline-flex h-12 items-center rounded-[6px] border border-rule px-5 font-semibold transition-colors duration-150 hover:border-ink">
+              Nous écrire
             </a>
           </div>
+          <SeteMap className="mt-8 rounded-[12px] border border-rule bg-salt p-4" />
         </div>
       </div>
     </section>

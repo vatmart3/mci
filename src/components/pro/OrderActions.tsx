@@ -79,13 +79,13 @@ export function OrderClientActions({ order, onChange }: { order: Order; onChange
           <Icon name="check" size={16} /> Valider et transmettre à MCI
         </Button>
       ) : null}
-      {order.status === "pending_approval" && user?.role === "buyer" ? <span className="rounded-full bg-salt px-3 py-1 text-sm text-ink/70">En attente de votre valideur.</span> : null}
+      {order.status === "pending_approval" && user?.role === "buyer" ? <span className="inline-flex items-center gap-1.5 rounded-[4px] bg-steel px-2 py-1 text-sm text-ink/80"><Icon name="clock" size={14} className="shrink-0" />En attente de votre valideur.</span> : null}
       {canAccept ? (
         <Button variant="action" size="sm" className="h-auto! min-h-8 whitespace-normal! py-1.5 text-left" disabled={busy} onClick={() => run(async () => (await getBackend()).acceptProforma(order.id))}>
           <Icon name="check" size={16} /> Valider la pro-forma
         </Button>
       ) : null}
-      {order.status === "confirmed" && order.customerAcceptedAt ? <span className="rounded-full bg-ok/10 px-3 py-1 text-sm font-medium text-ok">Pro-forma validée.</span> : null}
+      {order.status === "confirmed" && order.customerAcceptedAt ? <span className="inline-flex items-center gap-1.5 rounded-[4px] bg-ok/12 px-2 py-1 text-sm font-semibold text-ok"><Icon name="check" size={14} className="shrink-0" />Pro-forma validée.</span> : null}
       {err ? <span role="alert" className="text-sm text-danger">{err}</span> : null}
     </div>
   );

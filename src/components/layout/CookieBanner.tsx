@@ -23,7 +23,7 @@ export function CookieBanner() {
     setClosed(true);
   };
   return (
-    <div role="region" aria-label="Cookies" data-no-print data-cookie-banner className="fixed inset-x-3 bottom-24 z-50 mx-auto max-w-[480px] rounded-box bg-white p-4 shadow-float ring-1 ring-black/5 lg:bottom-6 lg:left-6 lg:right-auto">
+    <div role="region" aria-label="Cookies" data-no-print data-cookie-banner className="fixed inset-x-3 bottom-20 z-50 mx-auto max-w-[460px] rounded-[8px] border border-rule bg-white p-4 shadow-float lg:bottom-6 lg:left-6 lg:right-auto">
       <p className="h-16 overflow-hidden text-xs leading-snug sm:h-8">
         Uniquement des cookies techniques (bon de commande, connexion). Aucun traceur publicitaire ni mesure d&apos;audience tierce.{" "}
         <Link href="/confidentialite" className="link-u">

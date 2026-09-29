@@ -6,15 +6,16 @@ import { useSession } from "@/lib/store/session";
 import { getBackend } from "@/lib/backend";
 import { AuthPanel } from "./AuthPanel";
 import { Badge } from "@/components/ui/Badge";
-import { Icon } from "@/components/ui/Icon";
+import { Button, buttonClass } from "@/components/ui/Button";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { cx } from "@/lib/cx";
 
-const nav = [
-  { href: "/espace-pro", label: "Tableau de bord" },
-  { href: "/espace-pro/commandes", label: "Commandes" },
-  { href: "/espace-pro/favoris", label: "Listes favorites" },
-  { href: "/espace-pro/documents", label: "Documents" },
-  { href: "/espace-pro/adresses", label: "Structure & adresses" },
+const nav: { href: string; label: string; icon: IconName }[] = [
+  { href: "/espace-pro", label: "Tableau de bord", icon: "grid" },
+  { href: "/espace-pro/commandes", label: "Commandes", icon: "order" },
+  { href: "/espace-pro/favoris", label: "Listes favorites", icon: "star" },
+  { href: "/espace-pro/documents", label: "Documents", icon: "doc" },
+  { href: "/espace-pro/adresses", label: "Structure & adresses", icon: "pin" },
 ];
 
 export function ProShell({ children }: { children: React.ReactNode }) {
@@ -23,12 +24,12 @@ export function ProShell({ children }: { children: React.ReactNode }) {
   if (!ready) {
     return (
       <div className="bg-salt">
-        <div className="wrap min-h-[760px] py-16 lg:py-24" aria-busy="true">
-          <div className="mx-auto max-w-[760px] text-center">
-            <h1 className="t-h1">Espace pro</h1>
-            <p className="t-lead mx-auto mt-6 max-w-[46ch] text-ink/70">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
-            <p className="mt-12 inline-flex items-center gap-3 rounded-full bg-white px-4 py-2 text-sm text-ink/70 shadow-sheet ring-1 ring-black/5">
-              <span className="size-2 animate-pulse rounded-full bg-mci" aria-hidden="true" />
+        <div className="wrap min-h-[640px] py-12 lg:py-16" aria-busy="true">
+          <div className="mx-auto max-w-[480px] text-center">
+            <h1 className="t-h2">Espace pro</h1>
+            <p className="mx-auto mt-3 max-w-[46ch] text-ink/70">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
+            <p className="mt-8 inline-flex items-center gap-2 rounded-[6px] border border-rule bg-white px-4 py-2 text-sm text-ink/70">
+              <Icon name="clock" size={16} className="shrink-0 text-mci" />
               Chargement de votre session…
             </p>
           </div>
@@ -39,7 +40,7 @@ export function ProShell({ children }: { children: React.ReactNode }) {
   if (!user) {
     return (
       <div className="bg-salt">
-        <div className="wrap min-h-[760px] py-12 lg:py-20">
+        <div className="wrap min-h-[640px] py-10 lg:py-16">
           <Suspense>
             <AuthPanel />
           </Suspense>
@@ -56,34 +57,41 @@ export function ProShell({ children }: { children: React.ReactNode }) {
     .join("");
   return (
     <div className="bg-salt">
-      <div className="wrap pb-24 pt-8 lg:pt-12">
-        <header className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="flex min-w-0 items-center gap-4">
-            <span className="grid size-14 shrink-0 place-items-center rounded-full bg-white text-md font-semibold text-mci shadow-sheet ring-1 ring-black/5" aria-hidden="true">
-              {initials || "M"}
-            </span>
-            <div className="min-w-0">
-              <p className="text-sm text-ink/70">
-                <span className="font-semibold text-mci">Espace pro</span> · {user.fullName} · {user.role === "buyer" ? "Acheteur" : user.role === "approver" ? "Valideur" : "MCI"}
-              </p>
-              <p className="t-h2 mt-1 break-words">{account?.company ?? (staff ? "Compte MCI" : "Compte sans structure")}</p>
-              <div className="mt-3 flex flex-wrap gap-2 empty:hidden">
-                {account?.status === "pending" ? <Badge tone="warn">EN ATTENTE DE VALIDATION PAR MCI</Badge> : null}
-                {account?.status === "active" ? <Badge tone="ok">COMPTE VALIDÉ</Badge> : null}
-                {account?.status === "suspended" ? <Badge tone="danger">COMPTE SUSPENDU</Badge> : null}
-                {account?.isDemo ? <Badge tone="warn">DÉMO</Badge> : null}
+      <header className="border-b border-rule bg-white">
+        <div className="wrap flex flex-col gap-4 py-5 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <div className="flex min-w-0 items-center gap-4">
+              <span className="grid size-11 shrink-0 place-items-center rounded-[6px] bg-mci font-display text-md font-bold text-white" aria-hidden="true">
+                {initials || "M"}
+              </span>
+              <div className="min-w-0">
+                <p className="break-words font-display text-lg font-bold leading-tight text-ink">{account?.company ?? (staff ? "Compte MCI" : "Compte sans structure")}</p>
+                <p className="mt-0.5 flex flex-wrap items-center gap-x-2 text-sm text-ink/70">
+                  <span>Espace pro</span>
+                  <span aria-hidden="true">·</span>
+                  <span className="min-w-0 break-words">{user.fullName}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{user.role === "buyer" ? "Acheteur" : user.role === "approver" ? "Valideur" : "MCI"}</span>
+                </p>
               </div>
+            </div>
+            <div className="mt-3 flex flex-wrap gap-2 empty:hidden">
+              {account?.status === "pending" ? <Badge tone="warn">EN ATTENTE DE VALIDATION PAR MCI</Badge> : null}
+              {account?.status === "active" ? <Badge tone="ok">COMPTE VALIDÉ</Badge> : null}
+              {account?.status === "suspended" ? <Badge tone="danger">COMPTE SUSPENDU</Badge> : null}
+              {account?.isDemo ? <Badge tone="warn">DÉMO</Badge> : null}
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             {staff ? (
-              <Link href="/admin" className="inline-flex h-9 items-center gap-1 rounded-full bg-ink px-4 text-sm font-medium text-white transition-colors duration-300 hover:bg-deep">
-                Back-office →
+              <Link href="/admin" className={buttonClass("outline", "sm")}>
+                Back-office
+                <Icon name="arrow" size={16} />
               </Link>
             ) : null}
-            <button
-              type="button"
-              className="inline-flex h-9 items-center rounded-full bg-white px-4 text-sm font-medium text-ink/80 ring-1 ring-black/5 transition-[color,box-shadow] duration-300 hover:text-ink hover:shadow-sheet"
+            <Button
+              variant="outline"
+              size="sm"
               onClick={async () => {
                 const b = await getBackend();
                 await b.signOut();
@@ -91,12 +99,14 @@ export function ProShell({ children }: { children: React.ReactNode }) {
               }}
             >
               Se déconnecter
-            </button>
+            </Button>
           </div>
-        </header>
-        <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-[232px_minmax(0,1fr)] lg:gap-12">
-          <nav aria-label="Espace pro" className="min-w-0 lg:sticky lg:top-20 lg:self-start">
-            <ul className="relative flex gap-1 overflow-x-auto pb-1 [scrollbar-width:none] lg:flex-col lg:overflow-visible lg:pb-0">
+        </div>
+      </header>
+      <div className="wrap pb-20 pt-6 lg:pt-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[224px_minmax(0,1fr)] lg:gap-8">
+          <nav aria-label="Espace pro" className="min-w-0 lg:sticky lg:top-24 lg:self-start">
+            <ul className="relative flex gap-1 overflow-x-auto border-b border-rule pb-2 [scrollbar-width:none] lg:flex-col lg:overflow-visible lg:border-b-0 lg:pb-0">
               {nav.map((n) => {
                 const on = n.href === "/espace-pro" ? pathname === n.href : pathname.startsWith(n.href);
                 return (
@@ -105,12 +115,12 @@ export function ProShell({ children }: { children: React.ReactNode }) {
                       href={n.href}
                       aria-current={on ? "page" : undefined}
                       className={cx(
-                        "flex items-center justify-between gap-3 whitespace-nowrap rounded-full px-4 py-2 text-sm transition-[background-color,color,box-shadow] duration-300 ease-out lg:rounded-tech lg:px-3 lg:py-2.5",
-                        on ? "bg-white font-semibold text-ink shadow-sheet" : "font-medium text-ink/70 hover:bg-white/70 hover:text-ink",
+                        "flex items-center gap-2.5 whitespace-nowrap rounded-[6px] px-3 py-2 text-sm transition-colors duration-150",
+                        on ? "bg-sky/60 font-semibold text-mci" : "font-medium text-ink/80 hover:bg-steel/70 hover:text-ink",
                       )}
                     >
+                      <Icon name={n.icon} size={18} className={cx("shrink-0", on ? "text-mci" : "text-ink/70")} />
                       {n.label}
-                      <Icon name="chevronRight" size={16} className={cx("hidden lg:block", on ? "text-mci" : "text-ink/30")} />
                     </Link>
                   </li>
                 );

@@ -17,34 +17,38 @@ import { cx } from "@/lib/cx";
 
 const DRAFT = "mci:checkout-draft";
 
+/** Étape du bon : panneau fileté, en-tête numéroté (la séquence porte l'information), champs alignés sur deux colonnes. */
 function Fieldset({ n, legend, children, hint }: { n: string; legend: string; children: React.ReactNode; hint?: string }) {
   return (
-    <fieldset className="min-w-0 rounded-box bg-salt p-5 sm:p-8">
-      <legend className="float-left mb-6 flex w-full items-center gap-3">
-        <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-white text-sm font-semibold text-mci shadow-sheet">
+    <fieldset className="min-w-0 rounded-[8px] border border-rule bg-white">
+      <legend className="float-left flex w-full items-center gap-3 border-b border-rule bg-salt px-4 py-3 sm:px-6">
+        <span aria-hidden="true" className="t-num grid size-7 shrink-0 place-items-center rounded-[4px] bg-mci text-sm text-white">
           {Number(n)}
         </span>
         <span className="sr-only">Étape {Number(n)} : </span>
         <span className="t-label">{legend}</span>
       </legend>
-      {hint ? <p className="clear-both -mt-3 mb-6 text-sm text-ink/70">{hint}</p> : null}
-      <div className="clear-both grid grid-cols-1 gap-x-4 gap-y-5 sm:grid-cols-2">{children}</div>
+      <div className="clear-both px-4 py-5 sm:px-6 sm:py-6">
+        {hint ? <p className="-mt-1 mb-5 text-sm text-ink/70">{hint}</p> : null}
+        <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2">{children}</div>
+      </div>
     </fieldset>
   );
 }
 
-/** Carte radio arrondie : état sélectionné net (anneau bleu + pastille). */
+/** Carte radio rectangulaire : filet acier, sélection = filet et anneau bleus sur fond ciel. */
 const choiceCard = (on: boolean) =>
   cx(
-    "relative flex cursor-pointer items-start gap-3 rounded-box bg-white p-4 text-sm transition-[box-shadow,background-color] duration-200 ease-out",
+    "relative flex min-w-0 cursor-pointer items-start gap-3 rounded-[6px] border p-3.5 text-sm transition-[border-color,background-color,box-shadow] duration-150 ease-out",
     "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-mci",
-    on ? "ring-2 ring-mci" : "ring-1 ring-black/10 hover:ring-black/25",
+    on ? "border-mci bg-sky/30 ring-1 ring-mci" : "border-rule bg-white hover:border-ink/40",
   );
 
+/** Pastille radio (vrai cercle). */
 function Dot({ on }: { on: boolean }) {
   return (
-    <span aria-hidden="true" className={cx("mt-px grid size-5 shrink-0 place-items-center rounded-full transition-colors duration-200", on ? "bg-mci" : "bg-white ring-1 ring-black/20")}>
-      <span className={cx("size-2 rounded-full bg-white transition-transform duration-300 ease-spring", on ? "scale-100" : "scale-0")} />
+    <span aria-hidden="true" className={cx("mt-px grid size-[18px] shrink-0 place-items-center rounded-full border bg-white transition-colors duration-150", on ? "border-mci" : "border-ink/40")}>
+      <span className={cx("size-2.5 rounded-full bg-mci transition-opacity duration-150", on ? "opacity-100" : "opacity-0")} />
     </span>
   );
 }
@@ -213,19 +217,21 @@ export function CheckoutForm() {
 
   if (hydrated && !lines.length) {
     return (
-      <div className="wrap flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-        <span className="grid size-24 place-items-center rounded-full bg-salt text-ink/70">
-          <Icon name="order" size={44} />
-        </span>
-        <h1 className="t-h1 mt-10 max-w-[16ch]">Le bon de commande est vide.</h1>
-        <p className="t-lead mt-6 max-w-[48ch] text-ink/70">Ajoutez des produits depuis le catalogue, ou saisissez vos références si vous les connaissez déjà.</p>
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-          <ButtonLink href="/catalogue" variant="action" size="lg" className="max-w-full !whitespace-normal text-center leading-tight">
-            Ouvrir le catalogue
-          </ButtonLink>
-          <ButtonLink href="/commande-rapide" variant="outline" size="lg" className="max-w-full !whitespace-normal text-center leading-tight">
-            Commande rapide par référence
-          </ButtonLink>
+      <div className="wrap py-12 lg:py-20">
+        <div className="mx-auto max-w-[640px] rounded-[8px] border border-rule bg-white p-6 sm:p-10">
+          <span className="grid size-14 place-items-center rounded-[8px] bg-salt text-mci">
+            <Icon name="order" size={28} />
+          </span>
+          <h1 className="t-h1 mt-6">Le bon de commande est vide.</h1>
+          <p className="t-lead mt-3 max-w-[48ch] text-ink/70">Ajoutez des produits depuis le catalogue, ou saisissez vos références si vous les connaissez déjà.</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+            <ButtonLink href="/catalogue" variant="primary" size="lg" className="max-w-full !whitespace-normal text-center leading-tight">
+              Ouvrir le catalogue
+            </ButtonLink>
+            <ButtonLink href="/commande-rapide" variant="outline" size="lg" className="max-w-full !whitespace-normal text-center leading-tight">
+              Commande rapide par référence
+            </ButtonLink>
+          </div>
         </div>
       </div>
     );
@@ -234,32 +240,31 @@ export function CheckoutForm() {
   const err = (m?: string, id?: string) => <FieldError id={id}>{m}</FieldError>;
   const a = (name: string, invalid: boolean) => ({ id: `co-${name}`, "aria-invalid": invalid, "aria-describedby": invalid ? `co-${name}-err` : undefined });
 
-
   return (
-    <form onSubmit={onSubmit} noValidate className="wrap pb-24 pt-10 lg:pt-16">
-      <header className="max-w-[760px]">
-        <p className="t-eyebrow">Bon de commande</p>
-        <h1 className="t-h1 mt-3">Valider le bon de commande</h1>
-        <p className="mt-5 inline-flex items-center gap-2 rounded-full bg-salt px-4 py-1.5 text-sm font-medium text-ink/70">
-          <Icon name="order" size={16} className="text-mci" />
-          {count} article{count > 1 ? "s" : ""} · {lines.length} réf.
-        </p>
-        <p className="mt-6 max-w-[60ch] text-md text-ink/70">
-          {settings.priceMode === "on_request" ? "Aucun paiement en ligne. MCI vous renvoie une pro-forma avec les prix et le délai ; vous la validez en un clic." : "Aucun paiement en ligne : virement, facture à échéance ou mandat administratif."}{" "}
-          {user ? null : (
-            <>
+    <form onSubmit={onSubmit} noValidate className="wrap pb-20 pt-6 lg:pb-24 lg:pt-10">
+      <header className="flex flex-col gap-4 border-b border-rule pb-6 lg:flex-row lg:items-end lg:justify-between lg:gap-8 lg:pb-8">
+        <div className="min-w-0">
+          <h1 className="t-h1">Valider le bon de commande</h1>
+          <p className="mt-3 max-w-[64ch] text-ink/70">
+            {settings.priceMode === "on_request" ? "Aucun paiement en ligne. MCI vous renvoie une pro-forma avec les prix et le délai ; vous la validez en un clic." : "Aucun paiement en ligne : virement, facture à échéance ou mandat administratif."}
+          </p>
+        </div>
+        {user ? null : (
+          <p className="flex items-center gap-2 rounded-[6px] border border-rule bg-salt px-4 py-2.5 text-sm lg:max-w-[360px] lg:shrink-0">
+            <Icon name="user" size={18} className="shrink-0 text-mci" />
+            <span>
               Vous avez un compte ?{" "}
-              <Link href="/espace-pro?retour=/commande" className="link-u">
+              <Link href="/espace-pro?retour=/commande" className="link-u font-semibold">
                 Connectez-vous
               </Link>{" "}
               pour préremplir.
-            </>
-          )}
-        </p>
+            </span>
+          </p>
+        )}
       </header>
 
-      <div className="grid-12 mt-12 gap-y-10 lg:mt-16">
-        <div className="col-span-12 space-y-4 sm:space-y-6 lg:col-span-7">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:mt-10 lg:grid-cols-[minmax(0,1fr)_360px] xl:grid-cols-[minmax(0,1fr)_400px] xl:gap-12">
+        <div className="min-w-0 space-y-5 lg:space-y-6">
           <Fieldset n="01" legend="Votre structure">
             <div>
               <Label htmlFor="co-company" required>
@@ -460,49 +465,48 @@ export function CheckoutForm() {
               {err(errors.acceptCgv?.message)}
             </div>
           </Fieldset>
-
-          {error ? (
-            <p role="alert" className="flex items-start gap-3 rounded-box bg-danger/10 p-4 text-danger sm:p-5">
-              <Icon name="warning" size={20} className="mt-0.5 shrink-0" />
-              <span>{error}</span>
-            </p>
-          ) : null}
-          <div className="flex flex-col gap-4 pt-4 sm:flex-row sm:items-center sm:gap-6">
-            <Button type="submit" variant="action" size="lg" disabled={isSubmitting || !hydrated} className="w-full !px-5 !whitespace-normal text-center leading-tight sm:w-auto sm:!px-8">
-              {isSubmitting ? "Envoi en cours…" : "Envoyer le bon de commande"}
-              <Icon name="arrow" />
-            </Button>
-            <p className="text-sm text-ink/70">Vous recevez un récapitulatif par email et un bon de commande en PDF.</p>
-          </div>
         </div>
 
-        <aside className="col-span-12 lg:col-span-5 lg:col-start-8" aria-labelledby="recap-title">
-          <div className="rounded-box bg-white p-5 shadow-sheet ring-1 ring-black/5 lg:sticky lg:top-20 lg:p-7">
-            <div className="flex items-baseline justify-between gap-4">
+        <aside className="min-w-0" aria-labelledby="recap-title">
+          <div className="rounded-[8px] border border-rule bg-white shadow-sheet lg:sticky lg:top-[calc(var(--header-h)+24px)]">
+            <div className="flex items-center justify-between gap-4 border-b border-rule px-4 py-3 sm:px-5">
               <h2 id="recap-title" className="t-label">
-                Votre sélection
+                Récapitulatif
               </h2>
-              <Link href="/catalogue" className="link-u shrink-0 text-sm">
+              <Link href="/catalogue" className="link-u shrink-0 text-sm font-semibold">
                 Ajouter des produits
               </Link>
             </div>
-            <ul className="mt-2 max-h-[55vh] divide-y divide-black/5 overflow-y-auto overscroll-contain">
-              {hydrated ? lines.map((l, i) => <CartLineEditor key={`${l.productId}-${l.packagingId}`} line={l} index={i} />) : null}
+            <ul className="max-h-[min(46vh,440px)] divide-y divide-rule overflow-y-auto overscroll-contain px-4 sm:px-5">
+              {hydrated ? lines.map((l, i) => <CartLineEditor key={`${l.productId}-${l.packagingId}`} line={l} index={i} dense />) : null}
             </ul>
-            <dl className="mt-2 space-y-2 border-t border-black/5 pt-4 text-sm">
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-ink/70">Articles</dt>
-                <dd className="font-semibold tabular-nums">{count}</dd>
-              </div>
-              <div className="flex items-center justify-between gap-4">
-                <dt className="text-ink/70">Références</dt>
-                <dd className="font-semibold tabular-nums">{hydrated ? lines.length : 0}</dd>
-              </div>
-            </dl>
-            <p className="mt-4 flex items-start gap-2 rounded-tech bg-salt p-3 text-sm text-ink/70">
-              <Icon name="info" size={18} className="mt-px shrink-0 text-mci" />
-              {settings.priceMode === "on_request" ? "Prix et délai confirmés par MCI." : "Prix HT indicatifs, confirmés par MCI."}
-            </p>
+            <div className="border-t border-rule px-4 py-4 sm:px-5">
+              <dl className="space-y-1.5 text-sm">
+                <div className="flex items-center justify-between gap-4">
+                  <dt className="text-ink/70">Références</dt>
+                  <dd className="font-semibold tabular-nums">{hydrated ? lines.length : 0}</dd>
+                </div>
+                <div className="flex items-center justify-between gap-4 border-t border-rule pt-2 text-base">
+                  <dt className="font-semibold">Total articles</dt>
+                  <dd className="t-num text-lg">{count}</dd>
+                </div>
+              </dl>
+              <p className="mt-4 flex items-start gap-2 rounded-[6px] bg-salt p-3 text-sm text-ink/80">
+                <Icon name="info" size={18} className="mt-px shrink-0 text-mci" />
+                {settings.priceMode === "on_request" ? "Prix et délai confirmés par MCI." : "Prix HT indicatifs, confirmés par MCI."}
+              </p>
+              {error ? (
+                <p role="alert" className="mt-4 flex items-start gap-2 rounded-[6px] border border-danger/40 bg-danger/10 p-3 text-sm text-danger">
+                  <Icon name="warning" size={18} className="mt-px shrink-0" />
+                  <span>{error}</span>
+                </p>
+              ) : null}
+              <Button type="submit" variant="action" size="lg" disabled={isSubmitting || !hydrated} className="mt-4 w-full !px-4 !whitespace-normal text-center leading-tight">
+                {isSubmitting ? "Envoi en cours…" : "Envoyer le bon de commande"}
+                <Icon name="arrow" className="shrink-0" />
+              </Button>
+              <p className="mt-3 text-sm text-ink/70">Vous recevez un récapitulatif par email et un bon de commande en PDF.</p>
+            </div>
           </div>
         </aside>
       </div>

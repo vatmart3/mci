@@ -1,108 +1,82 @@
-"use client";
-import dynamic from "next/dynamic";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ButtonLink } from "@/components/ui/Button";
-import { Icon } from "@/components/ui/Icon";
+import Link from "next/link";
+import { InstantSearch } from "@/components/search/InstantSearch";
 import { ProductVisual } from "@/components/catalog/ProductVisual";
-import { ShaderBackground } from "@/components/fx/ShaderBackground";
-import { webglSupport, prefersReducedMotion, whenWebGLAllowed } from "@/lib/webgl";
-import { useScrollProgress } from "@/lib/hooks/useScrollProgress";
-import { showcaseItem, type MiniProduct } from "./showcase-data";
+import { Icon } from "@/components/ui/Icon";
+import { company } from "@/data/company";
+import type { MiniProduct } from "./showcase-data";
 
-const HeroScene = dynamic(() => import("@/components/three/HeroScene").then((m) => m.HeroScene), { ssr: false });
+const FREQUENT = ["graisse cuite", "graffitis", "mousses", "tartre", "frelons", "hydrocarbures"];
 
-/** Repli statique : les packshots en arc, mêmes places que la scène 3D. */
-function StaticArc({ products }: { products: { p: MiniProduct }[] }) {
-  const n = products.length;
+/** Vague du logo MCI, reprise en filigrane au pied du bandeau. */
+function BrandWave({ className }: { className?: string }) {
   return (
-    <div className="absolute inset-x-0 bottom-[6%] flex items-end justify-center" aria-hidden="true">
-      {products.map(({ p }, i) => {
-        const k = n === 1 ? 0 : i / (n - 1) - 0.5;
-        const w = 22 - Math.abs(k) * 12;
-        return (
-          <div key={p.slug} className={i === 0 || i === n - 1 ? "max-sm:hidden" : undefined} style={{ width: `${w}%`, maxWidth: 260, marginInline: "-1.5%", transform: `translateY(${Math.abs(k) * -24}%)`, zIndex: 10 - Math.round(Math.abs(k) * 10) }}>
-            <ProductVisual product={p} size={320} sizes="22vw" alt="" className="h-auto w-full drop-shadow-[0_24px_24px_rgb(10_34_51/0.18)]" priority={i === Math.floor(n / 2)} />
-          </div>
-        );
-      })}
-    </div>
+    <svg viewBox="0 0 1440 120" preserveAspectRatio="none" className={className} aria-hidden="true" focusable="false">
+      <path d="M0 70c120-52 240-52 360 0s240 52 360 0 240-52 360 0 240 52 360 0" fill="none" stroke="currentColor" strokeWidth="18" strokeLinecap="round" />
+      <path d="M120 108c90-38 180-38 270 0s180 38 270 0 180-38 270 0 180 38 270 0 180-38 270 0" fill="none" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+    </svg>
   );
 }
 
+/**
+ * Bandeau d'accueil : la recherche par problème est l'action principale, la gamme réelle
+ * (packshots) à droite. Aucun effet : tout est lisible au premier affichage.
+ */
 export function Hero({ products, stats }: { products: { p: MiniProduct; pack?: string }[]; stats: { references: number; families: number; withSheet: number } }) {
-  const [support, setSupport] = useState<"full" | "lite" | "none" | null>(null);
-  const [reduced, setReduced] = useState(false);
-  const [inView, setInView] = useState(true);
-  const [allowed, setAllowed] = useState(false);
-  const [ready3d, setReady3d] = useState(false);
-  const track = useRef<HTMLElement>(null);
-  const copy = useRef<HTMLDivElement>(null);
-  const progress = useScrollProgress(track, {
-    onChange: (p) => copy.current?.style.setProperty("--p", String(p)),
-  });
-
-  useEffect(() => {
-    const s = webglSupport();
-    setSupport(s);
-    setReduced(prefersReducedMotion());
-    const stop = s === "none" ? () => undefined : whenWebGLAllowed(s, () => setAllowed(true));
-    const io = new IntersectionObserver(([e]) => setInView(!!e?.isIntersecting));
-    if (track.current) io.observe(track.current);
-    return () => {
-      io.disconnect();
-      stop();
-    };
-  }, []);
-
-  const items = useMemo(() => {
-    const list = products.map(({ p, pack }) => showcaseItem(p, pack));
-    return support === "lite" ? list.slice(1, 4) : list;
-  }, [products, support]);
-  const statics = support === "lite" ? products.slice(1, 4) : products;
-
+  // ordre de composition : du fond vers l'avant (le bidon central au premier plan)
+  const place = [
+    { l: "-6%", b: "20%", w: "36%", z: 1 },
+    { l: "14%", b: "8%", w: "40%", z: 3 },
+    { l: "32%", b: "-2%", w: "48%", z: 4 },
+    { l: "56%", b: "10%", w: "44%", z: 2 },
+    { l: "74%", b: "24%", w: "32%", z: 1 },
+  ];
   return (
-    <section ref={track} aria-labelledby="hero-title" className="relative h-[165svh]">
-      <div className="sticky top-0 isolate h-svh min-h-[640px] overflow-hidden">
-        <ShaderBackground variant="aurora" />
-
-        <div
-          ref={copy}
-          className="wrap relative z-10 flex flex-col items-center pt-[9svh] text-center will-change-transform lg:pt-[10svh]"
-          style={{ opacity: "calc(1 - var(--p, 0) * 2.4)", transform: "translate3d(0, calc(var(--p, 0) * -120px), 0) scale(calc(1 - var(--p, 0) * 0.1))" }}
-        >
-          <p className="t-eyebrow animate-rise">Nettoyants techniques professionnels · Sète</p>
-          <h1 id="hero-title" className="t-display mt-4 max-w-[14ch] animate-rise [animation-delay:80ms]" style={{ fontSize: "clamp(2.75rem, 1rem + 6vw, 7rem)" }}>
-            Le produit juste <span className="t-sheen">pour chaque surface.</span>
+    <section aria-labelledby="hero-title" className="relative isolate z-10 overflow-x-clip bg-mci text-white">
+      <BrandWave className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-28 w-full text-white/[0.07]" />
+      <div className="wrap grid gap-12 py-12 lg:grid-cols-12 lg:items-center lg:gap-8 lg:py-20">
+        <div className="lg:col-span-7">
+          <h1 id="hero-title" className="t-display max-w-[15ch]">
+            Le bon produit pour chaque surface.
           </h1>
-          <p className="t-lead mt-6 max-w-[40ch] animate-rise text-ink/70 [animation-delay:160ms]">
-            Nettoyants, désinfectants et traitements de maintenance pour collectivités, industries et loisirs.
+          <p className="t-lead mt-5 max-w-[52ch] text-white/85">
+            Nettoyants techniques, désinfectants et traitements de maintenance pour collectivités, industries et loisirs. {stats.references} références, {stats.withSheet} fiches techniques en ligne, commande avec ou sans compte, et un interlocuteur à Sète qui vous répond.
           </p>
-          <div className="mt-8 flex animate-rise flex-wrap items-center justify-center gap-4 [animation-delay:240ms]">
-            <ButtonLink href="/catalogue" variant="action" size="lg">
-              Ouvrir le catalogue
-            </ButtonLink>
-            <ButtonLink href="/commande-rapide" variant="outline" size="lg">
-              Commande rapide
-            </ButtonLink>
+          <InstantSearch size="hero" autoRotate className="mt-8 max-w-[640px] text-ink" />
+          <div className="mt-4 flex max-w-[640px] flex-wrap items-center gap-2 text-sm">
+            <span className="mr-1 text-white/75">Recherches fréquentes :</span>
+            {FREQUENT.map((q) => (
+              <Link key={q} href={`/catalogue?q=${encodeURIComponent(q)}`} className="rounded-[4px] bg-white/12 px-2.5 py-1 font-medium text-white transition-colors duration-150 hover:bg-white hover:text-mci">
+                {q}
+              </Link>
+            ))}
           </div>
-          <p className="mt-6 animate-rise text-sm text-ink/70 [animation-delay:320ms]">
-            {stats.references} références · {stats.families} familles · {stats.withSheet} fiches techniques en ligne
-          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 border-t border-white/20 pt-6 text-sm">
+            <Link href="/commande-rapide" className="inline-flex items-center gap-2 font-semibold hover:underline">
+              <Icon name="order" size={18} /> Commande rapide par référence
+            </Link>
+            <a href={`tel:${company.phoneE164}`} className="inline-flex items-center gap-2 font-semibold hover:underline">
+              <Icon name="phone" size={18} /> {company.phone}
+            </a>
+            <Link href="/contact?objet=echantillon" className="inline-flex items-center gap-2 font-semibold hover:underline">
+              <Icon name="mail" size={18} /> Demander un échantillon
+            </Link>
+          </div>
         </div>
 
-        {/* La gamme : packshots immédiats, relayés par la 3D dès qu'elle est prête */}
-        <div className="absolute inset-x-0 bottom-0 h-[44%] sm:h-[46%]">
-          <div className={`absolute inset-0 transition-opacity duration-700 ${ready3d ? "opacity-0" : "opacity-100"}`}>
-            <StaticArc products={statics} />
+        <div className="relative lg:col-span-5" aria-hidden="true">
+          <div className="relative mx-auto aspect-[4/3] w-full max-w-[620px]">
+            <div className="absolute inset-x-[6%] bottom-[4%] h-[22%] rounded-[50%] bg-night/40 blur-2xl" />
+            <div className="absolute inset-x-[2%] bottom-[8%] h-[26%] rounded-[50%] bg-white/10" />
+            {products.slice(0, 5).map(({ p }, i) => {
+              const s = place[i]!;
+              return (
+                <div key={p.slug} className="absolute" style={{ left: s.l, bottom: s.b, width: s.w, zIndex: s.z }}>
+                  <ProductVisual product={p} size={360} sizes="(max-width: 1024px) 45vw, 300px" alt="" priority={i === 2} className="h-auto w-full drop-shadow-[0_18px_22px_rgb(8_30_45/0.45)]" />
+                </div>
+              );
+            })}
           </div>
-          {allowed && (support === "full" || support === "lite") ? (
-            <HeroScene items={items} progress={progress} still={reduced} active={inView} className="absolute inset-0" onReady={() => setReady3d(true)} />
-          ) : null}
         </div>
-
-        <a href="#histoire" className="absolute bottom-6 left-1/2 z-10 grid size-11 -translate-x-1/2 place-items-center rounded-full bg-white/70 text-ink shadow-sheet ring-1 ring-black/5 transition-transform hover:translate-y-1" aria-label="Découvrir la gamme">
-          <Icon name="arrowDown" size={18} />
-        </a>
       </div>
     </section>
   );

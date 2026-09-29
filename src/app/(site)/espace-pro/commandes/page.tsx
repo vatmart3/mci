@@ -24,14 +24,14 @@ export default function ProOrders() {
   const current = list.find((o) => o.id === selected) ?? (orders ?? []).find((o) => o.id === selected);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="t-h2">Commandes</h1>
         <div className="w-full sm:w-64">
           <label htmlFor="f-status" className="sr-only">
             Filtrer par statut
           </label>
-          <Select id="f-status" fieldSize="sm" className="rounded-full! pl-4!" value={status} onChange={(e) => setStatus(e.target.value as OrderStatus | "")}>
+          <Select id="f-status" fieldSize="sm" value={status} onChange={(e) => setStatus(e.target.value as OrderStatus | "")}>
             <option value="">Tous les statuts</option>
             {(Object.keys(statusLabels) as OrderStatus[]).map((s) => (
               <option key={s} value={s}>
@@ -42,7 +42,7 @@ export default function ProOrders() {
         </div>
       </div>
       {current ? <OrderDetail order={current} /> : null}
-      {loading && !orders ? <p className="rounded-box bg-white px-6 py-10 text-center text-sm text-ink/70 ring-1 ring-black/5">Chargement…</p> : <OrdersTable orders={list} selected={selected} onSelect={(o) => setSelected((s) => (s === o.id ? null : o.id))} />}
+      {loading && !orders ? <p className="rounded-[8px] border border-rule bg-white px-6 py-10 text-center text-sm text-ink/70">Chargement…</p> : <OrdersTable orders={list} selected={selected} onSelect={(o) => setSelected((s) => (s === o.id ? null : o.id))} />}
     </div>
   );
 }

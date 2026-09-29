@@ -1,5 +1,5 @@
 /**
- * Pictogrammes MCI — dessinés sur mesure, trait 1,5 px, style plan technique.
+ * Pictogrammes MCI — dessinés sur mesure, trait 1,75 px, extrémités arrondies.
  * Grille 24 × 24, extrémités carrées, angles vifs. Utilisés avec parcimonie.
  */
 import type { SVGProps } from "react";
@@ -136,6 +136,72 @@ const paths = {
       <path d="M9 14c0-3.5 2-5.5 6-6-.2 4-2.3 6-6 6zM9 14l3-3" />
     </>
   ),
+  /* ─── métiers (secteurs) ─── */
+  "sec-mairies": (
+    <>
+      <path d="M3.5 20.5h17M5 20.5v-9M19 20.5v-9M3.5 11.5h17L12 5.5z" />
+      <path d="M9 20.5v-5.5h6v5.5M12 5.5V3" />
+      <path d="M12 3h2.5v1.5H12" />
+    </>
+  ),
+  "sec-ecoles-universites": (
+    <>
+      <path d="M2.5 9L12 4.5 21.5 9 12 13.5z" />
+      <path d="M6.5 11v4.5c1.5 1.5 3.5 2.5 5.5 2.5s4-1 5.5-2.5V11M21.5 9v5.5" />
+    </>
+  ),
+  "sec-equipements-sportifs": (
+    <>
+      <circle cx="12" cy="12" r="8.5" />
+      <path d="M12 8l3.3 2.4-1.3 3.9h-4l-1.3-3.9zM12 8V3.5M15.3 10.4l4.3-1.4M14 14.3l2.7 3.7M10 14.3l-2.7 3.7M8.7 10.4L4.4 9" />
+    </>
+  ),
+  "sec-viticulture": (
+    <>
+      <circle cx="9.5" cy="11" r="2.2" />
+      <circle cx="14.5" cy="11" r="2.2" />
+      <circle cx="12" cy="15" r="2.2" />
+      <circle cx="7" cy="15" r="2.2" />
+      <circle cx="17" cy="15" r="2.2" />
+      <circle cx="12" cy="19" r="2.2" />
+      <path d="M12 8.8V5.5c0-1 1-2 2.5-2M12 5.5C10 3.5 7.5 4 6.5 5.5 8.5 6.5 10.5 6.5 12 5.5z" />
+    </>
+  ),
+  "sec-agriculture": (
+    <>
+      <circle cx="7" cy="16.5" r="3.5" />
+      <circle cx="18" cy="18" r="2" />
+      <path d="M10.5 16.5H16M5 13V8h6l2 5h5.5l1 3.5M11 8V5h-2" />
+    </>
+  ),
+  "sec-biotechnologie": (
+    <>
+      <path d="M9 3.5h6M10 3.5v6.5l-5 8.5A1.3 1.3 0 0 0 6.1 20.5h11.8a1.3 1.3 0 0 0 1.1-2L14 10V3.5" />
+      <path d="M7.5 15h9" />
+      <circle cx="10.5" cy="17.5" r=".8" />
+      <circle cx="13.5" cy="16.8" r=".6" />
+    </>
+  ),
+  "sec-automobile": (
+    <>
+      <path d="M3.5 16.5v-4l2-5a1.5 1.5 0 0 1 1.4-1h10.2a1.5 1.5 0 0 1 1.4 1l2 5v4z" />
+      <path d="M3.5 12.5h17M5.5 16.5v2h2.5v-2M16 16.5v2h2.5v-2" />
+      <circle cx="7.5" cy="14.5" r=".9" />
+      <circle cx="16.5" cy="14.5" r=".9" />
+    </>
+  ),
+  "sec-campings": (
+    <>
+      <path d="M2.5 20.5h19M12 4.5L3.5 20.5M12 4.5l8.5 16M12 4.5L10.5 2M12 4.5L13.5 2" />
+      <path d="M12 12.5l-3 8h6z" />
+    </>
+  ),
+  "sec-nautisme": (
+    <>
+      <path d="M12 3v13.5M12 4.5l6.5 10H12M12 6.5L7 14.5h5" />
+      <path d="M3 17.5h18l-2.5 3h-13zM2.5 21.5c1.5 0 1.5-.8 3-.8s1.5.8 3 .8" />
+    </>
+  ),
 } as const;
 
 export type IconName = keyof typeof paths;
@@ -153,7 +219,7 @@ export function Icon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1.5}
+      strokeWidth={1.75}
       strokeLinecap="round"
       strokeLinejoin="round"
       aria-hidden={title ? undefined : true}

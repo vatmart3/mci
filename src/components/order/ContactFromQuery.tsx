@@ -16,6 +16,6 @@ export function ContactFromQuery() {
       message: p.get("message") ?? (secteur ? `Secteur : ${secteur}. ` : undefined),
     });
   }, []);
-  if (!init) return <div className="h-96 rounded-box bg-white/60" aria-busy="true" />;
+  if (!init) return <div className="h-96 rounded-[6px] bg-salt" aria-busy="true" />;
   return <ContactForm {...init} />;
 }

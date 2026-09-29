@@ -7,7 +7,7 @@ import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ProductList } from "@/components/catalog/ProductList";
 import { AddSelection } from "@/components/cart/AddSelection";
 import { BiocideNotice } from "@/components/catalog/BiocideNotice";
-import { Icon } from "@/components/ui/Icon";
+import { Icon, type IconName } from "@/components/ui/Icon";
 import { JsonLd, pageMeta } from "@/lib/seo";
 import { SITE_URL } from "@/lib/env";
 import { company } from "@/data/company";
@@ -36,57 +36,56 @@ export default async function SectorPage({ params }: { params: Promise<{ secteur
 
   return (
     <>
-      <div className="wrap pt-8 lg:pt-12">
+      <div className="wrap py-4 lg:py-5">
         <Breadcrumb items={[{ name: "Accueil", path: "/" }, { name: "Secteurs", path: "/#secteurs" }, { name: sector.name, path: `/secteurs/${sector.slug}` }]} />
-        <header className="mt-10 grid grid-cols-1 gap-6 lg:mt-14 lg:grid-cols-12 lg:items-end lg:gap-x-6">
-          <div data-reveal className="min-w-0 lg:col-span-8">
-            <p className="t-eyebrow">
-              Secteur {String(sector.position).padStart(2, "0")} <span className="text-ink/70">· {sectorGroups[sector.group]}</span>
-            </p>
-            <h1 className="t-h1 mt-3">{sector.name}</h1>
-          </div>
-          <p data-reveal className="t-lead min-w-0 text-ink/70 lg:col-span-4" style={{ "--reveal-delay": "120ms" } as React.CSSProperties}>
-            {sector.buyer}
-          </p>
-        </header>
-
-        {/* Le problème terrain */}
-        <section data-reveal aria-labelledby="terrain" className="relative mt-12 overflow-hidden rounded-tile bg-deep p-8 text-white sm:p-12 lg:mt-16 lg:p-16">
-          <div aria-hidden="true" className="pointer-events-none absolute -right-24 -top-24 size-80 rounded-full bg-mci/40 blur-3xl" />
-          <div className="relative grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-x-6">
-            <h2 id="terrain" className="t-label min-w-0 text-sky lg:col-span-3">
-              Le problème, sur le terrain
-            </h2>
-            <p className="t-h2 min-w-0 text-white lg:col-span-9" style={{ fontWeight: 600 }}>
-              {sector.problem}
-            </p>
-          </div>
-        </section>
       </div>
 
-      <section className="wrap mt-20 lg:mt-24" aria-labelledby="selection">
-        <div data-reveal className="flex flex-col gap-6 pb-8 lg:flex-row lg:items-end lg:justify-between">
-          <div className="min-w-0">
-            <p className="t-eyebrow">
-              La sélection <span className="text-ink/70">· {list.length} référence{list.length > 1 ? "s" : ""}</span>
-            </p>
-            <h2 id="selection" className="t-h1 mt-3 max-w-[18ch]">
-              Ce que MCI propose pour {sector.name.toLowerCase()}.
+      <div className="bg-mci text-white">
+        <header className="wrap grid grid-cols-1 gap-8 py-10 lg:grid-cols-12 lg:gap-x-6 lg:py-14 [&>*]:min-w-0">
+          <div className="flex flex-col items-start gap-4 sm:flex-row sm:gap-5 lg:col-span-7">
+            <span className="grid size-14 shrink-0 place-items-center rounded-[8px] bg-white text-mci sm:size-16">
+              <Icon name={`sec-${sector.slug}` as IconName} size={32} />
+            </span>
+            <div className="min-w-0">
+              <h1 className="t-h1 break-words">{sector.name}</h1>
+              <p className="t-lead mt-3 max-w-[56ch] text-white/85">{sector.buyer}</p>
+              <p className="mt-3 text-sm text-white/80">
+                {sectorGroups[sector.group]} · {list.length} référence{list.length > 1 ? "s" : ""} sélectionnée{list.length > 1 ? "s" : ""}
+              </p>
+            </div>
+          </div>
+          <section aria-labelledby="terrain" className="border-t border-white/25 pt-6 lg:col-span-5 lg:border-l lg:border-t-0 lg:pl-8 lg:pt-0">
+            <h2 id="terrain" className="t-label">
+              Le problème, sur le terrain
             </h2>
+            <p className="mt-3 text-white/90">{sector.problem}</p>
+          </section>
+        </header>
+      </div>
+
+      <section className="wrap pt-10 lg:pt-14" aria-labelledby="selection">
+        <div className="flex flex-col gap-5 pb-6 lg:flex-row lg:items-end lg:justify-between">
+          <div className="min-w-0">
+            <h2 id="selection" className="t-h2 max-w-[28ch]">
+              Ce que MCI propose pour {sector.name.toLowerCase()}
+            </h2>
+            <p className="mt-2 text-ink/70">
+              {list.length} référence{list.length > 1 ? "s" : ""}, à ajouter une par une ou en une fois au bon de commande.
+            </p>
           </div>
           <AddSelection lines={list.map((p) => ({ productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }))} image={list[0] ? `/packshots/${list[0].slug}.webp` : undefined} className="self-start lg:self-auto" />
         </div>
-        {hasBiocide ? <BiocideNotice className="mb-6 max-w-[720px]" /> : null}
+        {hasBiocide ? <BiocideNotice className="mb-6 max-w-[760px]" /> : null}
         <ProductList products={list} />
-        <p className="mt-4 px-2 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
+        <p className="mt-3 text-sm text-ink/70">Sélection indicative : ajustez conditionnements et quantités dans le bon de commande. MCI confirme disponibilité et délai.</p>
       </section>
 
-      <section className="wrap mt-20 lg:mt-28" aria-labelledby="seo-secteur">
-        <div data-reveal className="grid grid-cols-1 gap-8 rounded-tile bg-salt p-8 sm:p-12 lg:grid-cols-12 lg:gap-x-6 lg:p-16">
-          <h2 id="seo-secteur" className="t-h2 min-w-0 lg:col-span-4">
+      <section className="wrap py-16 lg:py-20" aria-labelledby="seo-secteur">
+        <div className="max-w-[70ch]">
+          <h2 id="seo-secteur" className="t-h2">
             {sector.name} : comment on travaille
           </h2>
-          <div className="prose-mci min-w-0 max-w-[68ch] text-ink/70 lg:col-span-7 lg:col-start-6">
+          <div className="prose-mci mt-5 text-ink/80">
             {sector.seo.map((p) => (
               <p key={p.slice(0, 24)}>{p}</p>
             ))}
@@ -98,21 +97,26 @@ export default async function SectorPage({ params }: { params: Promise<{ secteur
         </div>
       </section>
 
-      <nav className="wrap mt-20 lg:mt-24" aria-label="Autres secteurs">
-        <p className="t-label">Autres secteurs</p>
-        <ul className="mt-5 flex flex-wrap gap-2">
-          {others.map((s) => (
-            <li key={s.slug} className="min-w-0 max-w-full">
-              <Link
-                href={`/secteurs/${s.slug}`}
-                className="inline-flex max-w-full items-center gap-1.5 rounded-full bg-salt py-2.5 pl-5 pr-4 font-medium text-ink transition-colors duration-300 ease-out hover:bg-ink hover:text-white"
-              >
-                <span className="truncate">{s.name}</span>
-                <Icon name="chevronRight" size={16} className="shrink-0 opacity-50" />
-              </Link>
-            </li>
-          ))}
-        </ul>
+      <nav className="border-t border-rule bg-salt" aria-labelledby="autres-secteurs">
+        <div className="wrap py-12 lg:py-16">
+          <h2 id="autres-secteurs" className="t-h2">
+            Autres secteurs
+          </h2>
+          <ul className="mt-6 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
+            {others.map((s) => (
+              <li key={s.slug} className="min-w-0">
+                <Link
+                  href={`/secteurs/${s.slug}`}
+                  className="group flex min-w-0 items-center gap-3 rounded-[6px] border border-rule bg-white px-3 py-3 font-semibold transition-colors duration-150 ease-out hover:border-mci hover:text-mci"
+                >
+                  <Icon name={`sec-${s.slug}` as IconName} size={24} className="shrink-0 text-mci" />
+                  <span className="min-w-0 flex-1 truncate">{s.name}</span>
+                  <Icon name="chevronRight" size={16} className="shrink-0 text-ink/40 transition-transform duration-150 ease-out group-hover:translate-x-0.5 group-hover:text-mci" />
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       </nav>
 
       <JsonLd

@@ -20,7 +20,7 @@ export function Ruler({ items, className, inverted = false }: { items: string[];
       {items.map((it, i) => (
         <span key={it} className="flex items-center gap-3">
           {i > 0 ? (
-            <span aria-hidden="true" className={inverted ? "text-white/30" : "text-ink/25"}>
+            <span aria-hidden="true" className={inverted ? "text-white/50" : "text-ink/40"}>
               ·
             </span>
           ) : null}

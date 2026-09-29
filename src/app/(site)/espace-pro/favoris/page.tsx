@@ -27,42 +27,44 @@ function ListEditor({ list, onSaved }: { list: FavoriteList; onSaved: () => void
     onSaved();
   };
   return (
-    <article className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
-      <div className="flex flex-wrap items-center gap-3">
+    <article className="rounded-[8px] border border-rule bg-white">
+      <div className="flex flex-wrap items-center gap-3 border-b border-rule px-4 py-3 sm:px-6">
         <label htmlFor={`fav-${list.id}`} className="sr-only">
           Nom de la liste
         </label>
-        <Input id={`fav-${list.id}`} value={name} onChange={(e) => setName(e.target.value)} className="min-w-0 flex-1 font-semibold sm:max-w-sm" />
-        <AddSelection lines={lines} label="Ajouter au bon" className="h-12! px-5! text-base! sm:ml-auto" />
+        <Input id={`fav-${list.id}`} value={name} onChange={(e) => setName(e.target.value)} className="min-w-0 flex-1 basis-48 font-semibold sm:max-w-sm" />
+        <AddSelection lines={lines} label="Ajouter au bon" className="h-11! w-full px-5! text-base! sm:ml-auto sm:w-auto" />
       </div>
-      <ul className="mt-6 divide-y divide-black/5 overflow-hidden rounded-box bg-salt empty:hidden">
-        {lines.map((l, i) => {
-          const p = byId(l.productId);
-          if (!p) return null;
-          return (
-            <li key={`${l.productId}-${i}`} className="flex flex-wrap items-center gap-3 px-4 py-3">
-              <span className="t-code w-full truncate text-sm text-mci sm:w-40">{p.code}</span>
-              <div className="w-44 max-w-full">
-                <Select fieldSize="sm" aria-label={`Conditionnement ${p.code}`} value={l.packagingId} onChange={(e) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, packagingId: e.target.value } : x)))}>
-                  {p.packagings.map((k) => (
-                    <option key={k.id} value={k.id}>
-                      {k.label}
-                    </option>
-                  ))}
-                </Select>
-              </div>
-              <Stepper size="sm" value={l.quantity} onChange={(q) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, quantity: q } : x)))} label={`Quantité ${p.code}`} />
-              <button type="button" className="ml-auto grid size-9 place-items-center rounded-full text-ink/70 transition-colors hover:bg-white hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
-                <Icon name="trash" size={16} />
-              </button>
-            </li>
-          );
-        })}
-      </ul>
-      <div className="mt-4 max-w-md">
-        <ProductPicker onPick={(p) => setLines((ls) => [...ls, { productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }])} />
+      <div className="px-4 py-4 sm:px-6">
+        <ul className="mb-4 divide-y divide-rule overflow-hidden rounded-[6px] border border-rule empty:hidden">
+          {lines.map((l, i) => {
+            const p = byId(l.productId);
+            if (!p) return null;
+            return (
+              <li key={`${l.productId}-${i}`} className="flex flex-wrap items-center gap-3 px-3 py-2.5 transition-colors duration-150 hover:bg-salt">
+                <span className="t-code w-full truncate text-sm text-mci sm:w-40">{p.code}</span>
+                <div className="w-44 max-w-full">
+                  <Select fieldSize="sm" aria-label={`Conditionnement ${p.code}`} value={l.packagingId} onChange={(e) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, packagingId: e.target.value } : x)))}>
+                    {p.packagings.map((k) => (
+                      <option key={k.id} value={k.id}>
+                        {k.label}
+                      </option>
+                    ))}
+                  </Select>
+                </div>
+                <Stepper size="sm" value={l.quantity} onChange={(q) => setLines((ls) => ls.map((x, k) => (k === i ? { ...x, quantity: q } : x)))} label={`Quantité ${p.code}`} />
+                <button type="button" className="ml-auto grid size-9 place-items-center rounded-[6px] text-ink/70 transition-colors duration-150 hover:bg-danger/10 hover:text-danger" aria-label={`Retirer ${p.code}`} onClick={() => setLines((ls) => ls.filter((_, k) => k !== i))}>
+                  <Icon name="trash" size={16} />
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+        <div className="max-w-md">
+          <ProductPicker onPick={(p) => setLines((ls) => [...ls, { productId: p.id, packagingId: p.packagings[0]!.id, quantity: 1 }])} />
+        </div>
       </div>
-      <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-black/5 pt-5">
+      <div className="flex flex-wrap items-center gap-3 rounded-b-[7px] border-t border-rule bg-salt px-4 py-3 sm:px-6">
         <Button size="sm" disabled={!dirty} onClick={save}>
           Enregistrer
         </Button>
@@ -89,7 +91,7 @@ export default function ProFavorites() {
   const accountId = user?.accountId ?? "";
   const { data: lists, reload } = useData((b) => (accountId ? b.listFavorites(accountId) : Promise.resolve([])), [accountId]);
   const [newName, setNewName] = useState("");
-  if (!accountId) return <p className="rounded-box bg-white p-6 text-ink/70 ring-1 ring-black/5">Les listes favorites sont rattachées à une structure.</p>;
+  if (!accountId) return <p className="rounded-[8px] border border-rule bg-white px-4 py-5 text-ink/70">Les listes favorites sont rattachées à une structure.</p>;
   const create = async (lines: CartLine[]) => {
     const name = newName.trim() || `Liste du ${new Date().toLocaleDateString("fr-FR")}`;
     await (await getBackend()).saveFavorite({ accountId, name, lines });
@@ -97,9 +99,9 @@ export default function ProFavorites() {
     reload();
   };
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <h1 className="t-h2">Listes favorites</h1>
-      <div className="flex flex-col gap-3 rounded-box bg-white p-4 ring-1 ring-black/5 sm:flex-row sm:flex-wrap sm:items-end sm:p-6">
+      <div className="flex flex-col gap-3 rounded-[8px] border border-rule bg-white p-4 sm:flex-row sm:flex-wrap sm:items-end sm:px-6">
         <div className="min-w-0 sm:min-w-60 sm:flex-1">
           <label htmlFor="fav-new" className="mb-2 block text-sm font-semibold">
             Nouvelle liste

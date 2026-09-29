@@ -31,19 +31,21 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
     }
   };
   return (
-    <li className="overflow-hidden rounded-box bg-white ring-1 ring-black/5">
-      <button type="button" className="flex w-full flex-wrap items-center gap-3 px-4 py-4 text-left transition-colors duration-200 hover:bg-salt/60 sm:px-6" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+    <li className="overflow-hidden rounded-[8px] border border-rule bg-white">
+      <button type="button" className="flex w-full flex-wrap items-center gap-3 px-4 py-3 text-left transition-colors duration-150 hover:bg-salt sm:px-5" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
         <span className="min-w-0 flex-1 basis-56">
           <span className="font-semibold">{account.company}</span>
           <span className="t-mono ml-2 text-xs text-ink/70">SIRET {account.siret}</span>
         </span>
-        <span className="text-xs text-ink/70">{account.kind} · créé le {formatDate(account.createdAt)}</span>
+        <span className="text-xs text-ink/70">
+          {account.kind} · créé le <span className="t-mono">{formatDate(account.createdAt)}</span>
+        </span>
         {account.isDemo ? <DemoBadge /> : null}
         <Badge tone={statusTone[account.status]}>{statusText[account.status]}</Badge>
-        <Icon name="chevronDown" size={18} className={cx("shrink-0 text-ink/70 transition-transform duration-300 ease-out", open && "rotate-180")} />
+        <Icon name="chevronDown" size={18} className={cx("shrink-0 text-ink/70 transition-transform duration-150", open && "rotate-180")} />
       </button>
       {open ? (
-        <div className="grid grid-cols-1 gap-8 border-t border-black/5 p-4 sm:p-6 lg:grid-cols-2">
+        <div className="grid grid-cols-1 gap-6 border-t border-rule px-4 py-5 sm:px-5 lg:grid-cols-2">
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2">
               {account.status !== "active" ? (
@@ -69,8 +71,8 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
             </div>
             <Checkbox id={`ra-${account.id}`} checked={account.requiresApproval} onChange={(e) => patch({ requiresApproval: e.target.checked })} label={<span className="text-sm">Les commandes des acheteurs doivent être validées par un valideur de la structure</span>} />
             <Checkbox id={`ch-${account.id}`} checked={account.chorus} onChange={(e) => patch({ chorus: e.target.checked })} label={<span className="text-sm">Facturation Chorus Pro{account.chorusServiceCode ? ` (${account.chorusServiceCode})` : ""}</span>} />
-            <div className="rounded-tech bg-salt p-4 text-sm">
-              <p className="text-xs font-medium text-ink/70">Adresses</p>
+            <div className="rounded-[6px] border border-rule bg-salt px-4 py-3 text-sm">
+              <p className="text-xs font-semibold text-ink/70">Adresses</p>
               <ul className="mt-2 space-y-1">
                 {account.addresses.map((a) => (
                   <li key={a.id}>
@@ -80,15 +82,15 @@ function AccountRow({ account, grids, onChange }: { account: Account; grids: Pri
                 ))}
               </ul>
             </div>
-            {err ? <p role="alert" className="rounded-tech bg-danger/10 px-4 py-3 text-sm text-danger">{err}</p> : null}
+            {err ? <p role="alert" className="rounded-[6px] border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">{err}</p> : null}
           </div>
           <div>
-            <p className="text-xs font-medium text-ink/70">Utilisateurs</p>
-            <ul className="mt-2 divide-y divide-black/5 overflow-hidden rounded-tech bg-salt text-sm empty:hidden">
+            <p className="text-xs font-semibold text-ink/70">Utilisateurs</p>
+            <ul className="mt-2 divide-y divide-rule overflow-hidden rounded-[6px] border border-rule text-sm empty:hidden">
               {(users ?? []).map((u) => (
-                <li key={u.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5">
+                <li key={u.id} className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 transition-colors duration-150 hover:bg-salt">
                   <span className="min-w-0">
-                    <span className="font-medium">{u.fullName}</span> <span className="t-mono break-all text-xs text-ink/70">{u.email}</span>
+                    <span className="font-semibold">{u.fullName}</span> <span className="t-mono break-all text-xs text-ink/70">{u.email}</span>
                   </span>
                   <Badge tone={u.role === "approver" ? "mci" : "ink"}>{u.role === "approver" ? "VALIDEUR" : "ACHETEUR"}</Badge>
                 </li>
@@ -135,17 +137,17 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
   const list = useMemo(() => products.filter((p) => p.active && (!q || norm(`${p.code} ${p.short}`).includes(norm(q)))), [products, q]);
   const filled = Object.values(prices).filter((v) => v.trim()).length;
   return (
-    <div className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-6">
+    <div className="rounded-[8px] border border-rule bg-white p-4 sm:p-5">
       <div className="flex flex-wrap items-end gap-3">
         <div className="w-full sm:w-64">
           <Label htmlFor={`gn-${grid.id}`}>Nom de la grille</Label>
           <Input id={`gn-${grid.id}`} fieldSize="sm" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="w-full sm:w-64">
-          <Input fieldSize="sm" className="rounded-full! pl-4!" aria-label="Filtrer" placeholder="Filtrer les produits…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <Input fieldSize="sm" aria-label="Filtrer" placeholder="Filtrer les produits…" value={q} onChange={(e) => setQ(e.target.value)} />
         </div>
-        <span className="inline-flex h-9 items-center rounded-full bg-salt px-3 text-xs text-ink/70">
-          <span className="t-mono mr-1 font-medium text-ink">{filled}</span> prix renseignés
+        <span className="inline-flex h-9 items-center rounded-[6px] border border-rule bg-salt px-3 text-xs text-ink/70">
+          <span className="t-mono mr-1 font-semibold text-ink">{filled}</span> prix renseignés
         </span>
         <Button
           size="sm"
@@ -165,13 +167,13 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
         </Button>
         {msg ? <span role="status" className="text-sm text-ok">{msg}</span> : null}
       </div>
-      <div className="relative mt-5 max-h-[60vh] overflow-auto rounded-tech ring-1 ring-black/5">
-        <table className="w-full min-w-[640px] text-sm">
-          <thead className="sticky top-0 z-10 bg-salt text-left text-xs text-ink/70">
+      <div className="relative mt-4 max-h-[60vh] overflow-auto rounded-[6px] border border-rule">
+        <table className="w-full min-w-[640px] text-left text-sm">
+          <thead className="sticky top-0 z-10 bg-steel text-xs font-semibold text-ink/70 shadow-[0_1px_0_var(--color-rule)]">
             <tr>
-              <th className="py-2.5 pl-4 pr-2 font-medium">Produit</th>
-              <th className="py-2.5 pr-2 font-medium">Conditionnement</th>
-              <th className="w-40 py-2.5 pl-2 pr-4 text-right font-medium">Prix HT (€)</th>
+              <th scope="col" className="py-2.5 pl-4 pr-2">Produit</th>
+              <th scope="col" className="py-2.5 pr-2">Conditionnement</th>
+              <th scope="col" className="w-40 py-2.5 pl-2 pr-4 text-right">Prix HT (€)</th>
             </tr>
           </thead>
           <tbody>
@@ -179,7 +181,7 @@ function GridEditor({ grid, onSaved }: { grid: PriceGrid; onSaved: () => void })
               p.packagings.map((k, i) => {
                 const key = `${p.id}:${k.id}`;
                 return (
-                  <tr key={key} className={cx("border-t border-black/5 transition-colors duration-200 hover:bg-salt/60", i > 0 && "border-t-0")}>
+                  <tr key={key} className={cx("border-t border-rule transition-colors duration-150 hover:bg-salt", i > 0 && "border-t-0")}>
                     <td className="py-1.5 pl-4 pr-2">{i === 0 ? <span className="t-code text-mci">{p.code}</span> : null}</td>
                     <td className="py-1.5 pr-2 text-ink/80">{k.label}</td>
                     <td className="py-1.5 pl-2 pr-4">
@@ -206,7 +208,7 @@ export default function AdminClients() {
   return (
     <div className="space-y-6">
       <h1 className="t-h2">Clients</h1>
-      <div className="flex w-full max-w-md rounded-full bg-black/5 p-1" role="tablist">
+      <div className="flex gap-6 overflow-x-auto border-b border-rule [scrollbar-width:none]" role="tablist">
         {(["comptes", "grilles"] as const).map((t) => (
           <button
             key={t}
@@ -215,8 +217,8 @@ export default function AdminClients() {
             aria-selected={tab === t}
             onClick={() => setTab(t)}
             className={cx(
-              "h-9 min-w-0 flex-1 truncate rounded-full px-3 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ease-out",
-              tab === t ? "bg-white text-ink shadow-sheet" : "text-ink/70 hover:text-ink",
+              "-mb-px h-11 shrink-0 whitespace-nowrap border-b-2 px-1 text-sm transition-colors duration-150",
+              tab === t ? "border-mci font-semibold text-mci" : "border-transparent font-medium text-ink/70 hover:text-ink",
             )}
           >
             {t === "comptes" ? `Comptes pros (${accounts?.length ?? "…"})` : "Grilles tarifaires"}
@@ -226,7 +228,7 @@ export default function AdminClients() {
       {tab === "comptes" ? (
         <>
           <div className="w-full sm:w-72">
-            <Input fieldSize="sm" className="rounded-full! pl-4!" aria-label="Rechercher" placeholder="Structure, SIRET…" value={q} onChange={(e) => setQ(e.target.value)} />
+            <Input fieldSize="sm" aria-label="Rechercher" placeholder="Structure, SIRET…" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
           <ul className="space-y-3">
             {list.map((a) => (
@@ -236,7 +238,7 @@ export default function AdminClients() {
         </>
       ) : (
         <div className="space-y-4">
-          <p className="rounded-box bg-white px-5 py-4 text-sm text-ink/70 ring-1 ring-black/5">
+          <p className="rounded-[8px] border border-rule bg-white px-4 py-3 text-sm text-ink/80">
             Mode de prix actuel : <strong>{priceModeLabels[priceMode]}</strong>. Les grilles servent en mode « par compte » (grille affectée au compte) et « public » (première grille).
           </p>
           {(grids ?? []).map((g) => (

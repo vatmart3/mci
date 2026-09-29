@@ -47,7 +47,7 @@ function LoginForm({ onDone, staff }: { onDone: () => void; staff?: boolean }) {
   });
   const demoList = staff ? [demoCredentials.admin, demoCredentials.sales] : [demoCredentials.buyer, demoCredentials.approver, demoCredentials.camping];
   return (
-    <form onSubmit={submit} noValidate className="mx-auto w-full max-w-[440px] space-y-5">
+    <form onSubmit={submit} noValidate className="w-full space-y-5">
       <div>
         <Label htmlFor="li-email" required>
           Email
@@ -62,32 +62,32 @@ function LoginForm({ onDone, staff }: { onDone: () => void; staff?: boolean }) {
         <Input id="li-password" type="password" autoComplete="current-password" {...register("password")} aria-invalid={!!errors.password} />
         <FieldError>{errors.password?.message}</FieldError>
       </div>
-      {error ? <p role="alert" className="rounded-tech bg-danger/10 px-4 py-3 text-sm text-danger">{error}</p> : null}
-      <Button type="submit" disabled={isSubmitting} className="mt-2 w-full">
+      {error ? <p role="alert" className="rounded-[6px] border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger">{error}</p> : null}
+      <Button type="submit" disabled={isSubmitting} className="w-full">
         {isSubmitting ? "Connexion…" : "Se connecter"}
       </Button>
       {IS_DEMO ? (
-        <div className="rounded-box bg-warn/10 p-4 text-sm">
-          <p className="flex flex-wrap items-center gap-2 text-xs text-ink/70">
+        <div className="overflow-hidden rounded-[6px] border border-rule text-sm">
+          <p className="flex flex-wrap items-center gap-2 border-b border-rule bg-steel/60 px-3 py-2 text-xs text-ink/80">
             <Badge tone="warn">DÉMO</Badge>
             <span>
-              Mode démo — comptes fictifs · mot de passe <span className="t-mono text-ink">{demoList[0]!.password}</span>
+              Comptes fictifs · mot de passe <span className="t-mono text-ink">{demoList[0]!.password}</span>
             </span>
           </p>
-          <ul className="mt-3 space-y-1">
+          <ul className="divide-y divide-rule bg-white">
             {demoList.map((c) => (
-              <li key={c.email} className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 rounded-tech px-2 py-1.5 transition-colors hover:bg-white/70">
+              <li key={c.email}>
                 <button
                   type="button"
-                  className="link-u text-left font-medium"
+                  className="flex w-full flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5 px-3 py-2 text-left transition-colors duration-150 hover:bg-salt"
                   onClick={() => {
                     setValue("email", c.email);
                     setValue("password", c.password);
                   }}
                 >
-                  {c.label}
-                </button>{" "}
-                <span className="t-mono min-w-0 break-all text-xs text-ink/70">{c.email}</span>
+                  <span className="font-semibold text-mci">{c.label}</span>
+                  <span className="t-mono min-w-0 break-all text-xs text-ink/70">{c.email}</span>
+                </button>
               </li>
             ))}
           </ul>
@@ -186,8 +186,8 @@ function SignupForm({ onDone }: { onDone: () => void }) {
         <Input type="password" autoComplete="new-password" {...register("password")} {...f("password")} />
         <FieldError>{errors.password?.message}</FieldError>
       </div>
-      <div className="sm:col-span-2 sm:mt-2">
-        <p className="mb-4 text-xs font-medium text-ink/70">Livraison (facultatif)</p>
+      <div className="border-t border-rule pt-5 sm:col-span-2">
+        <p className="mb-4 text-sm font-semibold text-ink">Livraison (facultatif)</p>
         <Label htmlFor="su-line1">Adresse de livraison principale</Label>
         <Input autoComplete="address-line1" {...register("line1")} id="su-line1" />
       </div>
@@ -199,7 +199,7 @@ function SignupForm({ onDone }: { onDone: () => void }) {
         <Label htmlFor="su-city">Ville</Label>
         <Input {...register("city")} id="su-city" />
       </div>
-      <div className="rounded-box bg-salt p-4 sm:col-span-2">
+      <div className="rounded-[6px] border border-rule bg-salt p-4 sm:col-span-2">
         <Checkbox
           id="su-consent"
           {...register("consent")}
@@ -211,8 +211,8 @@ function SignupForm({ onDone }: { onDone: () => void }) {
         />
         <FieldError>{errors.consent?.message}</FieldError>
       </div>
-      {error ? <p role="alert" className="rounded-tech bg-danger/10 px-4 py-3 text-sm text-danger sm:col-span-2">{error}</p> : null}
-      <div className="flex flex-col gap-3 sm:col-span-2 sm:flex-row sm:items-center sm:gap-6">
+      {error ? <p role="alert" className="rounded-[6px] border border-danger/30 bg-danger/10 px-4 py-3 text-sm text-danger sm:col-span-2">{error}</p> : null}
+      <div className="flex flex-col gap-3 border-t border-rule pt-5 sm:col-span-2 sm:flex-row sm:items-center sm:gap-6">
         <Button type="submit" variant="primary" disabled={isSubmitting} className="w-full sm:w-auto">
           {isSubmitting ? "Création…" : "Créer mon compte pro"}
         </Button>
@@ -232,18 +232,20 @@ export function AuthPanel({ staff = false, title }: { staff?: boolean; title?: s
     const retour = params.get("retour");
     if (retour && retour.startsWith("/")) router.push(retour);
   };
+  const wide = !staff && tab === "signup";
   return (
-    <div className="mx-auto w-full max-w-[820px]">
+    <div className={cx("mx-auto w-full", wide ? "max-w-[720px]" : "max-w-[480px]")}>
       <div className="text-center">
-        {staff ? <p className="t-eyebrow mb-3 text-mci">Back-office</p> : null}
-        <h1 className={staff ? "t-h2" : "t-h1"}>{title ?? (tab === "login" ? "Espace pro" : "Créer un compte pro")}</h1>
-        {staff ? null : (
-          <p className="t-lead mx-auto mt-5 max-w-[46ch] text-ink/70">Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures.</p>
-        )}
+        <h1 className="t-h2">{title ?? (tab === "login" ? "Espace pro" : "Créer un compte pro")}</h1>
+        <p className="mx-auto mt-3 max-w-[46ch] text-ink/70">
+          {staff
+            ? "Accès réservé aux équipes MCI."
+            : "Suivi des commandes, « Recommander » en un clic, listes favorites, fiches techniques, pro-formas, bons de livraison et factures."}
+        </p>
       </div>
-      <div className={cx("mt-10 rounded-tile bg-white p-5 shadow-tile ring-1 ring-black/5 sm:p-10 lg:mt-12", staff ? "mx-auto max-w-[560px]" : null)}>
+      <div className="mt-8 overflow-hidden rounded-[8px] border border-rule bg-white shadow-sheet">
         {staff ? null : (
-          <div className="mx-auto mb-8 flex w-full max-w-[440px] rounded-full bg-salt p-1" role="tablist">
+          <div className="flex gap-6 border-b border-rule px-5 sm:px-8" role="tablist">
             {(["login", "signup"] as const).map((t) => (
               <button
                 key={t}
@@ -252,16 +254,16 @@ export function AuthPanel({ staff = false, title }: { staff?: boolean; title?: s
                 type="button"
                 onClick={() => setTab(t)}
                 className={cx(
-                  "h-10 min-w-0 flex-1 rounded-full px-3 text-sm font-medium transition-[background-color,color,box-shadow] duration-300 ease-out",
-                  tab === t ? "bg-white text-ink shadow-sheet" : "text-ink/70 hover:text-ink",
+                  "-mb-px h-12 min-w-0 border-b-2 px-1 text-sm transition-colors duration-150",
+                  tab === t ? "border-mci font-semibold text-mci" : "border-transparent font-medium text-ink/70 hover:text-ink",
                 )}
               >
-                {t === "login" ? "Se connecter" : "Créer un compte"}
+                {t === "login" ? "Connexion" : "Créer un compte"}
               </button>
             ))}
           </div>
         )}
-        {tab === "login" || staff ? <LoginForm onDone={done} staff={staff} /> : <SignupForm onDone={done} />}
+        <div className="p-5 sm:p-8">{tab === "login" || staff ? <LoginForm onDone={done} staff={staff} /> : <SignupForm onDone={done} />}</div>
       </div>
     </div>
   );

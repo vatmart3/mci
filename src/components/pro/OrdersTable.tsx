@@ -6,41 +6,49 @@ import { ReorderButton } from "./OrderActions";
 import { cx } from "@/lib/cx";
 
 export function OrdersTable({ orders, selected, onSelect }: { orders: Order[]; selected?: string | null; onSelect?: (o: Order) => void }) {
-  if (!orders.length) return <p className="rounded-box bg-white px-6 py-10 text-center text-ink/70 ring-1 ring-black/5">Aucune commande pour l&apos;instant.</p>;
+  if (!orders.length) return <p className="rounded-[8px] border border-rule bg-white px-6 py-10 text-center text-sm text-ink/70">Aucune commande pour l&apos;instant.</p>;
   return (
-    <div className="overflow-hidden rounded-box bg-white ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-[8px] border border-rule bg-white">
       <div className="relative overflow-x-auto">
-        <table className="w-full min-w-[640px] text-sm">
-          <thead>
-            <tr className="text-left text-xs text-ink/70">
-              <th className="py-3 pl-5 pr-3 font-medium">N°</th>
-              <th className="px-3 py-3 font-medium">Date</th>
-              <th className="px-3 py-3 font-medium">Réf.</th>
-              <th className="px-3 py-3 font-medium">Statut</th>
-              <th className="py-3 pl-3 pr-5 font-medium">
+        <table className="w-full min-w-[640px] text-left text-sm">
+          <thead className="border-b border-rule bg-steel/60 text-xs font-semibold text-ink/70">
+            <tr>
+              <th scope="col" className="py-2.5 pl-4 pr-3">
+                N°
+              </th>
+              <th scope="col" className="px-3 py-2.5">
+                Date
+              </th>
+              <th scope="col" className="px-3 py-2.5">
+                Réf.
+              </th>
+              <th scope="col" className="px-3 py-2.5">
+                Statut
+              </th>
+              <th scope="col" className="py-2.5 pl-3 pr-4">
                 <span className="sr-only">Actions</span>
               </th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-rule">
             {orders.map((o) => (
-              <tr key={o.id} className={cx("border-t border-black/5 transition-colors duration-200", selected === o.id ? "bg-mci/5" : "hover:bg-salt")}>
-                <td className="py-3.5 pl-5 pr-3">
+              <tr key={o.id} className={cx("transition-colors duration-150", selected === o.id ? "bg-sky/40" : "hover:bg-salt")}>
+                <td className="py-2.5 pl-4 pr-3">
                   <span className="flex items-center gap-2">
-                    <button type="button" className="t-mono font-medium text-mci underline-offset-4 hover:underline" onClick={() => onSelect?.(o)} aria-expanded={selected === o.id}>
+                    <button type="button" className="t-mono font-semibold text-mci underline-offset-4 hover:underline" onClick={() => onSelect?.(o)} aria-expanded={selected === o.id}>
                       {o.number}
                     </button>
                     {o.isDemo ? <DemoBadge /> : null}
                   </span>
                 </td>
-                <td className="t-mono px-3 py-3.5 text-ink/70">{formatDate(o.createdAt)}</td>
-                <td className="max-w-[240px] px-3 py-3.5 text-ink/70">
+                <td className="t-mono whitespace-nowrap px-3 py-2.5 text-ink/70">{formatDate(o.createdAt)}</td>
+                <td className="max-w-[240px] px-3 py-2.5 text-ink/80">
                   <span className="line-clamp-1">{o.lines.map((l) => l.code).join(", ")}</span>
                 </td>
-                <td className="px-3 py-3.5">
+                <td className="px-3 py-2.5">
                   <StatusBadge status={o.status} />
                 </td>
-                <td className="py-3.5 pl-3 pr-5 text-right">
+                <td className="py-2 pl-3 pr-4 text-right">
                   <ReorderButton order={o} />
                 </td>
               </tr>

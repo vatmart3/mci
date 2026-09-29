@@ -5,26 +5,27 @@ import { Icon } from "@/components/ui/Icon";
 
 export default function SiteError({ reset }: { error: Error; reset: () => void }) {
   return (
-    <div className="wrap flex min-h-[60vh] flex-col items-center justify-center py-24 text-center">
-      <span className="grid size-20 place-items-center rounded-full bg-danger/10 text-danger">
-        <Icon name="warning" size={36} />
-      </span>
-      <p className="mt-8 text-sm font-semibold text-danger">Erreur</p>
-      <h1 className="t-h1 mt-3 max-w-[18ch]">Quelque chose s&apos;est mal passé.</h1>
-      <p className="t-lead mt-6 max-w-[48ch] text-ink/70">
-        Votre bon de commande est conservé. Réessayez, ou appelez-nous au{" "}
-        <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline">
-          {company.phone}
-        </a>
-        .
-      </p>
-      <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-        <Button size="lg" onClick={reset}>
-          Réessayer
-        </Button>
-        <ButtonLink href="/" variant="outline" size="lg">
-          Retour à l&apos;accueil
-        </ButtonLink>
+    <div className="wrap py-12 lg:py-20">
+      <div className="mx-auto max-w-[640px] rounded-[8px] border border-rule bg-white p-6 sm:p-10">
+        <span className="grid size-14 place-items-center rounded-[8px] bg-danger/10 text-danger">
+          <Icon name="warning" size={28} />
+        </span>
+        <h1 className="t-h1 mt-6">Quelque chose s&apos;est mal passé.</h1>
+        <p className="t-lead mt-3 max-w-[48ch] text-ink/70">
+          Votre bon de commande est conservé. Réessayez, ou appelez-nous au{" "}
+          <a href={`tel:${company.phoneE164}`} className="whitespace-nowrap font-semibold text-mci hover:underline">
+            {company.phone}
+          </a>
+          .
+        </p>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+          <Button size="lg" onClick={reset}>
+            Réessayer
+          </Button>
+          <ButtonLink href="/" variant="outline" size="lg">
+            Retour à l&apos;accueil
+          </ButtonLink>
+        </div>
       </div>
     </div>
   );

@@ -27,9 +27,9 @@ function cssFont(varName: string, fallback: string) {
 let fontsReady: Promise<void> | null = null;
 export function ensureFonts(): Promise<void> {
   if (fontsReady) return fontsReady;
-  const display = cssFont("--font-geist", "Geist, sans-serif");
+  const display = cssFont("--font-barlow-sc", "sans-serif");
   const mono = cssFont("--font-geist-mono", "monospace");
-  const body = cssFont("--font-geist", "sans-serif");
+  const body = cssFont("--font-barlow", "sans-serif");
   fontsReady = Promise.all([
     document.fonts.load(`700 64px ${display}`),
     document.fonts.load(`500 24px ${mono}`),
@@ -78,9 +78,9 @@ export function makeLabelTexture(input: LabelInput): THREE.CanvasTexture {
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext("2d")!;
-  const display = cssFont("--font-geist", "Geist, sans-serif");
+  const display = cssFont("--font-barlow-sc", "sans-serif");
   const mono = cssFont("--font-geist-mono", "monospace");
-  const body = cssFont("--font-geist", "sans-serif");
+  const body = cssFont("--font-barlow", "sans-serif");
 
   // Pour les étiquettes enveloppantes (aérosol, cartouche), le contenu occupe la face avant.
   const wrapAround = input.wrap ?? input.aspect > 2.2;

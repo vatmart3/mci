@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { geist, geistMono } from "./fonts";
+import { barlow, barlowSC, geistMono } from "./fonts";
 import { SITE_URL } from "@/lib/env";
 import { JsonLd, organizationJsonLd } from "@/lib/seo";
 import { bootScript } from "@/lib/cookie-boot";
@@ -24,7 +24,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" suppressHydrationWarning className={`${geist.variable} ${geistMono.variable}`}>
+    <html lang="fr" suppressHydrationWarning className={`${barlow.variable} ${barlowSC.variable} ${geistMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>

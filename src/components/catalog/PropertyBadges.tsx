@@ -14,9 +14,9 @@ export function PropertyBadges({ properties, full = false, className }: { proper
           key={p}
           title={propertyLabels[p].hint}
           className={cx(
-            "inline-flex items-center rounded-full",
-            full ? "gap-1.5 px-3 py-1.5 text-sm font-medium" : "gap-1 px-2 py-0.5 text-[11px] font-semibold tracking-[0.02em]",
-            p === "biocide" ? "bg-warn/12 text-[#7a4f0c]" : full ? "bg-salt text-ink" : "bg-ink/5 text-ink/80",
+            "inline-flex items-center rounded-[4px]",
+            full ? "gap-1.5 px-3 py-1.5 text-sm font-medium" : "gap-1 px-1.5 py-0.5 text-xs font-semibold",
+            p === "biocide" ? "bg-warn/12 text-[#7a4f0c]" : full ? "bg-steel text-ink" : "bg-steel text-ink/80",
           )}
         >
           <Icon name={p} size={full ? 16 : 13} className="shrink-0" />

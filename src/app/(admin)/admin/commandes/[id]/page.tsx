@@ -16,9 +16,9 @@ import { formatDateTime, formatEur } from "@/lib/format";
 
 function Block({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-6">
-      <h2 className="t-label mb-4">{title}</h2>
-      {children}
+    <section className="min-w-0 rounded-[8px] border border-rule bg-white">
+      <h2 className="t-label border-b border-rule px-4 py-3 sm:px-5">{title}</h2>
+      <div className="px-4 py-4 sm:px-5">{children}</div>
     </section>
   );
 }
@@ -45,7 +45,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
   }, [order, settingsLead]);
 
   if (loading && !order) return <p className="text-sm text-ink/70">Chargement…</p>;
-  if (!order) return <p className="rounded-box bg-white p-6 ring-1 ring-black/5">Commande introuvable. <Link href="/admin/commandes" className="link-u">Retour</Link></p>;
+  if (!order) return <p className="rounded-[8px] border border-rule bg-white px-4 py-5">Commande introuvable. <Link href="/admin/commandes" className="link-u">Retour</Link></p>;
 
   const parsed = prices.map((p) => (p.trim() === "" ? null : Number(p.replace(",", "."))));
   const invalid = parsed.some((p) => p !== null && (!Number.isFinite(p) || p < 0));
@@ -71,38 +71,40 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
   const needsPricing = order.status === "received" && priceMode === "on_request";
 
   return (
-    <div className="space-y-6">
-      <Link href="/admin/commandes" className="link-u inline-flex text-sm font-medium">
+    <div className="space-y-5">
+      <Link href="/admin/commandes" className="link-u inline-flex text-sm font-semibold">
         ← Commandes
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="t-mono break-all text-[clamp(1.5rem,1.2rem+1.2vw,2.25rem)] font-semibold tracking-[-0.02em] text-ink">{order.number}</h1>
+        <h1 className="t-mono break-all text-[clamp(1.5rem,1.2rem+1vw,2rem)] font-semibold text-ink">{order.number}</h1>
         <StatusBadge status={order.status} />
         {order.customerAcceptedAt ? <Badge tone="ok">PRO-FORMA VALIDÉE PAR LE CLIENT</Badge> : null}
         {order.isDemo ? <DemoBadge /> : null}
         {order.accountId ? <Badge tone="mci">COMPTE PRO</Badge> : <Badge>INVITÉ</Badge>}
       </div>
-      <p className="-mt-3 text-sm text-ink/70">Reçue le {formatDateTime(order.createdAt)} · dernière mise à jour {formatDateTime(order.updatedAt)}</p>
+      <p className="-mt-3 text-sm text-ink/70">
+        Reçue le <span className="t-mono">{formatDateTime(order.createdAt)}</span> · dernière mise à jour <span className="t-mono">{formatDateTime(order.updatedAt)}</span>
+      </p>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <div className="space-y-6 xl:col-span-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <div className="min-w-0 space-y-4 xl:col-span-2">
           <Block title="Lignes, prix et délai">
-            <div className="relative overflow-x-auto">
-              <table className="w-full min-w-[620px] text-sm">
-                <thead>
-                  <tr className="text-left text-xs text-ink/70">
-                    <th className="py-2 pr-2 font-medium">Réf.</th>
-                    <th className="py-2 pr-2 font-medium">Désignation</th>
-                    <th className="py-2 pr-2 font-medium">Condit.</th>
-                    <th className="py-2 pr-2 text-right font-medium">Qté</th>
-                    <th className="w-32 py-2 pr-2 text-right font-medium">PU HT (€)</th>
-                    <th className="py-2 text-right font-medium">Total</th>
+            <div className="relative overflow-x-auto rounded-[6px] border border-rule">
+              <table className="w-full min-w-[620px] text-left text-sm">
+                <thead className="border-b border-rule bg-steel/60 text-xs font-semibold text-ink/70">
+                  <tr>
+                    <th scope="col" className="py-2.5 pl-3 pr-2">Réf.</th>
+                    <th scope="col" className="py-2.5 pr-2">Désignation</th>
+                    <th scope="col" className="py-2.5 pr-2">Condit.</th>
+                    <th scope="col" className="py-2.5 pr-2 text-right">Qté</th>
+                    <th scope="col" className="w-32 py-2.5 pr-2 text-right">PU HT (€)</th>
+                    <th scope="col" className="py-2.5 pl-2 pr-3 text-right">Total</th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-rule">
                   {order.lines.map((l, i) => (
-                    <tr key={i} className="border-t border-black/5 align-top transition-colors duration-200 hover:bg-salt/60">
-                      <td className="t-code py-2 pr-2 text-mci">{l.code}</td>
+                    <tr key={i} className="align-top transition-colors duration-150 hover:bg-salt">
+                      <td className="t-code py-2 pl-3 pr-2 text-mci">{l.code}</td>
                       <td className="py-2 pr-2">
                         {l.name}
                         {l.note ? <span className="block text-xs text-ink/70">Note : {l.note}</span> : null}
@@ -115,16 +117,16 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                         </label>
                         <Input id={`pu-${i}`} fieldSize="sm" inputMode="decimal" className="t-mono text-right" value={prices[i] ?? ""} onChange={(e) => setPrices((p) => p.map((x, k) => (k === i ? e.target.value : x)))} placeholder="—" />
                       </td>
-                      <td className="t-mono py-2 text-right">{parsed[i] != null && Number.isFinite(parsed[i]) ? formatEur(parsed[i]! * l.quantity) : "—"}</td>
+                      <td className="t-mono whitespace-nowrap py-2 pl-2 pr-3 text-right">{parsed[i] != null && Number.isFinite(parsed[i]) ? formatEur(parsed[i]! * l.quantity) : "—"}</td>
                     </tr>
                   ))}
                 </tbody>
-                <tfoot>
-                  <tr className="border-t border-black/10">
-                    <td colSpan={5} className="pr-2 pt-3 text-right text-sm font-medium text-ink/70">
+                <tfoot className="border-t border-rule bg-salt">
+                  <tr>
+                    <td colSpan={5} className="py-2.5 pr-2 text-right text-sm font-semibold text-ink/70">
                       Total HT
                     </td>
-                    <td className="t-mono pt-3 text-right font-semibold">{draftTotal != null ? formatEur(draftTotal) : orderTotal(order) != null ? formatEur(orderTotal(order)!) : "—"}</td>
+                    <td className="t-mono whitespace-nowrap py-2.5 pl-2 pr-3 text-right font-semibold">{draftTotal != null ? formatEur(draftTotal) : orderTotal(order) != null ? formatEur(orderTotal(order)!) : "—"}</td>
                   </tr>
                 </tfoot>
               </table>
@@ -174,7 +176,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
               <p className="text-sm text-ink/70">Commande clôturée.</p>
             )}
             {msg ? (
-              <p role="status" className="mt-4 rounded-tech bg-ok/10 px-4 py-3 text-sm text-ok">
+              <p role="status" className="mt-4 rounded-[6px] border border-ok/30 bg-ok/10 px-4 py-3 text-sm text-ok">
                 {msg}
               </p>
             ) : null}
@@ -198,7 +200,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
           </Block>
         </div>
 
-        <div className="space-y-6">
+        <div className="min-w-0 space-y-4">
           <Block title="Client">
             <p className="break-words font-semibold">{order.customer.company}</p>
             <p className="t-mono mt-0.5 text-xs text-ink/70">SIRET {order.customer.siret}</p>
@@ -210,7 +212,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
             <p className="mt-2 text-sm text-ink/70">Type : {order.customer.kind}</p>
             {order.poNumber ? (
               <p className="mt-3 text-sm">
-                <span className="text-xs font-medium text-ink/70">Engagement · </span>
+                <span className="text-xs font-semibold text-ink/70">Engagement · </span>
                 <span className="t-mono">{order.poNumber}</span>
               </p>
             ) : null}
@@ -231,11 +233,11 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
             {order.deliverySlots ? <p className="mt-1 text-sm">Créneaux : {order.deliverySlots}</p> : null}
             {order.billing ? (
               <p className="mt-3 text-sm">
-                <span className="text-xs font-medium text-ink/70">Facturation · </span>
+                <span className="text-xs font-semibold text-ink/70">Facturation · </span>
                 {order.billing.company}, {order.billing.line1}, {order.billing.postalCode} {order.billing.city}
               </p>
             ) : null}
-            {order.comment ? <p className="mt-4 rounded-tech bg-salt px-4 py-3 text-sm">« {order.comment} »</p> : null}
+            {order.comment ? <p className="mt-4 rounded-[6px] border border-rule bg-salt px-4 py-3 text-sm">« {order.comment} »</p> : null}
           </Block>
           {order.accountId ? (
             <Block title="Déposer un document (espace pro du client)">
@@ -260,7 +262,7 @@ export default function AdminOrder({ params }: { params: Promise<{ id: string }>
                   <option value="proforma">Pro-forma</option>
                   <option value="autre">Autre</option>
                 </Select>
-                <label className="flex cursor-pointer items-center gap-2 rounded-tech bg-salt px-4 py-3 text-sm ring-1 ring-black/5 transition-shadow duration-200 hover:ring-black/20 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
+                <label className="flex cursor-pointer items-center gap-2 rounded-[6px] border border-dashed border-ink/30 bg-salt px-4 py-3 text-sm transition-colors duration-150 hover:border-mci has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
                   <input type="file" accept="application/pdf,image/*" className="sr-only" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
                   <Icon name="doc" size={16} />
                   <span className="truncate">{file ? file.name : "Choisir un fichier (PDF, image)"}</span>

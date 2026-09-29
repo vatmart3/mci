@@ -53,9 +53,9 @@ const blank = (): Product => ({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <fieldset className="min-w-0 rounded-box bg-white p-4 ring-1 ring-black/5 sm:p-8">
-      <legend className="t-label float-left mb-5 w-full">{title}</legend>
-      <div className="clear-both grid grid-cols-1 gap-4 sm:grid-cols-2">{children}</div>
+    <fieldset className="min-w-0 rounded-[8px] border border-rule bg-white">
+      <legend className="t-label float-left w-full border-b border-rule px-4 py-3 sm:px-6">{title}</legend>
+      <div className="clear-both grid grid-cols-1 gap-4 px-4 py-5 sm:grid-cols-2 sm:px-6">{children}</div>
     </fieldset>
   );
 }
@@ -66,8 +66,9 @@ function Toggles<T extends string>({ options, value, onChange, labels }: { optio
       {options.map((o) => {
         const on = value.includes(o);
         return (
-          <label key={o} className={`cursor-pointer select-none rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors duration-200 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci ${on ? "bg-ink text-white" : "bg-salt text-ink/70 hover:bg-black/10 hover:text-ink"}`}>
+          <label key={o} className={`inline-flex cursor-pointer select-none items-center gap-1.5 rounded-[4px] border px-2.5 py-1 text-sm transition-colors duration-150 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci ${on ? "border-mci bg-sky/60 font-semibold text-mci" : "border-rule bg-white font-medium text-ink/80 hover:border-ink/40 hover:text-ink"}`}>
             <input type="checkbox" className="sr-only" checked={on} onChange={() => onChange(on ? value.filter((x) => x !== o) : [...value, o])} />
+            {on ? <Icon name="check" size={14} className="shrink-0" /> : null}
             {labels(o)}
           </label>
         );
@@ -84,7 +85,7 @@ function FileField({ id, label, value, onChange, accept, folder }: { id: string;
       <Label htmlFor={id}>{label}</Label>
       <div className="flex flex-wrap items-center gap-2">
         <Input id={id} fieldSize="sm" className="min-w-0 flex-1 basis-56" value={value ?? ""} onChange={(e) => onChange(e.target.value)} placeholder="https://… ou déposer un fichier" />
-        <label className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-full border border-mci px-4 text-sm font-medium text-mci transition-colors duration-300 hover:bg-mci hover:text-white has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
+        <label className="inline-flex h-9 cursor-pointer items-center gap-1.5 rounded-[6px] border border-rule bg-white px-3 text-sm font-semibold text-ink transition-colors duration-150 hover:border-ink has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-mci">
           <Icon name="download" size={14} className="rotate-180" /> {busy ? "Envoi…" : "Déposer"}
           <input
             type="file"
@@ -172,12 +173,12 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
   };
 
   return (
-    <div className="max-w-5xl space-y-6">
-      <Link href="/admin/produits" className="link-u inline-flex text-sm font-medium">
+    <div className="max-w-5xl space-y-4">
+      <Link href="/admin/produits" className="link-u inline-flex text-sm font-semibold">
         ← Produits
       </Link>
       <div className="flex flex-wrap items-center gap-4 sm:gap-6">
-        <span className="shrink-0 overflow-hidden rounded-box bg-white shadow-sheet ring-1 ring-black/5">
+        <span className="shrink-0 overflow-hidden rounded-[8px] border border-rule bg-white">
           <ProductVisual product={p} size={72} alt="" />
         </span>
         <div className="min-w-0">
@@ -185,12 +186,12 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
           <p className="mt-1 text-ink/70">{p.short}</p>
         </div>
         {p.slug ? (
-          <Link href={`/produit/${p.slug}`} target="_blank" className="link-u text-sm font-medium sm:ml-auto">
-            Voir la fiche publique
+          <Link href={`/produit/${p.slug}`} target="_blank" className="link-u inline-flex items-center gap-1 text-sm font-semibold sm:ml-auto">
+            Voir la fiche publique <Icon name="external" size={14} />
           </Link>
         ) : null}
       </div>
-      {p.adminNote ? <p className="rounded-box bg-warn/10 px-5 py-4 text-sm">Note interne : {p.adminNote}</p> : null}
+      {p.adminNote ? <p className="rounded-[8px] border border-warn/40 bg-warn/10 px-4 py-3 text-sm">Note interne : {p.adminNote}</p> : null}
 
       <Section title="Identité">
         <div>
@@ -229,7 +230,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
       <Section title="Conditionnements">
         <div className="sm:col-span-2">{tc("packagings")}</div>
         {p.packagings.map((k, i) => (
-          <div key={i} className="grid grid-cols-1 gap-2 rounded-tech bg-salt p-3 sm:col-span-2 sm:grid-cols-[1fr_2fr_1fr_1.5fr_auto]">
+          <div key={i} className="grid grid-cols-1 gap-2 rounded-[6px] border border-rule bg-salt p-3 sm:col-span-2 sm:grid-cols-[1fr_2fr_1fr_1.5fr_auto]">
             <Input fieldSize="sm" aria-label="Identifiant" className="t-mono" value={k.id} onChange={(e) => setPack(i, { id: slugify(e.target.value) })} />
             <Input fieldSize="sm" aria-label="Libellé" value={k.label} onChange={(e) => setPack(i, { label: e.target.value })} />
             <Input fieldSize="sm" aria-label="Libellé court" className="t-mono" value={k.short} onChange={(e) => setPack(i, { short: e.target.value.toUpperCase() })} />
@@ -240,12 +241,12 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
                 </option>
               ))}
             </Select>
-            <button type="button" aria-label="Supprimer ce conditionnement" className="grid size-9 place-items-center justify-self-end rounded-full text-ink/70 transition-colors hover:bg-white hover:text-danger" onClick={() => set("packagings", p.packagings.filter((_, j) => j !== i))}>
+            <button type="button" aria-label="Supprimer ce conditionnement" className="grid size-9 place-items-center justify-self-end rounded-[6px] text-ink/70 transition-colors duration-150 hover:bg-danger/10 hover:text-danger" onClick={() => set("packagings", p.packagings.filter((_, j) => j !== i))}>
               <Icon name="trash" size={16} />
             </button>
           </div>
         ))}
-        <button type="button" className="link-u inline-flex items-center gap-1 justify-self-start text-sm font-medium sm:col-span-2" onClick={() => set("packagings", [...p.packagings, { id: `c${p.packagings.length + 1}`, label: "", short: "", container: "can5" }])}>
+        <button type="button" className="link-u inline-flex items-center gap-1 justify-self-start text-sm font-semibold sm:col-span-2" onClick={() => set("packagings", [...p.packagings, { id: `c${p.packagings.length + 1}`, label: "", short: "", container: "can5" }])}>
           <Icon name="plus" size={14} /> Ajouter un conditionnement
         </button>
       </Section>
@@ -286,7 +287,7 @@ export default function AdminProduct({ params }: { params: Promise<{ id: string 
         </div>
       </Section>
 
-      <div className="glass sticky bottom-4 z-10 flex flex-wrap items-center gap-3 rounded-box p-3 pl-4 shadow-float ring-1 ring-black/5">
+      <div className="sticky bottom-4 z-10 flex flex-wrap items-center gap-3 rounded-[8px] border border-rule bg-white px-4 py-3 shadow-sheet">
         <Button onClick={save}>Enregistrer</Button>
         {msg ? <span role="status" className="text-sm text-ink/70">{msg}</span> : null}
         {!isNew ? (

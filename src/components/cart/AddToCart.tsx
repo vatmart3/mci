@@ -43,7 +43,7 @@ export function AddToCartButton({
     <button
       ref={ref}
       type="button"
-      className={cx(buttonClass("action", size), iconOnly && "w-8 !px-0", className)}
+      className={cx(buttonClass("action", size), iconOnly && "aspect-square !px-0", className)}
       aria-label={iconOnly ? `Ajouter ${product.code} au bon de commande` : undefined}
       onClick={() => {
         addToCart(product, packagingId, quantity, ref.current);

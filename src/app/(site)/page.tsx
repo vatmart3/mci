@@ -6,13 +6,13 @@ import { sectors } from "@/data/sectors";
 import { company } from "@/data/company";
 import type { SectorSlug } from "@/lib/types";
 import { Hero } from "@/components/home/Hero";
-import { StorySection, type Chapter } from "@/components/home/StorySection";
 import { SectorsSection } from "@/components/home/SectorsSection";
-import { BentoSection } from "@/components/home/BentoSection";
 import { ShelfSection, type ShelfGroup } from "@/components/home/ShelfSection";
+import { FeaturedSection } from "@/components/home/FeaturedSection";
 import { OrderSection } from "@/components/home/OrderSection";
+import { PublicBuyersSection } from "@/components/home/PublicBuyersSection";
+import { DocumentsSection } from "@/components/home/DocumentsSection";
 import { TeamSection } from "@/components/home/TeamSection";
-import { CtaSection } from "@/components/home/CtaSection";
 import { toMini } from "@/components/home/showcase-data";
 import { pageMeta } from "@/lib/seo";
 
@@ -23,62 +23,33 @@ export const metadata = pageMeta({
   path: "/",
 });
 
-// arc du hero : le bidon DG90 au centre
-const heroPicks: [string, string?][] = [
-  ["cst"],
-  ["sanikel-renforce", "1l"],
-  ["dg90", "5l"],
-  ["kermex", "20l"],
-  ["super-granul"],
-];
-
-// histoire défilée : un geste, un produit
-const storyPicks: [string, string, string?][] = [
-  ["Dégraisser.", "dg90", "5l"],
-  ["Désinfecter.", "ecodyl"],
-  ["Démousser.", "kermex", "20l"],
-  ["Dégripper.", "cst"],
-  ["Absorber.", "super-granul"],
-];
-
-// ordre de visite du rayon (brief §8.4)
-const shelfOrder = ["aerosols", "decapants-detartrants", "detergents-desinfectants", "desherbants-insecticides-biocides", "absorbants", "produits-bio", "surodorants-shampooings"] as const;
+// composition du bandeau, de gauche à droite (le bidon DG90 au centre, au premier plan)
+const heroPicks = ["cst", "sanikel-renforce", "dg90", "kermex", "super-granul"];
+// fiches techniques mises en avant dans la section documents
+const sheetPicks = ["dg90", "kermex", "detag", "super-granul", "ecodyl", "oxychoc"];
 
 export default async function HomePage() {
   const [all, stats] = await Promise.all([getProducts(), getStats()]);
-  const by = new Map(all.map((p) => [p.slug, p]));
+  const active = all.filter((p) => p.active);
+  const by = new Map(active.map((p) => [p.slug, p]));
+  const pick = (slugs: string[]) => slugs.flatMap((s) => (by.get(s) ? [toMini(by.get(s)!)] : []));
 
-  const hero = heroPicks.flatMap(([slug, pack]) => {
-    const p = by.get(slug);
-    return p ? [{ p: toMini(p), pack }] : [];
-  });
+  const hero = pick(heroPicks).map((p) => ({ p }));
 
-  const chapters: Chapter[] = storyPicks.flatMap(([verb, slug, pack]) => {
-    const p = by.get(slug);
-    return p ? [{ verb, p: toMini(p), pack, usages: p.usages }] : [];
-  });
+  const counts = Object.fromEntries(sectors.map((s) => [s.slug, active.filter((p) => p.sectors.includes(s.slug)).length])) as Record<SectorSlug, number>;
 
-  const selections = Object.fromEntries(sectors.map((s) => [s.slug, all.filter((p) => p.sectors.includes(s.slug)).map(toMini)])) as Record<SectorSlug, ReturnType<typeof toMini>[]>;
+  const groups: ShelfGroup[] = [...families]
+    .sort((a, b) => a.position - b.position)
+    .map((f) => {
+      const inFamily = active.filter((p) => p.families.includes(f.slug));
+      const ordered = [...inFamily.filter((p) => p.featured), ...inFamily.filter((p) => !p.featured)];
+      return { slug: f.slug, name: f.name, code: f.code, intro: f.intro, count: inFamily.length, products: ordered.slice(0, 3).map(toMini) };
+    })
+    // familles garnies d'abord, gammes sur demande en fin de grille
+    .sort((a, b) => Number(b.count > 0) - Number(a.count > 0));
 
-  const groups: ShelfGroup[] = shelfOrder.map((slug) => {
-    const f = families.find((x) => x.slug === slug)!;
-    const inFamily = all.filter((p) => p.families[0] === slug || (slug === "desherbants-insecticides-biocides" && p.families.includes(slug)));
-    const picks = [...inFamily.filter((p) => p.featured), ...inFamily.filter((p) => !p.featured)].filter((p, i, arr) => arr.indexOf(p) === i).slice(0, 4);
-    return { slug, name: f.name, code: f.code, intro: f.intro, count: all.filter((p) => p.families.includes(slug)).length, products: picks.map(toMini) };
-  });
-
-  const facts = {
-    references: stats.references,
-    withSheet: stats.withSheet,
-    food: all.filter((p) => p.properties.includes("contact-alimentaire")).length,
-    bio: all.filter((p) => p.properties.includes("bio-vegetal")).length,
-    biocontrol: all.filter((p) => p.properties.includes("biocontrole")).length,
-    families: stats.families,
-  };
-  const bentoPicks = ["cst", "dg90", "sanikel-renforce"].flatMap((slug) => {
-    const p = by.get(slug);
-    return p ? [toMini(p)] : [];
-  });
+  const featured = active.filter((p) => p.featured).slice(0, 8).map(toMini);
+  const sheets = pick(sheetPicks).filter((p) => p.technicalSheetUrl);
 
   const teamLocal = existsSync(path.join(process.cwd(), "public", company.photos.team.local));
   const photo = teamLocal ? company.photos.team.local : company.photos.team.remote;
@@ -86,13 +57,13 @@ export default async function HomePage() {
   return (
     <>
       <Hero products={hero} stats={stats} />
-      <StorySection chapters={chapters} />
-      <SectorsSection selections={selections} />
-      <BentoSection facts={facts} picks={bentoPicks} />
+      <SectorsSection counts={counts} />
       <ShelfSection groups={groups} total={stats.references} />
+      <FeaturedSection products={featured} />
+      <PublicBuyersSection />
       <OrderSection />
+      <DocumentsSection sheets={sheets} withSheet={stats.withSheet} references={stats.references} />
       <TeamSection photo={photo} />
-      <CtaSection />
     </>
   );
 }

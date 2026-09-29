@@ -2,7 +2,7 @@
 import { Icon } from "./Icon";
 import { cx } from "@/lib/cx";
 
-/** Sélecteur de quantité en pilule : boutons ronds, valeur centrale éditable. */
+/** Sélecteur de quantité rectangulaire : boutons carrés séparés par des filets, valeur centrale éditable. */
 export function Stepper({
   value,
   onChange,
@@ -20,14 +20,14 @@ export function Stepper({
 }) {
   const sm = size === "sm";
   const btn = cx(
-    sm ? "size-7" : "size-10",
-    "grid shrink-0 place-items-center rounded-full text-ink transition-[background-color,transform] duration-200 ease-out hover:bg-salt active:scale-90 disabled:opacity-30 disabled:hover:bg-transparent disabled:active:scale-100",
+    sm ? "w-8" : "w-10",
+    "grid h-full shrink-0 place-items-center bg-salt text-ink transition-colors duration-150 ease-out hover:bg-steel disabled:text-ink/35 disabled:hover:bg-salt",
   );
   return (
     <div
       className={cx(
-        "inline-flex items-center rounded-full bg-white ring-1 ring-black/10 transition-shadow duration-200 ease-out focus-within:ring-2 focus-within:ring-mci/60",
-        sm ? "h-8 p-0.5" : "h-12 p-1",
+        "inline-flex shrink-0 items-stretch divide-x divide-rule overflow-hidden rounded-[6px] border border-rule bg-white transition-[border-color,box-shadow] duration-150 ease-out hover:border-ink/30 focus-within:border-mci focus-within:shadow-[0_0_0_3px_rgb(31_106_153/0.2)]",
+        sm ? "h-9" : "h-11",
       )}
       role="group"
       aria-label={label}
@@ -47,8 +47,8 @@ export function Stepper({
           if (Number.isFinite(n)) onChange(Math.min(max, Math.max(min, n)));
         }}
         className={cx(
-          "bg-transparent text-center font-semibold tabular-nums focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
-          sm ? "w-9 text-sm" : "w-12 text-base",
+          "bg-white text-center font-semibold tabular-nums focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none",
+          sm ? "w-10 text-sm" : "w-12 text-base",
         )}
       />
       <button type="button" className={btn} onClick={() => onChange(Math.min(max, value + 1))} disabled={value >= max} aria-label="Augmenter la quantité">
